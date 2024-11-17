@@ -15,7 +15,7 @@
     size = 24;
   };
 
-  # set dpi for 4k monitor
+  # set dpi
   xresources.properties = {
     # dpi for Xorg's font
     "Xft.dpi" = 150;

@@ -2,10 +2,10 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    neofetch
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    just # justfile
-    nushell # nushell
+    #just # justfile
+    #nushell # nushell
+    zsh
 
     # system call monitoring
     strace # system call monitoring
@@ -13,17 +13,15 @@
     tcpdump # network sniffer
     lsof # list open files
 
-    # ebpf related tools
-    # https://github.com/bpftrace/bpftrace
-    bpftrace # powerful tracing tool
-    bpftop # monitor BPF programs
-    bpfmon # BPF based visual packet rate monitor
+    ## ebpf related tools
+    ## https://github.com/bpftrace/bpftrace
+    #bpftrace # powerful tracing tool
+    #bpftop # monitor BPF programs
+    #bpfmon # BPF based visual packet rate monitor
 
     # system monitoring
     sysstat
     iotop
-    iftop
-    btop
     nmon
     sysbench
 
@@ -38,10 +36,13 @@
     parted
   ];
 
-  # BCC - Tools for BPF-based Linux IO analysis, networking, monitoring, and more
-  # https://github.com/iovisor/bcc
-  programs.bcc.enable = true;
+  ## BCC - Tools for BPF-based Linux IO analysis, networking, monitoring, and more
+  ## https://github.com/iovisor/bcc
+  #programs.bcc.enable = true;
 
   # replace default editor with neovim
   environment.variables.EDITOR = "nvim";
+
+  # enable zsh system-wide
+  programs.zsh.enable = true;
 }

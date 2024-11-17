@@ -2,24 +2,11 @@
   lib,
   pkgs,
   ...
-}:
-###########################################################
-#
-# Kitty Configuration
-#
-# Useful Hot Keys for Linux(replace `ctrl + shift` with `cmd` on macOS)):
-#   1. Increase Font Size: `ctrl + shift + =` | `ctrl + shift + +`
-#   2. Decrease Font Size: `ctrl + shift + -` | `ctrl + shift + _`
-#   3. And Other common shortcuts such as Copy, Paste, Cursor Move, etc.
-#
-###########################################################
-{
+}: {
   programs.kitty = {
     enable = true;
-    # kitty has catppuccin theme built-in,
-    # all the built-in themes are packaged into an extra package named `kitty-themes`
-    # and it's installed by home-manager if `theme` is specified.
-    themeFile = "Catppuccin-Mocha";
+    shellIntegration.enableZshIntegration = true;
+    theme = "Catppuccin-Mocha";
     font = {
       name = "JetBrainsMono Nerd Font";
       # use different font size on macOS
@@ -28,26 +15,38 @@
         then 14
         else 13;
     };
-
-    # consistent with other terminal emulators
     keybindings = {
+      "f1" = "show_kitty_env_vars";
       "ctrl+shift+m" = "toggle_maximized";
       "ctrl+shift+f" = "show_scrollback"; # search in the current window
     };
-
     settings = {
-      background_opacity = "0.93";
-      macos_option_as_alt = true; # Option key acts as Alt on macOS
+      background_opacity = "0.9";
+      background_tint = "0.9";
+      background_blur = 10;
+      dim_opacity = "1.0";
+      tab_bar_edge = "bottom";
+      tab_bar_margin_width = "20.0";
+      tab_bar_margin_height = "20.0 0.0";
+      tab_bar_style = "powerline";
+      tab_bar_align = "left";
+      tab_bar_min_tabs = 2;
+      tab_switch_strategy = "previous";
+      tab_activity_symbol = "none";
+      tab_powerline_style = "slanted";
+      tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
+      active_tab_title_template = "none";
+      scrollback_lines = 10000;
       enable_audio_bell = false;
-      tab_bar_edge = "top"; # tab bar on top
-      #  To resolve issues:
-      #    1. https://github.com/ryan4yin/nix-config/issues/26
-      #    2. https://github.com/ryan4yin/nix-config/issues/8
-      #  Spawn a nushell in login mode via `bash`
-      shell = "${pkgs.bash}/bin/bash --login -c 'nu --login --interactive'";
+      window_margin_width = 0;
+      window_padding_width = 20;
+      remember_window_size = true;
+      placement_strategy = "center";
+      confirm_os_window_close = 0;
+      hide_window_decorations = "titlebar-only";
+      macos_quit_when_last_window_closed = true;
     };
-
-    # macOS specific settings
-    darwinLaunchOptions = ["--start-as=maximized"];
+    # macOS-specific
+    darwinLaunchOptions = ["--single-instance"];
   };
 }

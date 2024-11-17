@@ -1,17 +1,24 @@
 {
   myvars,
   config,
+  pkgs,
   ...
 }: {
+  # Don't require password for sudo
+  security.sudo.wheelNeedsPassword = false;
+
+  # Set default shell
+  users.defaultUserShell = pkgs.zsh;
+
   # Don't allow mutation of users outside the config.
   users.mutableUsers = false;
 
   users.groups = {
     "${myvars.username}" = {};
     docker = {};
-    wireshark = {};
+    #wireshark = {};
     # for android platform tools's udev rules
-    adbusers = {};
+    #adbusers = {};
     dialout = {};
     # for openocd (embedded system development)
     plugdev = {};
@@ -31,9 +38,9 @@
       "networkmanager"
       "wheel"
       "docker"
-      "wireshark"
-      "adbusers"
-      "libvirtd"
+      #"wireshark"
+      #"adbusers"
+      #"libvirtd"
     ];
   };
 

@@ -40,7 +40,7 @@
       marksman # language server for markdown
       glow # markdown previewer
       pandoc # document converter
-      pkgs-unstable.hugo # static site generator
+      hugo # static site generator
 
       #-- sql
       sqlfluff
@@ -97,7 +97,6 @@
 
       #-- rust
       # we'd better use the rust-overlays for rust development
-      pkgs-unstable.rustc
       pkgs-unstable.rust-analyzer
       pkgs-unstable.cargo # rust package manager
       pkgs-unstable.rustfmt

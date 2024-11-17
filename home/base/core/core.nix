@@ -1,12 +1,12 @@
 {
   pkgs,
-  nur-ryan4yin,
+  #nur-ryan4yin, # TODO: enable ryan's nur-ryan4yin if we want it later
   ...
 }: {
   home.packages = with pkgs; [
     # Misc
-    tldr
-    cowsay
+    #tldr
+    #cowsay
     gnupg
     gnumake
 
@@ -62,7 +62,7 @@
       # do not enable aliases in nushell!
       enableNushellIntegration = false;
       git = true;
-      icons = "auto";
+      icons = true;
     };
 
     # a cat(1) clone with syntax highlighting and Git integration.
@@ -70,15 +70,16 @@
       enable = true;
       config = {
         pager = "less -FR";
-        theme = "catppuccin-mocha";
+        #theme = "catppuccin-mocha";
       };
-      themes = {
-        # https://raw.githubusercontent.com/catppuccin/bat/main/Catppuccin-mocha.tmTheme
-        catppuccin-mocha = {
-          src = nur-ryan4yin.packages.${pkgs.system}.catppuccin-bat;
-          file = "Catppuccin-mocha.tmTheme";
-        };
-      };
+      # TODO: enable theme if we enable ryan's nur-ryan4yin
+      #themes = {
+      #  # https://raw.githubusercontent.com/catppuccin/bat/main/Catppuccin-mocha.tmTheme
+      #  catppuccin-mocha = {
+      #    src = nur-ryan4yin.packages.${pkgs.system}.catppuccin-bat;
+      #    file = "Catppuccin-mocha.tmTheme";
+      #  };
+      #};
     };
 
     # A command-line fuzzy finder
@@ -123,7 +124,7 @@
       enable = true;
       enableBashIntegration = true;
       enableZshIntegration = true;
-      enableNushellIntegration = true;
+      #enableNushellIntegration = true; # TODO: enable nushell integration
     };
 
     # Atuin replaces your existing shell history with a SQLite database,
@@ -134,7 +135,8 @@
       enable = true;
       enableBashIntegration = true;
       enableZshIntegration = true;
-      enableNushellIntegration = true;
+      # TODO: enable nushell integration
+      #enableNushellIntegration = true;
     };
   };
 }

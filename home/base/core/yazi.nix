@@ -1,7 +1,7 @@
 {
   pkgs,
   pkgs-unstable,
-  nur-ryan4yin,
+  #nur-ryan4yin,
   ...
 }: {
   # terminal file manager
@@ -19,5 +19,5 @@
     };
   };
 
-  xdg.configFile."yazi/theme.toml".source = "${nur-ryan4yin.packages.${pkgs.system}.catppuccin-yazi}/mocha.toml";
+  #xdg.configFile."yazi/theme.toml".source = "${nur-ryan4yin.packages.${pkgs.system}.catppuccin-yazi}/mocha.toml";
 }

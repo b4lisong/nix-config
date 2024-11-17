@@ -37,50 +37,58 @@
     # aarch64-linux = import ./aarch64-linux (args // {system = "aarch64-linux";});
     # riscv64-linux = import ./riscv64-linux (args // {system = "riscv64-linux";});
   };
-  darwinSystems = {
-    aarch64-darwin = import ./aarch64-darwin (args // {system = "aarch64-darwin";});
-    x86_64-darwin = import ./x86_64-darwin (args // {system = "x86_64-darwin";});
-  };
-  allSystems = nixosSystems // darwinSystems;
+  # TODO: implement darwin systems
+  #darwinSystems = {
+  #  aarch64-darwin = import ./aarch64-darwin (args // {system = "aarch64-darwin";});
+  #  x86_64-darwin = import ./x86_64-darwin (args // {system = "x86_64-darwin";});
+  #};
+  #allSystems = nixosSystems // darwinSystems;
+  allSystems = nixosSystems;
   allSystemNames = builtins.attrNames allSystems;
   nixosSystemValues = builtins.attrValues nixosSystems;
-  darwinSystemValues = builtins.attrValues darwinSystems;
-  allSystemValues = nixosSystemValues ++ darwinSystemValues;
+  # TODO: implement darwin systems
+  #darwinSystemValues = builtins.attrValues darwinSystems;
+  #allSystemValues = nixosSystemValues ++ darwinSystemValues;
+  allSystemValues = nixosSystemValues;
 
   # Helper function to generate a set of attributes for each system
   forAllSystems = func: (nixpkgs.lib.genAttrs allSystemNames func);
 in {
+  # TODO: implement darwin systems
   # Add attribute sets into outputs, for debugging
-  debugAttrs = {inherit nixosSystems darwinSystems allSystems allSystemNames;};
+  #debugAttrs = {inherit nixosSystems darwinSystems allSystems allSystemNames;};
+  debugAttrs = {inherit nixosSystems allSystems allSystemNames;};
 
   # NixOS Hosts
   nixosConfigurations =
     lib.attrsets.mergeAttrsList (map (it: it.nixosConfigurations or {}) nixosSystemValues);
 
-  # Colmena - remote deployment via SSH
-  colmena =
-    {
-      meta =
-        (
-          let
-            system = "x86_64-linux";
-          in {
-            # colmena's default nixpkgs & specialArgs
-            nixpkgs = import nixpkgs {inherit system;};
-            specialArgs = genSpecialArgs system;
-          }
-        )
-        // {
-          # per-node nixpkgs & specialArgs
-          nodeNixpkgs = lib.attrsets.mergeAttrsList (map (it: it.colmenaMeta.nodeNixpkgs or {}) nixosSystemValues);
-          nodeSpecialArgs = lib.attrsets.mergeAttrsList (map (it: it.colmenaMeta.nodeSpecialArgs or {}) nixosSystemValues);
-        };
-    }
-    // lib.attrsets.mergeAttrsList (map (it: it.colmena or {}) nixosSystemValues);
+  # TODO: colmena
+  ## Colmena - remote deployment via SSH
+  #colmena =
+  #  {
+  #    meta =
+  #      (
+  #        let
+  #          system = "x86_64-linux";
+  #        in {
+  #          # colmena's default nixpkgs & specialArgs
+  #          nixpkgs = import nixpkgs {inherit system;};
+  #          specialArgs = genSpecialArgs system;
+  #        }
+  #      )
+  #      // {
+  #        # per-node nixpkgs & specialArgs
+  #        nodeNixpkgs = lib.attrsets.mergeAttrsList (map (it: it.colmenaMeta.nodeNixpkgs or {}) nixosSystemValues);
+  #        nodeSpecialArgs = lib.attrsets.mergeAttrsList (map (it: it.colmenaMeta.nodeSpecialArgs or {}) nixosSystemValues);
+  #      };
+  #  }
+  #  // lib.attrsets.mergeAttrsList (map (it: it.colmena or {}) nixosSystemValues);
 
-  # macOS Hosts
-  darwinConfigurations =
-    lib.attrsets.mergeAttrsList (map (it: it.darwinConfigurations or {}) darwinSystemValues);
+  # TODO: implement darwin systems
+  ## macOS Hosts
+  #darwinConfigurations =
+  #  lib.attrsets.mergeAttrsList (map (it: it.darwinConfigurations or {}) darwinSystemValues);
 
   # Packages
   packages = forAllSystems (
@@ -134,8 +142,8 @@ in {
           gcc
           # Nix-related
           alejandra
-          deadnix
-          statix
+          #deadnix
+          #statix
           # spell checker
           typos
           # code formatter

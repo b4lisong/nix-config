@@ -21,7 +21,7 @@ in {
   '';
 
   home.shellAliases = shellAliases;
-  programs.nushell.shellAliases = shellAliases;
+  #programs.nushell.shellAliases = shellAliases;
 
   programs = {
     neovim = {
