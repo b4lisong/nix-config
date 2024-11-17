@@ -1,5 +1,4 @@
-{ pkgs, ...}: {
-
+{pkgs, ...}: {
   ##########################################################################
   #
   #  Install all apps and packages here.
@@ -7,7 +6,7 @@
   #  NOTE: Your can find all available options in:
   #    https://daiderd.com/nix-darwin/manual/index.html
   #
-  # TODO: modify and reference old config 
+  # TODO: modify and reference old config
   #
   ##########################################################################
 
@@ -48,6 +47,7 @@
     # TODO Feel free to add your favorite apps here.
     casks = [
       # "google-chrome"
+      "vmware-fusion"
     ];
   };
 }
