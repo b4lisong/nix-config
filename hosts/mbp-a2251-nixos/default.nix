@@ -10,7 +10,7 @@
 #
 #############################################################
 let
-  hostName = "a2251"; # Define your hostname.
+  hostName = "a2251-nixos"; # Define your hostname.
 in {
   imports = [
     nixos-hardware.nixosModules.apple-t2

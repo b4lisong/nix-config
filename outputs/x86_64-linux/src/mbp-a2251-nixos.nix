@@ -13,8 +13,7 @@
   genSpecialArgs,
   ...
 } @ args: let
-  # remote development VM (in Proxmox VE)
-  name = "a2251";
+  name = "a2251-nixos";
   tags = ["bm" "client"];
   ssh-user = "root";
 
