@@ -81,6 +81,20 @@
     trusted-users = [myvars.username];
   };
 
+  # TODO:
+  # fix https://github.com/LnL7/nix-darwin/issues/1082 in a better way
+  # waiting on NixOS module to be improved as per
+  # https://github.com/LnL7/nix-darwin/issues/1082#issuecomment-2356862631
+  nixpkgs.flake = {
+    # https://github.com/LnL7/nix-darwin/issues/1082#issuecomment-2358489238
+    # caveats:
+    # 1. nix run `nixpkgs#something` won't be running packages from the same nixpkgs
+    #    revision used in nix-darwin
+    # 2. "legacy" <nixpkgs> lookup path with channels explicitly disabled won't work,
+    #     e.g. import <nixpkgs> in a shell.nix; irrelevant since we only use flakes.
+    setFlakeRegistry = false;
+    setNixPath = false;
+  };
   # make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.
   nix.registry.nixpkgs.flake = nixpkgs;
 
