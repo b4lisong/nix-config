@@ -1,7 +1,7 @@
 {lib, ...}: {
   # TODO: implement other systems
   #colmenaSystem = import ./colmenaSystem.nix;
-  #macosSystem = import ./macosSystem.nix;
+  macosSystem = import ./macosSystem.nix;
   nixosSystem = import ./nixosSystem.nix;
 
   attrs = import ./attrs.nix {inherit lib;};
