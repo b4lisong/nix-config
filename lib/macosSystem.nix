@@ -9,13 +9,14 @@
   specialArgs ? (genSpecialArgs system),
   ...
 }: let
-  inherit (inputs) nixpkgs-darwin home-manager nix-darwin;
+  inherit (inputs) nixpkgs-darwin home-manager nix-darwin mac-app-util;
 in
   nix-darwin.lib.darwinSystem {
     inherit system specialArgs;
     modules =
       darwin-modules
       ++ [
+        mac-app-util.darwinModules.default
         ({lib, ...}: {
           nixpkgs.pkgs = import nixpkgs-darwin {inherit system;};
         })
@@ -30,6 +31,9 @@ in
             home-manager.backupFileExtension = "home-manager.backup";
 
             home-manager.extraSpecialArgs = specialArgs;
+            home-manager.sharedModules = [
+              mac-app-util.homeManagerModules.default
+            ];
             home-manager.users."${myvars.username}".imports = home-modules;
           }
         ]

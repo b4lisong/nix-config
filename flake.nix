@@ -20,13 +20,18 @@
 
     # impermanence
     impermanence.url = "github:nix-community/impermanence";
-    
+
     # for macos
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
     nix-darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
+
+    # Launch Nix-installed apps from Spotlight
+    mac-app-util.url = "github:hraban/mac-app-util";
+
+    # nix hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # home-manager, used for managing user configuration
