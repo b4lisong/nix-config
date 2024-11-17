@@ -49,5 +49,10 @@
       # "google-chrome"
       "vmware-fusion"
     ];
+
+    masApps = {
+      "1Password for Safari" = 1569813296;
+      "Tailscale" = 1475387142;
+    };
   };
 }
