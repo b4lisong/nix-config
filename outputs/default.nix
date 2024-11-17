@@ -37,27 +37,22 @@
     # aarch64-linux = import ./aarch64-linux (args // {system = "aarch64-linux";});
     # riscv64-linux = import ./riscv64-linux (args // {system = "riscv64-linux";});
   };
-  # TODO: implement darwin systems
-  #darwinSystems = {
-  #  aarch64-darwin = import ./aarch64-darwin (args // {system = "aarch64-darwin";});
-  #  x86_64-darwin = import ./x86_64-darwin (args // {system = "x86_64-darwin";});
-  #};
-  #allSystems = nixosSystems // darwinSystems;
-  allSystems = nixosSystems;
+  darwinSystems = {
+    # TODO: implement aarch64-darwin
+    #aarch64-darwin = import ./aarch64-darwin (args // {system = "aarch64-darwin";});
+    x86_64-darwin = import ./x86_64-darwin (args // {system = "x86_64-darwin";});
+  };
+  allSystems = nixosSystems // darwinSystems;
   allSystemNames = builtins.attrNames allSystems;
   nixosSystemValues = builtins.attrValues nixosSystems;
-  # TODO: implement darwin systems
-  #darwinSystemValues = builtins.attrValues darwinSystems;
-  #allSystemValues = nixosSystemValues ++ darwinSystemValues;
-  allSystemValues = nixosSystemValues;
+  darwinSystemValues = builtins.attrValues darwinSystems;
+  allSystemValues = nixosSystemValues ++ darwinSystemValues;
 
   # Helper function to generate a set of attributes for each system
   forAllSystems = func: (nixpkgs.lib.genAttrs allSystemNames func);
 in {
-  # TODO: implement darwin systems
   # Add attribute sets into outputs, for debugging
-  #debugAttrs = {inherit nixosSystems darwinSystems allSystems allSystemNames;};
-  debugAttrs = {inherit nixosSystems allSystems allSystemNames;};
+  debugAttrs = {inherit nixosSystems darwinSystems allSystems allSystemNames;};
 
   # NixOS Hosts
   nixosConfigurations =
@@ -85,10 +80,9 @@ in {
   #  }
   #  // lib.attrsets.mergeAttrsList (map (it: it.colmena or {}) nixosSystemValues);
 
-  # TODO: implement darwin systems
-  ## macOS Hosts
-  #darwinConfigurations =
-  #  lib.attrsets.mergeAttrsList (map (it: it.darwinConfigurations or {}) darwinSystemValues);
+  # macOS Hosts
+  darwinConfigurations =
+    lib.attrsets.mergeAttrsList (map (it: it.darwinConfigurations or {}) darwinSystemValues);
 
   # Packages
   packages = forAllSystems (

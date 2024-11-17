@@ -21,13 +21,12 @@
     # impermanence
     impermanence.url = "github:nix-community/impermanence";
     
-    # TODO: enable macos support
-    ## for macos
-    #nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
-    #nix-darwin = {
-    #  url = "github:lnl7/nix-darwin";
-    #  inputs.nixpkgs.follows = "nixpkgs-darwin";
-    #};
+    # for macos
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    nix-darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # home-manager, used for managing user configuration
