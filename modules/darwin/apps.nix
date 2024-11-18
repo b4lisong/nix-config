@@ -48,6 +48,7 @@
     casks = [
       # "google-chrome"
       "vmware-fusion"
+      "scroll-reverser"
     ];
 
     masApps = {
