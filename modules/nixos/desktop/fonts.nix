@@ -15,9 +15,7 @@
           # symbols icon only
           "NerdFontsSymbolsOnly"
           # Characters
-          "FiraCode"
-          "JetBrainsMono"
-          "Iosevka"
+          "SourceCodePro"
         ];
       })
 
@@ -29,7 +27,7 @@
     # Noto Color Emoji is present everywhere to override
     #  DejaVu's B&W emojis showing instead of color emojis
     fontconfig.defaultFonts = {
-      monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
+      monospace = ["SauceCodePro Nerd Font" "Noto Color Emoji"];
       emoji = ["Noto Color Emoji"];
     };
   };

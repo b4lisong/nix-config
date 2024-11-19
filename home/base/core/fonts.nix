@@ -20,9 +20,7 @@
         # symbols only
         "NerdFontsSymbolsOnly"
         # characters
-        "FiraCode"
-        "JetBrainsMono"
-        "Iosevka"
+        "SourceCodePro"
       ];
     })
     julia-mono
