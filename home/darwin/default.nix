@@ -4,6 +4,7 @@
   ...
 }: {
   home.homeDirectory = "/Users/${myvars.username}";
+  home.enableNixpkgsReleaseCheck = false; # suppress warnings
   imports =
     (mylib.scanPaths ./.)
     ++ [
