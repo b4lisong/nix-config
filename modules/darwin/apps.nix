@@ -46,6 +46,7 @@
 
     taps = [
       "homebrew/services"
+      "nikitabobko/tap" # for Aerospace
     ];
 
     # `brew install`
@@ -60,6 +61,7 @@
       # "google-chrome"
       "vmware-fusion"
       "scroll-reverser"
+      "nikitabobko/tap/aerospace"
     ];
 
     masApps = {
