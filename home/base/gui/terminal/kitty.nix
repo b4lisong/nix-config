@@ -6,7 +6,7 @@
   programs.kitty = {
     enable = true;
     shellIntegration.enableZshIntegration = true;
-    theme = "Catppuccin-Mocha";
+    themeFile = "Catppuccin-Mocha";
     font = {
       name = "SauceCodePro Nerd Font";
       # use different font size on macOS
