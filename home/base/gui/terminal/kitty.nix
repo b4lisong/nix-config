@@ -8,7 +8,7 @@
     shellIntegration.enableZshIntegration = true;
     theme = "Catppuccin-Mocha";
     font = {
-      name = "JetBrainsMono Nerd Font";
+      name = "SauceCodePro Nerd Font";
       # use different font size on macOS
       size =
         if pkgs.stdenv.isDarwin
