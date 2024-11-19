@@ -23,6 +23,9 @@
     defaults = {
       menuExtraClock.Show24Hour = true; # show 24 hour clock
 
+      # Show specific text as a greeting at login
+      loginwindow.LoginwindowText = "おかえり、お兄ちゃん";
+
       # customize dock
       dock = {
         autohide = true; # automatically hide and show the dock
@@ -30,6 +33,8 @@
         # do not automatically rearrange spaces based on most recent use.
         mru-spaces = false;
         expose-group-by-app = true; # Group windows by application
+        showhidden = true;
+        tilesize = 48;
 
         # customize Hot Corners
         wvous-tl-corner = 2; # top-left - Mission Control
@@ -137,6 +142,22 @@
         };
         # Prevent Photos from opening automatically when devices are plugged in
         "com.apple.ImageCapture".disableHotPlug = true;
+        "com.apple.print.PrintingPrefs" = {
+          # Automatically quit printer app once the print jobs complete
+          "Quit When Finished" = true;
+        };
+        "com.apple.SoftwareUpdate" = {
+          AutomaticCheckEnabled = true;
+          # Check for software updates daily, not just once per week
+          ScheduleFrequency = 1;
+          # Download newly available updates in background
+          AutomaticDownload = 1;
+          # Install System data files & security updates
+          CriticalUpdateInstall = 1;
+        };
+        "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
+        # Turn on app auto-update
+        "com.apple.commerce".AutoUpdate = true;
       };
 
       loginwindow = {
