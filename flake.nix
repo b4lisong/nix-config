@@ -22,8 +22,7 @@
     impermanence.url = "github:nix-community/impermanence";
 
     # for macos
-    # TODO: update to 24.11; watch https://github.com/NixOS/nixpkgs/pull/356960
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs-darwin.url = "github:nixos/nixpkgs";
     nix-darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
