@@ -37,6 +37,10 @@
     escapeTime = 10;
     historyLimit = 50000;
     extraConfig = ''
+      # fix for bug: https://github.com/nix-community/home-manager/issues/5952
+      set -gu default-command
+      set -g default-shell "$SHELL"
+
       # Remove Vim mode delays
       set -g focus-events on
 
