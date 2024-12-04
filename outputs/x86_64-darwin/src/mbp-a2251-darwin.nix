@@ -19,8 +19,9 @@
         # TODO: add secrets
         #"secrets/darwin.nix"
         "modules/darwin"
-        # host specific
+        # host-specific
         "hosts/mbp-${name}-darwin"
+        "hosts/mbp-${name}-darwin/apps.nix" # host-specific apps
       ])
       ++ [];
 
