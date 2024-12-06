@@ -1,12 +1,13 @@
 {pkgs, ...}: {
   ##########################################################################
   #
-  #  Install all apps and packages here.
+  #  Install all common apps and packages here.
   #
   #  NOTE: Your can find all available options in:
   #    https://daiderd.com/nix-darwin/manual/index.html
   #
-  # TODO: modify and reference old config
+  #  Host-specific applications defined in:
+  #    hosts/{host}/apps.nix
   #
   ##########################################################################
 
@@ -58,8 +59,24 @@
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
     casks = [
-      # "google-chrome"
+      # Password Managers
+      "1password@beta"
+      "1password-cli"
+
+      # Browsers
+      "google-chrome"
+      "firefox"
+      
+      # Security
+      "little-snitch"
+
+      # Virtualization
       "vmware-fusion"
+
+      # RDP
+      "parsec"
+
+      # UI
       "scroll-reverser"
       "nikitabobko/tap/aerospace"
     ];
