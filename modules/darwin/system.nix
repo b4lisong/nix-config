@@ -32,7 +32,7 @@
         show-recents = false; # do not show recent apps in dock
         # do not automatically rearrange spaces based on most recent use.
         mru-spaces = false;
-        expose-group-by-app = true; # Group windows by application
+        expose-group-apps = true; # Group windows by application
         showhidden = true;
         tilesize = 48;
 
