@@ -66,7 +66,7 @@
       # Browsers
       "google-chrome"
       "firefox"
-      
+
       # Security
       "little-snitch"
 
@@ -84,6 +84,7 @@
     masApps = {
       "1Password for Safari" = 1569813296;
       "Tailscale" = 1475387142;
+      "Windows App" = 1295203466;
     };
   };
 }
