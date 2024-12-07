@@ -15,14 +15,18 @@
     source-serif
 
     # nerdfonts
-    (nerdfonts.override {
-      fonts = [
-        # symbols only
-        "NerdFontsSymbolsOnly"
-        # characters
-        "SourceCodePro"
-      ];
-    })
+    # after 25.05
+    nerd-fonts.symbols-only
+    nerd-fonts.sauce-code-pro
+    # before 25.05
+    #(nerdfonts.override {
+    #  fonts = [
+    #    # symbols only
+    #    "NerdFontsSymbolsOnly"
+    #    # characters
+    #    "SourceCodePro"
+    #  ];
+    #}
     julia-mono
     dejavu_fonts
   ];

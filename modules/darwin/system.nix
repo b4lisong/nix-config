@@ -209,16 +209,9 @@
       source-sans
       source-serif
 
-      # nerdfonts
-      # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/pkgs/data/fonts/nerdfonts/shas.nix
-      (nerdfonts.override {
-        fonts = [
-          # symbols icon only
-          "NerdFontsSymbolsOnly"
-          # Characters
-          "SourceCodePro"
-        ];
-      })
+      nerd-fonts.symbols-only
+      nerd-fonts.sauce-code-pro
+
       julia-mono
       dejavu_fonts
     ];

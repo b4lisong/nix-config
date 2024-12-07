@@ -10,14 +10,8 @@
 
       noto-fonts-emoji
 
-      (nerdfonts.override {
-        fonts = [
-          # symbols icon only
-          "NerdFontsSymbolsOnly"
-          # Characters
-          "SourceCodePro"
-        ];
-      })
+      nerd-fonts.symbols-only
+      nerd-fonts.sauce-code-pro
 
       julia-mono
       dejavu_fonts
