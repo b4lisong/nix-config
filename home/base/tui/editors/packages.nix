@@ -10,6 +10,7 @@
   };
 
   home.packages = with pkgs; (
+    # TODO: add / enable language servers as needed
     # -*- Data & Configuration Languages -*-#
     [
       #-- nix
@@ -21,16 +22,16 @@
       alejandra # Nix Code Formatter
 
       #-- nickel lang
-      nickel
+      # nickel
 
       #-- json like
       # terraform  # install via brew on macOS
-      terraform-ls
-      jsonnet
-      jsonnet-language-server
-      taplo # TOML language server / formatter / validator
+      # terraform-ls
+      # jsonnet
+      # jsonnet-language-server
+      # taplo # TOML language server / formatter / validator
       nodePackages.yaml-language-server
-      actionlint # GitHub Actions linter
+      # actionlint # GitHub Actions linter
 
       #-- dockerfile
       hadolint # Dockerfile linter
@@ -40,13 +41,13 @@
       marksman # language server for markdown
       glow # markdown previewer
       pandoc # document converter
-      hugo # static site generator
+      # hugo # static site generator
 
       #-- sql
-      sqlfluff
+      # sqlfluff
 
       #-- protocol buffer
-      buf # linting and formatting
+      # buf # linting and formatting
     ]
     ++
     #-*- General Purpose Languages -*-#
@@ -83,43 +84,34 @@
             pyquery
             pyyaml
             boto3
-
-            ## emacs's lsp-bridge dependenciesge
-            # epc
-            # orjson
-            # sexpdata
-            # six
-            # setuptools
-            # paramiko
-            # rapidfuzz
           ]
       ))
 
       #-- rust
       # we'd better use the rust-overlays for rust development
-      pkgs-unstable.rust-analyzer
-      pkgs-unstable.cargo # rust package manager
-      pkgs-unstable.rustfmt
-      pkgs-unstable.clippy # rust linter
+      # pkgs-unstable.rust-analyzer
+      # pkgs-unstable.cargo # rust package manager
+      # pkgs-unstable.rustfmt
+      # pkgs-unstable.clippy # rust linter
 
       #-- golang
-      go
-      gomodifytags
-      iferr # generate error handling code for go
-      impl # generate function implementation for go
-      gotools # contains tools like: godoc, goimports, etc.
-      gopls # go language server
-      delve # go debugger
+      # go
+      # gomodifytags
+      # iferr # generate error handling code for go
+      # impl # generate function implementation for go
+      # gotools # contains tools like: godoc, goimports, etc.
+      # gopls # go language server
+      # delve # go debugger
 
       # -- java
-      jdk17
-      gradle
-      maven
-      spring-boot-cli
-      jdt-language-server
+      # jdk17
+      # gradle
+      # maven
+      # spring-boot-cli
+      # jdt-language-server
 
       #-- zig
-      zls
+      # zls
 
       #-- lua
       stylua
@@ -142,20 +134,20 @@
     ]
     # -*- Lisp like Languages -*-#
     ++ [
-      guile
-      racket-minimal
-      fnlfmt # fennel
-      (
-        if pkgs.stdenv.isDarwin
-        then pkgs.emptyDirectory
-        else pkgs-unstable.akkuPackages.scheme-langserver
-      )
+      # guile
+      # racket-minimal
+      # fnlfmt # fennel
+      # (
+      #   if pkgs.stdenv.isDarwin
+      #   then pkgs.emptyDirectory
+      #   else pkgs-unstable.akkuPackages.scheme-langserver
+      # )
     ]
     ++ [
       proselint # English prose linter
 
       #-- verilog / systemverilog
-      verible
+      # verible
 
       #-- Optional Requirements:
       nodePackages.prettier # common code formatter
