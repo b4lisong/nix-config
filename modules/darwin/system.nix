@@ -28,7 +28,7 @@
 
       # customize dock
       dock = {
-        autohide = true; # automatically hide and show the dock
+        # autohide = true; # automatically hide and show the dock
         show-recents = false; # do not show recent apps in dock
         # do not automatically rearrange spaces based on most recent use.
         mru-spaces = false;
@@ -119,7 +119,7 @@
           # Display have separate spaces
           #   true => disable this feature
           #   false => enable this feature
-          "spans-displays" = false;
+          "spans-displays" = true;
         };
         "com.apple.WindowManager" = {
           EnableStandardClickToShowDesktop = 0; # Click wallpaper to reveal desktop
