@@ -86,6 +86,18 @@ alt-shift-cmd-l = ['join-with right', 'mode main']
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
+# See: https://nikitabobko.github.io/AeroSpace/guide#multiple-monitors
+[workspace-to-monitor-force-assignment]
+1 = ['DELL P2422H (1)', 'Z35P', 'Built-in Retina Display']
+2 = ['DELL P2422H (1)', 'Z35P', 'Built-in Retina Display']
+3 = ['Z35P', 'Built-in Retina Display']
+4 = ['Z35P', 'Built-in Retina Display']
+5 = ['Z35P', 'Built-in Retina Display']
+6 = ['DELL P2422H (2)', 'Z35P', 'Built-in Retina Display']
+7 = ['DELL P2422H (2)', 'Z35P', 'Built-in Retina Display']
+8 = ['Built-in Retina Display', 'Z35P'] 
+9 = ['Built-in Retina Display', 'Z35P'] 
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
