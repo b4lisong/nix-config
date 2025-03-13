@@ -16,17 +16,17 @@
 
     # nerdfonts
     # after 25.05
-    nerd-fonts.symbols-only
-    nerd-fonts.sauce-code-pro
+    # nerd-fonts.symbols-only
+    # nerd-fonts.sauce-code-pro
     # before 25.05
-    #(nerdfonts.override {
-    #  fonts = [
-    #    # symbols only
-    #    "NerdFontsSymbolsOnly"
-    #    # characters
-    #    "SourceCodePro"
-    #  ];
-    #}
+    (nerdfonts.override {
+      fonts = [
+        # symbols only
+        "NerdFontsSymbolsOnly"
+        # characters
+        "SourceCodePro"
+      ];
+    })
     julia-mono
     dejavu_fonts
   ];

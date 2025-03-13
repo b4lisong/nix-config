@@ -209,8 +209,18 @@
       source-sans
       source-serif
 
-      nerd-fonts.symbols-only
-      nerd-fonts.sauce-code-pro
+      # after 25.05
+      #nerd-fonts.symbols-only
+      #nerd-fonts.sauce-code-pro
+
+      (nerdfonts.override {
+        fonts = [
+          # symbols only
+          "NerdFontsSymbolsOnly"
+          # characters
+          "SourceCodePro"
+        ];
+      })
 
       julia-mono
       dejavu_fonts
