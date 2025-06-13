@@ -183,6 +183,7 @@
         fd
         zoxide
         tmux
+        starship
 
         # Editors
         
@@ -316,6 +317,89 @@
       };
 
       /*
+      Modern shell prompt
+      */
+      programs.starship = {
+        enable = true;
+        enableBashIntegration = true;
+        enableZshIntegration = true;
+
+        settings = {
+          # kali linux prompt copy (w/modifications)
+          # Inspo:
+          #   https://gist.githubusercontent.com/mIcHyAmRaNe/a6ee5ca3311d61ae6f181e691643925d/raw/cc26b710fce3c21fe15edf6623be5cd12e4d5a32/starship.toml
+
+          # Inserts a blank line between shell prompts
+          add_newline = true;
+
+          format = ''
+            [┌╴\(](bold green)[$username$os$hostname](bold blue)[\)](bold green)$container $time
+            [|](bold green) $all[└─](bold green) $character
+          '';
+
+          character = {
+            success_symbol = "[❯](bold green)";
+            error_symbol = "[✗](bold red)";
+            vicmd_symbol = "[CMD❮](bold yellow)";
+          };
+
+          username = {
+            style_user = "blue bold";
+            style_root = "red bold";
+            format = "[$user]($style)";
+            disabled = false;
+            show_always = true;
+          };
+
+          hostname = {
+            ssh_only = false;
+            format = "[$ssh_symbol](bold blue)[$hostname](bold blue)";
+            trim_at = ".companyname.com";
+            disabled = false;
+          };
+
+          # No need for env variables as starship provides a way to show your current distro
+          os = {
+            style = "bold white";
+            format = "@[$symbol$arch](style) ";
+            disabled = false;
+          };
+
+          os.symbols = {
+            Macos = "";
+            NixOS = "";
+            Kali = "";
+            Linux = "";
+            Windows = "";
+            Unknown = "";
+          };
+
+          git_branch = {
+            truncation_length = 16;
+            truncation_symbol = "...";
+            disabled = false;
+          };
+
+          git_status = {
+            disabled = false;
+          };
+
+          git_commit = {
+            commit_hash_length = 4;
+            tag_disabled = false;
+            only_detached = false;
+          };
+
+          directory = {
+            truncation_length = 8;
+            truncation_symbol = "…/";
+            truncate_to_repo = true;
+            read_only = "🔒";
+          };
+        };
+      };
+
+      /*
         Additional Program Configurations
         
         Uncomment and configure as needed:
@@ -325,12 +409,6 @@
           enable = true;
           shortcut = "a";
           keyMode = "vi";
-        };
-        
-        # Modern shell prompt
-        programs.starship = {
-          enable = true;
-          enableZshIntegration = true;
         };
         
         # Directory-based development environments
