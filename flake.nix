@@ -70,7 +70,7 @@
           #"spotify"
           #"google-chrome"
           #"1password"
-          cursor
+          "cursor"
         ];
         
         # Regular Homebrew packages (if needed)
