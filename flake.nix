@@ -5,6 +5,20 @@
   - System-level packages and settings via nix-darwin
   - User-level packages and dotfiles via Home Manager
   - Development environment setup
+
+  Current state:
+  - Single flake.nix
+  - Single-machine configuration (macOS/Darwin x86_64)
+
+  TODO:
+  - [ ] Re-factor into:
+    - [ ] Multi-machine/host, multi-OS, multi-arch support
+    - [ ] Inheritable hierarchy with base config (for all machines)
+      - [ ] Darwin (base)
+        - [ ] Machine 1,2,etc.
+      - [ ] Linux (base)
+        - [ ] Machine 4,5,etc.
+
   
   Usage:
     darwin-rebuild switch --flake .
