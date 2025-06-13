@@ -157,10 +157,10 @@
           ".." = "cd ..";
           "..." = "cd ../..";
           
-          # Git shortcuts (if you use git frequently)
-          # gs = "git status";
-          # ga = "git add";
-          # gc = "git commit";
+          # Git shortcuts
+          gs = "git status";
+          ga = "git add";
+          gc = "git commit";
         };
       };
 
