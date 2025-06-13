@@ -249,9 +249,6 @@
           # Number of spaces for automatic indentation
           shiftwidth = 4;
           
-          # Number of spaces inserted when pressing Tab
-          softtabstop = 4;
-          
           # Show line numbers
           number = true;
         };
@@ -262,6 +259,9 @@
           we use extraConfig to include raw vim script
         */
         extraConfig = ''
+          " Number of spaces inserted when pressing Tab
+          set softtabstop=4
+
           " Enable automatic indentation
           set autoindent
           
