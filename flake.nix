@@ -109,6 +109,7 @@
         
         Categories:
         - Essential CLI tools
+        - Editors
         - Development tools
       */
       home.packages = with pkgs; [
@@ -117,6 +118,9 @@
         curl
         tree
         htop
+
+        # Editors
+        code-cursor
         
         /*
           Development Tools (commented out - uncomment as needed)
