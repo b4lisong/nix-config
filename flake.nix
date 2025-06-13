@@ -55,6 +55,23 @@
       # programs.fish.enable = true;
 
       /*
+        System Fonts
+        This enables system-wide font support
+      */
+      fonts.packages = with pkgs; [
+        # Nerd Fonts
+        nerd-fonts.sauce-code-pro
+        nerd-fonts.symbols-only
+        # Icon Fonts
+        font-awesome
+        material-design-icons
+        # Emoji Fonts
+        noto-fonts-emoji
+        # Other Fonts
+        dejavu_fonts
+      ];
+
+      /*
         Homebrew Integration
         
         This enables Homebrew management through nix-darwin.
