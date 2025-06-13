@@ -71,6 +71,7 @@
           #"google-chrome"
           #"1password"
           "cursor"
+          "scroll-reverser"
         ];
         
         # Regular Homebrew packages (if needed)
