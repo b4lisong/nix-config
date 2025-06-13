@@ -54,6 +54,37 @@
       */
       # programs.fish.enable = true;
 
+      /*
+        Homebrew Integration
+        
+        This enables Homebrew management through nix-darwin.
+        Use this for GUI applications that need Spotlight integration.
+      */
+      homebrew = {
+        enable = true;
+        
+        # Install GUI applications via Homebrew casks
+        casks = [
+          #"visual-studio-code"
+          #"discord"
+          #"spotify"
+          #"google-chrome"
+          #"1password"
+          cursor
+        ];
+        
+        # Regular Homebrew packages (if needed)
+        brews = [
+          # "some-package-not-in-nix"
+        ];
+        
+        # Mac App Store apps
+        masApps = {
+          # "App Name" = app-id;
+          # "Xcode" = 497799835;
+        };
+      };
+
       /* Version tracking for system updates */
       system.configurationRevision = self.rev or self.dirtyRev or null;
 
@@ -120,7 +151,6 @@
         htop
 
         # Editors
-        code-cursor
         
         /*
           Development Tools (commented out - uncomment as needed)
