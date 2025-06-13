@@ -72,6 +72,7 @@
           #"1password"
           "cursor"
           "scroll-reverser"
+          "little-snitch"
         ];
         
         # Regular Homebrew packages (if needed)
@@ -151,6 +152,7 @@
         - Essential CLI tools
         - Editors
         - Development tools
+        - System utilities
       */
       home.packages = with pkgs; [
         # Essential tools
