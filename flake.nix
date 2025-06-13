@@ -283,7 +283,7 @@
           */
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.yourusername = homeConfiguration;
+          home-manager.users.balisong = homeConfiguration;
         }
       ];
     };
