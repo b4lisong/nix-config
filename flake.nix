@@ -109,10 +109,18 @@
       nixpkgs.config.allowUnfree = true;
 
       /*
+        Primary User Configuration
+        
+        This sets the primary user for nix-darwin operations.
+        Required for Homebrew and other user-specific features.
+      */
+      system.primaryUser = "balisong";
+
+      /*
         User Account Setup
         Required for Home Manager integration
       */
-      users.users.yourusername = {
+      users.users.balisong = {
         name = "balisong";
         home = "/Users/balisong";
       };
