@@ -71,6 +71,13 @@
       nixpkgs.hostPlatform = "x86_64-darwin";
 
       /*
+        Nixpkgs Configuration
+        
+        allowUnfree: Permits installation of unfree/proprietary software
+      */
+      nixpkgs.config.allowUnfree = true;
+
+      /*
         User Account Setup
         Required for Home Manager integration
       */
