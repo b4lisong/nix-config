@@ -160,6 +160,9 @@
 
         # Editors
         
+        /* Development Tools */
+        # Nix
+        nil
         /*
           Development Tools (commented out - uncomment as needed)
           
