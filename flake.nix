@@ -167,17 +167,22 @@
         They won't be available to other users on the system.
         
         Categories:
-        - Essential CLI tools
+        - CLI tools & system utilities
         - Editors
         - Development tools
-        - System utilities
       */
       home.packages = with pkgs; [
-        # Essential tools
+        # CLI tools & utilities
         git
+        lazygit
         curl
         tree
         htop
+        bat
+        ripgrep
+        fd
+        zoxide
+        tmux
 
         # Editors
         
