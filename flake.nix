@@ -62,6 +62,7 @@
       */
       homebrew = {
         enable = true;
+        onActivation.cleanup = "zap"; # Remove all undefined packages
         
         # Install GUI applications via Homebrew casks
         casks = [
