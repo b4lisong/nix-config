@@ -227,6 +227,70 @@
       };
 
       /*
+        Vim Configuration
+        
+        This replaces your .vimrc file with declarative Home Manager configuration.
+        All your vim settings are now managed by Nix.
+      */
+      programs.vim = {
+        enable = true;
+        
+        /*
+          Vim Settings
+          These correspond to the 'set' commands in your .vimrc
+        */
+        settings = {
+          # Use spaces instead of tabs
+          expandtab = true;
+          
+          # Number of spaces per indentation level
+          tabstop = 4;
+          
+          # Number of spaces for automatic indentation
+          shiftwidth = 4;
+          
+          # Number of spaces inserted when pressing Tab
+          softtabstop = 4;
+          
+          # Show line numbers
+          number = true;
+          
+          # Enable incremental search
+          incsearch = true;
+        };
+        
+        /*
+          Extra Vim Configuration
+          For settings that don't have direct Home Manager options,
+          we use extraConfig to include raw vim script
+        */
+        extraConfig = ''
+          " Enable automatic indentation
+          set autoindent
+          
+          " Enable syntax highlighting
+          syntax on
+          
+          " Enable filetype detection, load any filetype-specific plugins, indentation, etc.
+          filetype plugin indent on
+          
+          " Highlight the current line
+          set cursorline
+          
+          " Enable highlighting all the matches in incsearch mode
+          " But don't enable hlsearch always
+          augroup vimrc-incsearch-highlight
+            autocmd!
+            autocmd CmdlineEnter [/\?] :set hlsearch
+            autocmd CmdlineLeave [/\?] :set nohlsearch
+          augroup END
+          
+          " Set colorscheme (will be available after we create the color file)
+          " colorscheme catppuccin_mocha
+        '';
+      };
+
+      /*
         Additional Program Configurations
         
         Uncomment and configure as needed:
