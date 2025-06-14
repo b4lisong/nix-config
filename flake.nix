@@ -103,6 +103,10 @@
           Don't change unless you're upgrading to a new nix-darwin release
         */
         stateVersion = 6;
+
+        defaults = {
+            menuExtraClock.Show24Hour = true;
+        };
       };
 
       /*
