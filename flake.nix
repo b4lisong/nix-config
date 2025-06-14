@@ -147,6 +147,15 @@
                 FXDefaultSearchScope = "SCcf";      # Search current folder by default
                 FXPreferredViewStyle = "Nlsv";      # Default view: "icnv"=icon, "Nlsv"=list, "clmv"=column, "Flwv"=gallery
             };
+
+            # Trackpad & Mouse
+            trackpad = {
+                Clicking = true; # enable tap-to-click
+                TrackpadRightClick = true; # enable two-finger right click
+                TrackpadThreeFingerDrag = true; # enable three-finger drag
+            };
+            # Mouse tracking speed
+            ".GlobalPreferences"."com.apple.mouse.scaling" = 1.0;
         };
       };
 
