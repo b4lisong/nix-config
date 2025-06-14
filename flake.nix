@@ -324,6 +324,11 @@
             autocmd CmdlineEnter [/\?] :set hlsearch
             autocmd CmdlineLeave [/\?] :set nohlsearch
           augroup END
+
+          " Custom key bindings for faster vertical movement
+          " J moves down 5 lines, K moves up 5 lines
+          nnoremap J 5j
+          nnoremap K 5k
           
           " Set colorscheme (will be available after we create the color file)
           " colorscheme catppuccin_mocha
