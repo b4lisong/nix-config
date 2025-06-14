@@ -114,6 +114,27 @@
             loginwindow.LoginwindowText = "おかえり、お兄ちゃん";
 
             menuExtraClock.Show24Hour = true; # show 24-hour clock
+
+            # Customize dock
+            dock = {
+                autohide = true; # automatically hide and show the dock
+                show-recents = false; # do not show recent apps in dock
+                # do not automatically rearrange spaces based on most recent use.
+                mru-spaces = false;
+                expose-group-apps = true; # Group windows by application
+                showhidden = true;
+                autohide-delay = 0.0;              # Remove delay before showing dock
+                autohide-time-modifier = 0.2;      # Speed up dock animation
+                orientation = "bottom";             # Dock position: "bottom", "left", "right"
+                tilesize = 48;                     # Icon size (16-128)
+                magnification = true;              # Enable icon magnification on hover
+                largesize = 64;                    # Magnified icon size
+                minimize-to-application = true;     # Minimize windows into app icon
+                persistent-apps = [                # Apps to keep in dock
+                  "/Applications/Safari.app"
+                  "/System/Applications/Terminal.app"
+                ];
+            };
         };
       };
 
