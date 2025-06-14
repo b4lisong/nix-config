@@ -22,6 +22,8 @@
   
   Usage:
     darwin-rebuild switch --flake .
+    nix develop                      # Enter dev environment manually
+    direnv allow                     # Auto-enter dev environment
 */
 {
   description = "Example nix-darwin system flake with Home Manager";
@@ -44,6 +46,15 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }:
   let
+    # System-agnostic configuration
+    systems = [ "x86_64-darwin" "aarch64-darwin" ];
+    
+    # Helper to create package sets for each system
+    forAllSystems = nixpkgs.lib.genAttrs systems;
+    
+    # Get nixpkgs for a specific system
+    nixpkgsFor = system: nixpkgs.legacyPackages.${system};
+
     /*
       System-Level Configuration Function
       
@@ -511,6 +522,17 @@
       };
 
       /*
+        Direnv Configuration
+        
+        Enable direnv for automatic environment management
+      */
+      programs.direnv = {
+        enable = true;
+        enableZshIntegration = true;
+        nix-direnv.enable = true;
+      };
+
+      /*
         Additional Program Configurations
         
         Uncomment and configure as needed:
@@ -522,14 +544,6 @@
           keyMode = "vi";
         };
         
-        # Directory-based development environments
-        programs.direnv = {
-          enable = true;
-          enableZshIntegration = true;
-          nix-direnv.enable = true;
-        };
-      */
-
       /* Allow Home Manager to manage itself */
       programs.home-manager.enable = true;
 
@@ -539,6 +553,53 @@
       */
       home.stateVersion = "25.05";
     };
+
+    /*
+      Development Shell Factory Function
+      Creates a development shell for any system (for working on this nix-config)
+    */
+    mkDevShell = system:
+      let pkgs = nixpkgsFor system;
+      in pkgs.mkShell {
+        buildInputs = with pkgs; [
+          # Nix development tools
+          nixpkgs-fmt      # Format .nix files
+          statix           # Linter for Nix
+          deadnix          # Find unused Nix code
+          nix-tree         # Visualize dependency trees
+          manix            # Search Nix documentation
+          
+          # Helpful utilities for config work
+          jq               # JSON processing (for flake.lock)
+          git              # Version control
+        ];
+        
+        shellHook = ''
+          echo "🔧 Nix Configuration Development Environment"
+          echo "Working on: $(basename $PWD)"
+          echo "System: $(scutil --get LocalHostName) (${system})"
+          echo ""
+          echo "Available tools:"
+          echo "  nixpkgs-fmt  - Format Nix files"
+          echo "  statix       - Lint Nix files"
+          echo "  deadnix      - Find dead code"
+          echo "  manix        - Search Nix docs"
+          echo ""
+          echo "Useful commands:"
+          echo "  sudo darwin-rebuild switch --flake ."
+          echo "  sudo darwin-rebuild check --flake ."
+          echo "  sudo darwin-rebuild --list-generations"
+          echo "  nix flake update"
+          echo ""
+          
+          # Set up convenient aliases (only in this dev shell)
+          alias rebuild="darwin-rebuild switch --flake ."
+          alias check="darwin-rebuild check --flake ."
+          alias update="nix flake update"
+          alias fmt="nixpkgs-fmt *.nix"
+          alias lint="statix check ."
+        '';
+      };
   in
   {
     /*
@@ -569,5 +630,13 @@
         }
       ];
     };
+
+    /*
+      Development Shells for All Systems
+      This creates development environments for both Intel and Apple Silicon Macs
+    */
+    devShells = forAllSystems (system: {
+      default = mkDevShell system;
+    });
   };
 }
