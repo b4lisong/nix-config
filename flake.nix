@@ -91,7 +91,12 @@
         All configuration options are documented here:
         https://nix-darwin.github.io/nix-darwin/manual/index.html
       */
-      # Use TouchID for sudo
+      
+      /*
+        Use TouchID for sudo
+        note: the following command needs to be run for this to work when using DisplayLink
+        /usr/bin/defaults write ~/Library/Preferences/com.apple.security.authorization.plist ignoreArd -bool TRUE
+      */
       security.pam.services.sudo_local.touchIdAuth = true;
 
       system = {
