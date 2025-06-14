@@ -132,7 +132,8 @@
                 minimize-to-application = true;     # Minimize windows into app icon
                 persistent-apps = [                # Apps to keep in dock
                   "/Applications/Safari.app"
-                  "/System/Applications/Terminal.app"
+                  "/Applications/Notes.app"
+                  "/Applications/Cursor.app"
                 ];
             };
         };
