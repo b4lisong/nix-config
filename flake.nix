@@ -156,6 +156,11 @@
             };
             # Mouse tracking speed
             ".GlobalPreferences"."com.apple.mouse.scaling" = 1.0;
+
+            # Menubar and control center
+            controlcenter = {
+                Sound = true; # Keep sound options in menu bar
+            };
         };
       };
 
