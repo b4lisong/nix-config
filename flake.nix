@@ -86,6 +86,15 @@
       ];
 
       /*
+        macOS System Settings
+
+        All configuration options are documented here:
+        https://nix-darwin.github.io/nix-darwin/manual/index.html
+      */
+      # Use TouchID for sudo
+      security.pam.services.sudo_local.touchIdAuth = true;
+
+      /*
         Homebrew Integration
         
         This enables Homebrew management through nix-darwin.
