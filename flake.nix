@@ -105,7 +105,10 @@
         stateVersion = 6;
 
         defaults = {
-            menuExtraClock.Show24Hour = true;
+            # Show specific text as a greeting at login
+            loginwindow.LoginwindowText = "おかえり、お兄ちゃん";
+
+            menuExtraClock.Show24Hour = true; # show 24-hour clock
         };
       };
 
