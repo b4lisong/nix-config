@@ -94,6 +94,17 @@
       # Use TouchID for sudo
       security.pam.services.sudo_local.touchIdAuth = true;
 
+      system = {
+        /* Version tracking for system updates */
+        configurationRevision = self.rev or self.dirtyRev or null;
+
+        /*
+          Compatibility Version
+          Don't change unless you're upgrading to a new nix-darwin release
+        */
+        stateVersion = 6;
+      };
+
       /*
         Homebrew Integration
         
@@ -128,14 +139,7 @@
         };
       };
 
-      /* Version tracking for system updates */
-      system.configurationRevision = self.rev or self.dirtyRev or null;
-
-      /*
-        Compatibility Version
-        Don't change unless you're upgrading to a new nix-darwin release
-      */
-      system.stateVersion = 6;
+      
 
       /*
         Target Platform
