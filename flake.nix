@@ -161,6 +161,26 @@
             controlcenter = {
                 Sound = true; # Keep sound options in menu bar
             };
+
+            # Additional customization via NSGlobalDomain
+            NSGlobalDomain = {
+                AppleInterfaceStyle = "Dark"; # dark mode
+                AppleKeyboardUIMode = 3; # Mode 3 enables full keyboard control.
+                ApplePressAndHoldEnabled = true; # enable press and hold
+                InitialKeyRepeat = 15; # Delay before key repeat starts (lower = faster)
+                KeyRepeat = 2;                      # Key repeat rate (lower = faster)
+                AppleShowAllExtensions = true;      # Show all file extensions
+                AppleShowScrollBars = "Automatic";  # "WhenScrolling", "Automatic", "Always"
+                NSNavPanelExpandedStateForSaveMode = true;  # Expand save panel by default
+                NSNavPanelExpandedStateForSaveMode2 = true; # Expand save panel by default
+                PMPrintingExpandedStateForPrint = true;     # Expand print panel by default
+                PMPrintingExpandedStateForPrint2 = true;    # Expand print panel by default
+                NSAutomaticCapitalizationEnabled = false; # disable auto capitalization
+                NSAutomaticDashSubstitutionEnabled = false; # disable auto dash substitution
+                NSAutomaticPeriodSubstitutionEnabled = false; # disable auto period substitution
+                NSAutomaticQuoteSubstitutionEnabled = false; # disable auto quote substitution
+                NSAutomaticSpellingCorrectionEnabled = false; # disable auto spelling correction
+            };
         };
       };
 
