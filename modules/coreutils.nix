@@ -38,8 +38,6 @@
     # Text processing and manipulation
     jq                # JSON processor and formatter
     yq                # YAML/XML processor (like jq for YAML)
-    sed               # Stream editor
-    awk               # Text processing language
     
     # System monitoring and process management
     htop              # Interactive process viewer (better than top)
