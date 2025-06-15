@@ -1,5 +1,9 @@
 { config, lib, pkgs, myVars, ... }:
 
+let
+  # Import the master starship configuration from our organized configs
+  starshipConfig = import ../configs/home/programs/starship.nix;
+in
 {
   /*
     Base Home Manager Configuration
@@ -73,6 +77,16 @@
         # Set up any user-specific environment
         export PERSONAL_CONFIG_DIR="$HOME/.config"
       '';
+    };
+
+    # Enable and configure starship using Home Manager's built-in module
+    starship = {
+      enable = true;
+      enableZshIntegration = true;
+      enableBashIntegration = false;
+
+      # Use our imported starship configuration
+      settings = starshipConfig;
     };
 
     # Git configuration (user-specific, complements system git)
