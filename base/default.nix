@@ -15,7 +15,7 @@ in
     base/default.nix (this file)
     ├── systems/darwin/default.nix
     ├── systems/nixos/default.nix
-    └── hosts/*
+    └── hosts/*/
 
     All machines inherit these settings and can override them as needed.
   */
@@ -124,19 +124,11 @@ in
     /*
       Global Program Configuration
       Basic program settings that should be consistent across all machines
+      
+      Note: nix-darwin has limited system-level program options compared to NixOS.
+      Many configurations are handled via shell initialization or Home Manager.
     */
     programs = {
-      # Git - Essential for flakes and development
-      git = {
-        enable = true;
-        config = {
-          init.defaultBranch = vars.git.defaultBranch;
-          pull.rebase = vars.git.pullRebase;
-          user.name = vars.git.userName;
-          user.email = vars.git.userEmail;
-        };
-      };
-
       # Zsh - Modern shell with basic configuration
       zsh = {
         enable = true;
@@ -183,6 +175,15 @@ in
           ignoreSpace = true;
           expireDuplicatesFirst = true;
         };
+
+        # Shell initialization for git configuration
+        interactiveShellInit = ''
+          # Configure git globally
+          git config --global init.defaultBranch "${vars.git.defaultBranch}"
+          git config --global pull.rebase ${if vars.git.pullRebase then "true" else "false"}
+          git config --global user.name "${vars.git.userName}"
+          git config --global user.email "${vars.git.userEmail}"
+        '';
       };
 
       # Vim - Basic editor configuration that works everywhere
@@ -261,7 +262,7 @@ in
     /*
       Placeholder for future base configuration
       Items that might be added here later:
-      - More aliases and shell configuration
+      - Common aliases and shell configuration
       - Basic networking settings
       - Shared directory structure
       - Common environment variables
