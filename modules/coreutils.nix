@@ -70,53 +70,6 @@
   ];
 
   /*
-    Shell Integration and Aliases
-    
-    Configure shell aliases that work well with the modern tools above.
-    These aliases provide a better default experience while maintaining
-    compatibility with standard Unix commands.
-  */
-  programs.zsh.shellAliases = lib.mkMerge [
-    # Modern tool replacements (only if tools are available)
-    (lib.mkIf (builtins.elem pkgs.bat config.environment.systemPackages) {
-      cat = "bat --paging=never";  # Use bat but don't page for small files
-    })
-    
-    (lib.mkIf (builtins.elem pkgs.eza config.environment.systemPackages) {
-      ls = "eza --icons";          # Use eza with icons
-      ll = "eza -l --icons";       # Long format with icons
-      la = "eza -la --icons";      # Long format with hidden files
-      tree = "eza --tree";         # Tree view using eza
-    })
-    
-    (lib.mkIf (builtins.elem pkgs.fd config.environment.systemPackages) {
-      find = "fd";                 # Use fd as find replacement
-    })
-    
-    # Useful shortcuts regardless of available tools
-    {
-      # Quick directory navigation
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      "...." = "cd ../../..";
-      
-      # Safety aliases
-      rm = "rm -i";               # Prompt before removing files
-      cp = "cp -i";               # Prompt before overwriting files
-      mv = "mv -i";               # Prompt before overwriting files
-      
-      # Convenience aliases
-      h = "history";
-      j = "jobs -l";
-      grep = "grep --color=auto";
-      
-      # System information
-      ports = "lsof -i";          # Show what's using network ports
-      psg = "ps aux | grep";      # Search running processes
-    }
-  ];
-
-  /*
     Environment Variables
     
     Set up environment variables that enhance the experience
@@ -124,7 +77,7 @@
   */
   environment.variables = {
     # Better paging with bat
-    PAGER = lib.mkIf (builtins.elem pkgs.bat config.environment.systemPackages) "bat";
+    PAGER = "bat";
     
     # Enable colored output for various tools
     CLICOLOR = "1";
@@ -146,46 +99,80 @@
   };
 
   /*
-    Program Configuration
+    Shell Integration and Configuration
     
-    Configure programs that are included in this module for optimal
-    out-of-the-box experience.
-    
-    Note: nix-darwin has very limited system-level program options.
-    Most tools are configured via shell initialization.
+    Configure shell integration for the tools since nix-darwin doesn't
+    have extensive program configuration options.
   */
-  programs = {
-    # No system-level program configurations for nix-darwin
-    # All tool configuration is handled via shell init below
+  programs.zsh = {
+    # Modern tool aliases
+    shellAliases = {
+      # Modern tool replacements
+      cat = "bat --paging=never";  # Use bat but don't page for small files
+      ls = "eza --icons";          # Use eza with icons
+      ll = "eza -l --icons";       # Long format with icons
+      la = "eza -la --icons";      # Long format with hidden files
+      tree = "eza --tree";         # Tree view using eza
+      find = "fd";                 # Use fd as find replacement
+      
+      # Quick directory navigation
+      ".." = "cd ..";
+      "..." = "cd ../..";
+      "...." = "cd ../../..";
+      
+      # Safety aliases
+      rm = "rm -i";               # Prompt before removing files
+      cp = "cp -i";               # Prompt before overwriting files
+      mv = "mv -i";               # Prompt before overwriting files
+      
+      # Convenience aliases
+      h = "history";
+      j = "jobs -l";
+      grep = "grep --color=auto";
+      
+      # System information
+      ports = "lsof -i";          # Show what's using network ports
+      psg = "ps aux | grep";      # Search running processes
+    };
+    
+    # Shell initialization for tools that need setup
+    interactiveShellInit = lib.mkAfter ''
+      # Initialize zoxide (smart cd replacement)
+      if command -v zoxide >/dev/null 2>&1; then
+        eval "$(zoxide init zsh --cmd cd)"
+      fi
+      
+      # Configure fzf if available
+      if command -v fzf >/dev/null 2>&1; then
+        # Set default command to use fd
+        export FZF_DEFAULT_COMMAND="fd --type f"
+        
+        # Set default options
+        export FZF_DEFAULT_OPTS="--height 40% --border --layout=reverse --inline-info"
+        
+        # Key bindings for fzf (try to source if available)
+        for fzf_completion in \
+          "/run/current-system/sw/share/fzf/completion.zsh" \
+          "/usr/local/share/zsh/site-functions/_fzf" \
+          "$(brew --prefix 2>/dev/null)/share/zsh/site-functions/_fzf" 2>/dev/null
+        do
+          if [[ -f "$fzf_completion" ]]; then
+            source "$fzf_completion"
+            break
+          fi
+        done
+        
+        for fzf_keybindings in \
+          "/run/current-system/sw/share/fzf/key-bindings.zsh" \
+          "/usr/local/share/fzf/shell/key-bindings.zsh" \
+          "$(brew --prefix 2>/dev/null)/share/fzf/shell/key-bindings.zsh" 2>/dev/null
+        do
+          if [[ -f "$fzf_keybindings" ]]; then
+            source "$fzf_keybindings"
+            break
+          fi
+        done
+      fi
+    '';
   };
-
-  /*
-    Shell Integration for Tools
-    
-    Configure shell initialization for tools since nix-darwin doesn't
-    have system-level program options for most tools.
-  */
-  programs.zsh.interactiveShellInit = lib.mkAfter ''
-    # Initialize zoxide (smart cd replacement)
-    if command -v zoxide >/dev/null 2>&1; then
-      eval "$(zoxide init zsh --cmd cd)"
-    fi
-    
-    # Configure fzf if available
-    if command -v fzf >/dev/null 2>&1; then
-      # Set default command to use fd
-      export FZF_DEFAULT_COMMAND="fd --type f"
-      
-      # Set default options
-      export FZF_DEFAULT_OPTS="--height 40% --border --layout=reverse --inline-info"
-      
-      # Key bindings for fzf (if available)
-      if [[ -f "$(fzf-share)/key-bindings.zsh" ]]; then
-        source "$(fzf-share)/key-bindings.zsh"
-      fi
-      if [[ -f "$(fzf-share)/completion.zsh" ]]; then
-        source "$(fzf-share)/completion.zsh"
-      fi
-    fi
-  '';
 }

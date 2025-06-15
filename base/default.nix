@@ -42,9 +42,6 @@ in
         
         # Optimize store and enable auto-optimization
         auto-optimise-store = true;
-        
-        # Allow unfree packages (for things like Discord, Spotify, etc.)
-        # This will be inherited by nixpkgs.config.allowUnfree
       };
       
       # Garbage collection - keep system clean
@@ -62,11 +59,6 @@ in
     nixpkgs.config = {
       # Allow unfree/proprietary software
       allowUnfree = true;
-      
-      # Allow packages with broken/insecure status if needed
-      # (Usually not needed, but can be enabled per-host if required)
-      # allowBroken = false;
-      # allowInsecure = false;
     };
 
     /*
@@ -187,32 +179,50 @@ in
     };
 
     /*
-      Global Program Configuration
-      Basic program settings that should be consistent across all machines
-      
-      Note: nix-darwin has limited system-level program options compared to NixOS.
-      Many configurations are handled via shell initialization or Home Manager.
+      Program Configuration
+      Using nix-darwin's actual supported options
     */
     programs = {
-      # Zsh - Modern shell with basic configuration
+      # Zsh - using nix-darwin's actual option names
       zsh = {
         enable = true;
         enableCompletion = true;
-        autosuggestions.enable = true;
-        syntaxHighlighting.enable = true;
+        enableAutosuggestions = true;        # Note: different from NixOS
+        enableSyntaxHighlighting = true;     # Note: different from NixOS
         
-        # Basic shell options that improve usability
-        setOptions = [
-          "autocd"              # Change directory just by typing its name
-          "interactivecomments" # Allow comments in interactive mode
-          "magicequalsubst"     # Enable filename expansion for arguments
-          "nonomatch"           # Hide error message if no match for pattern
-          "notify"              # Report status of background jobs immediately
-          "numericglobsort"     # Sort filenames numerically when it makes sense
-          "promptsubst"         # Enable command substitution in prompt
-        ];
-
-        # Essential aliases that should be available everywhere
+        # Shell initialization for git, starship, and custom settings
+        shellInit = ''
+          # Configure git globally
+          git config --global init.defaultBranch "${vars.git.defaultBranch}"
+          git config --global pull.rebase ${if vars.git.pullRebase then "true" else "false"}
+          git config --global user.name "${vars.git.userName}"
+          git config --global user.email "${vars.git.userEmail}"
+        '';
+        
+        interactiveShellInit = ''
+          # Initialize starship prompt if available
+          if command -v starship >/dev/null 2>&1; then
+            eval "$(starship init zsh)"
+          fi
+          
+          # Set up history options
+          setopt autocd              # Change directory just by typing its name
+          setopt interactivecomments # Allow comments in interactive mode
+          setopt magicequalsubst     # Enable filename expansion for arguments
+          setopt nonomatch           # Hide error message if no match for pattern
+          setopt notify              # Report status of background jobs immediately
+          setopt numericglobsort     # Sort filenames numerically when it makes sense
+          setopt promptsubst         # Enable command substitution in prompt
+          
+          # History settings
+          HISTSIZE=1000
+          SAVEHIST=2000
+          setopt hist_ignore_dups
+          setopt hist_ignore_space
+          setopt hist_expire_dups_first
+        '';
+        
+        # Essential aliases
         shellAliases = {
           # Force zsh to show complete history
           history = "history 0";
@@ -231,50 +241,10 @@ in
           gd = "git diff";
           gdc = "git diff --cached";
         };
-
-        # History configuration
-        history = {
-          size = 1000;
-          save = 2000;
-          ignoreDups = true;
-          ignoreSpace = true;
-          expireDuplicatesFirst = true;
-        };
-
-        # Shell initialization for git configuration and starship
-        interactiveShellInit = ''
-          # Configure git globally
-          git config --global init.defaultBranch "${vars.git.defaultBranch}"
-          git config --global pull.rebase ${if vars.git.pullRebase then "true" else "false"}
-          git config --global user.name "${vars.git.userName}"
-          git config --global user.email "${vars.git.userEmail}"
-          
-          # Initialize starship prompt if available
-          if command -v starship >/dev/null 2>&1; then
-            eval "$(starship init zsh)"
-          fi
-        '';
       };
 
-      # Vim - Basic editor configuration that works everywhere
-      vim = {
-        enable = true;
-      };
+      # Vim - minimal configuration since nix-darwin has limited vim options
+      vim.enable = true;
     };
-
-    /*
-      Security and Privacy
-      Basic security settings that should apply everywhere
-    */
-    # This section will be expanded by OS-specific configurations
-    
-    /*
-      Placeholder for future base configuration
-      Items that might be added here later:
-      - Common aliases and shell configuration
-      - Basic networking settings
-      - Shared directory structure
-      - Common environment variables
-    */
   };
 }
