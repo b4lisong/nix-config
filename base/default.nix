@@ -176,13 +176,18 @@ in
           expireDuplicatesFirst = true;
         };
 
-        # Shell initialization for git configuration
+        # Shell initialization for git configuration and starship
         interactiveShellInit = ''
           # Configure git globally
           git config --global init.defaultBranch "${vars.git.defaultBranch}"
           git config --global pull.rebase ${if vars.git.pullRebase then "true" else "false"}
           git config --global user.name "${vars.git.userName}"
           git config --global user.email "${vars.git.userEmail}"
+          
+          # Initialize starship prompt if available
+          if command -v starship >/dev/null 2>&1; then
+            eval "$(starship init zsh)"
+          fi
         '';
       };
 
@@ -225,33 +230,35 @@ in
           inoremap jk <Esc>
         '';
       };
-
-      # Starship - Modern prompt that works across all shells
-      starship = {
-        enable = true;
-        settings = {
-          # Keep prompt minimal but informative at base level
-          add_newline = true;
-          
-          # Simple format - can be enhanced in modules or home manager
-          format = "$all$character";
-          
-          character = {
-            success_symbol = "[❯](bold green)";
-            error_symbol = "[✗](bold red)";
-          };
-          
-          # Show git information when in git repos
-          git_branch = {
-            disabled = false;
-          };
-          
-          git_status = {
-            disabled = false;
-          };
-        };
-      };
     };
+
+    /*
+      Starship Configuration
+      
+      Since nix-darwin doesn't have programs.starship, we configure it via
+      environment variables and config files.
+    */
+    environment.etc."starship.toml".text = ''
+      # Basic starship configuration for all machines
+      add_newline = true
+      
+      # Simple format - can be enhanced in modules or home manager
+      format = "$all$character"
+      
+      [character]
+      success_symbol = "[❯](bold green)"
+      error_symbol = "[✗](bold red)"
+      
+      # Show git information when in git repos
+      [git_branch]
+      disabled = false
+      
+      [git_status]
+      disabled = false
+    '';
+
+    # Set starship config path
+    environment.variables.STARSHIP_CONFIG = "/etc/starship.toml";
 
     /*
       Security and Privacy
