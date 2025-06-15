@@ -96,6 +96,84 @@ in
     ];
 
     /*
+      Environment Variables
+      Global environment settings that should be consistent
+    */
+    environment.variables = {
+      # Default editor
+      EDITOR = vars.preferences.editor;
+      VISUAL = vars.preferences.editor;
+      
+      # Improve nix command output
+      NIXPKGS_ALLOW_UNFREE = "1";
+      
+      # Set vim to use system vimrc
+      VIMINIT = "source /etc/vimrc";
+      
+      # Set starship config path
+      STARSHIP_CONFIG = "/etc/starship.toml";
+    };
+
+    /*
+      System Configuration Files
+      Create configuration files for programs that don't have dedicated
+      nix-darwin program options.
+    */
+    environment.etc = {
+      # Vim configuration
+      "vimrc".text = ''
+        " Essential vim settings
+        set expandtab         " Use spaces instead of tabs
+        set tabstop=4         " Number of spaces per indentation level
+        set shiftwidth=4      " Number of spaces for automatic indentation
+        set number            " Show line numbers
+        
+        " Basic usability settings
+        set softtabstop=4
+        set autoindent
+        syntax on
+        filetype plugin indent on
+        set cursorline
+        set incsearch
+        
+        " Search highlighting that only shows during search
+        augroup vimrc-incsearch-highlight
+          autocmd!
+          autocmd CmdlineEnter [/\?] :set hlsearch
+          autocmd CmdlineLeave [/\?] :set nohlsearch
+        augroup END
+        
+        " Custom key bindings for faster vertical movement
+        " J moves down 5 lines, K moves up 5 lines
+        nnoremap J 5j
+        nnoremap K 5k
+        
+        " Map 'jk' to ESC for faster mode switching
+        inoremap jk <Esc>
+      '';
+
+      # Starship configuration
+      "starship.toml".text = ''
+        # Basic starship configuration for all machines
+        add_newline = true
+        
+        # Simple format - can be enhanced in modules or home manager
+        format = "$all$character"
+        
+        [character]
+        success_symbol = "[❯](bold green)"
+        error_symbol = "[✗](bold red)"
+        
+        # Show git information when in git repos
+        [git_branch]
+        disabled = false
+        
+        [git_status]
+        disabled = false
+      '';
+    };
+
+    /*
       User Account Configuration
       Set up the primary user account with basic settings
     */
@@ -185,75 +263,6 @@ in
     };
 
     /*
-      Vim Configuration via System Files
-      
-      Since nix-darwin has very limited vim configuration options,
-      we create a system-wide vimrc file directly.
-    */
-    environment.etc."vimrc".text = ''
-      " Essential vim settings
-      set expandtab         " Use spaces instead of tabs
-      set tabstop=4         " Number of spaces per indentation level
-      set shiftwidth=4      " Number of spaces for automatic indentation
-      set number            " Show line numbers
-      
-      " Basic usability settings
-      set softtabstop=4
-      set autoindent
-      syntax on
-      filetype plugin indent on
-      set cursorline
-      set incsearch
-      
-      " Search highlighting that only shows during search
-      augroup vimrc-incsearch-highlight
-        autocmd!
-        autocmd CmdlineEnter [/\?] :set hlsearch
-        autocmd CmdlineLeave [/\?] :set nohlsearch
-      augroup END
-      
-      " Custom key bindings for faster vertical movement
-      " J moves down 5 lines, K moves up 5 lines
-      nnoremap J 5j
-      nnoremap K 5k
-      
-      " Map 'jk' to ESC for faster mode switching
-      inoremap jk <Esc>
-    '';
-
-    # Set vim to use system vimrc
-    environment.variables.VIMINIT = "source /etc/vimrc";
-    };
-
-    /*
-      Starship Configuration
-      
-      Since nix-darwin doesn't have programs.starship, we configure it via
-      environment variables and config files.
-    */
-    environment.etc."starship.toml".text = ''
-      # Basic starship configuration for all machines
-      add_newline = true
-      
-      # Simple format - can be enhanced in modules or home manager
-      format = "$all$character"
-      
-      [character]
-      success_symbol = "[❯](bold green)"
-      error_symbol = "[✗](bold red)"
-      
-      # Show git information when in git repos
-      [git_branch]
-      disabled = false
-      
-      [git_status]
-      disabled = false
-    '';
-
-    # Set starship config path
-    environment.variables.STARSHIP_CONFIG = "/etc/starship.toml";
-
-    /*
       Security and Privacy
       Basic security settings that should apply everywhere
     */
@@ -267,4 +276,5 @@ in
       - Shared directory structure
       - Common environment variables
     */
+  };
 }
