@@ -5,3 +5,8 @@
 4. Set nixpkgs.hostPlatform = "x86_64-darwin";
 5. sudo nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake .
 6. sudo darwin-rebuild switch --flake .
+
+---
+TODO:
+-[] evaluation warning: 'vam' attribute is deprecated. Use 'packages' instead in your vim configuration
+-[] evaluation warning: `programs.zsh.initExtra` is deprecated, use `programs.zsh.initContent` instead.
