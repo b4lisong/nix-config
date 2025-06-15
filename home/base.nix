@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, myVars, ... }:
 
 {
   /*
@@ -17,8 +17,8 @@
     user-level settings, dotfiles, and personal applications.
   */
 
-  # Access to system variables through the system configuration
-  # Variables are available as config.myVars.* thanks to our base system config
+  # Access to system variables through extraSpecialArgs
+  # Variables are available as myVars.* (passed from system config)
 
   /*
     Essential Home Manager Settings
@@ -28,8 +28,8 @@
   home.stateVersion = "25.05";
 
   # Basic user information (should match system user config)
-  home.username = config.myVars.user.username;
-  home.homeDirectory = "/Users/${config.myVars.user.username}";
+  home.username = myVars.user.username;
+  home.homeDirectory = "/Users/${myVars.user.username}";
 
   /*
     User-Specific Packages
@@ -78,16 +78,16 @@
     # Git configuration (user-specific, complements system git)
     git = {
       enable = true;
-      userName = config.myVars.git.userName;
-      userEmail = config.myVars.git.userEmail;
+      userName = myVars.git.userName;
+      userEmail = myVars.git.userEmail;
       
       # User-specific git settings
       extraConfig = {
-        init.defaultBranch = config.myVars.git.defaultBranch;
-        pull.rebase = config.myVars.git.pullRebase;
+        init.defaultBranch = myVars.git.defaultBranch;
+        pull.rebase = myVars.git.pullRebase;
         
         # Personal git preferences
-        core.editor = config.myVars.preferences.editor;
+        core.editor = myVars.preferences.editor;
         diff.tool = "vimdiff";
         merge.tool = "vimdiff";
         

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, myVars, ... }:
 
 {
   /*
@@ -82,7 +82,7 @@
   home.file = {
     # macOS-specific configuration files can go here
     # Example: ".hushlogin" to suppress login message
-    # ".hushlogin".text = "";
+    ".hushlogin".text = "";
   };
 
   /*

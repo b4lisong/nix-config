@@ -35,9 +35,9 @@
     # Install packages to /etc/profiles instead of ~/.nix-profile
     useUserPackages = true;
     
-    # Make system variables available to Home Manager
+    # Pass variables directly to Home Manager modules
     extraSpecialArgs = { 
-      inherit (config) myVars; 
+      myVars = config.myVars;
     };
     
     # User-specific configuration
