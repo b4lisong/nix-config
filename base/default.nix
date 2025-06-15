@@ -39,10 +39,11 @@ in
       # Enable flakes and the new nix command interface
       settings = {
         experimental-features = [ "nix-command" "flakes" ];
-      };
-
-      optimise = {
-        automatic = true;
+        
+        # Optimize store automatically
+        optimise = {
+          automatic = true;
+        };
       };
       
       # Garbage collection - keep system clean
@@ -93,9 +94,7 @@ in
       Global environment settings that should be consistent
     */
     environment.variables = {
-      # Default editor
-      EDITOR = vars.preferences.editor;
-      VISUAL = vars.preferences.editor;
+      # Note: EDITOR and VISUAL are set by programs.vim.enable automatically
       
       # Improve nix command output
       NIXPKGS_ALLOW_UNFREE = "1";
