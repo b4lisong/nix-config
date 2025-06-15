@@ -39,9 +39,10 @@ in
       # Enable flakes and the new nix command interface
       settings = {
         experimental-features = [ "nix-command" "flakes" ];
-        
-        # Optimize store and enable auto-optimization
-        auto-optimise-store = true;
+      };
+
+      optimise = {
+        automatic = true;
       };
       
       # Garbage collection - keep system clean
