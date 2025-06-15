@@ -312,8 +312,6 @@
           # Editors
 
           /* Development Tools */
-          # Nix
-          nil
         ];
       };
 
@@ -553,6 +551,7 @@
           deadnix          # Find unused Nix code
           nix-tree         # Visualize dependency trees
           manix            # Search Nix documentation
+          nil              # Nix LSP
           
           # Helpful utilities for config work
           jq               # JSON processing (for flake.lock)
