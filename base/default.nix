@@ -84,9 +84,9 @@ in
       unzip             # Archive extraction
       zip               # Archive creation
       
-      # Shell and prompt
+      # Shell
       zsh               # Modern shell
-      starship          # Cross-shell prompt
+      # Note: starship temporarily removed to fix initialization issue
     ];
 
     /*
@@ -102,8 +102,7 @@ in
       # Set vim to use system vimrc
       VIMINIT = "source /etc/vimrc";
       
-      # Set starship config path
-      STARSHIP_CONFIG = "/etc/starship.toml";
+      # Note: STARSHIP_CONFIG temporarily removed with starship
     };
 
     /*
@@ -144,25 +143,7 @@ in
         inoremap jk <Esc>
       '';
 
-      # Starship configuration
-      "starship.toml".text = ''
-        # Basic starship configuration for all machines
-        add_newline = true
-        
-        # Simple format - can be enhanced in modules or home manager
-        format = "$all$character"
-        
-        [character]
-        success_symbol = "[❯](bold green)"
-        error_symbol = "[✗](bold red)"
-        
-        # Show git information when in git repos
-        [git_branch]
-        disabled = false
-        
-        [git_status]
-        disabled = false
-      '';
+      # Note: starship.toml temporarily removed with starship package
     };
 
     /*
