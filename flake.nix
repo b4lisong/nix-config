@@ -270,62 +270,52 @@
       These settings only affect the specified user, not the entire system.
     */
     homeConfiguration = { pkgs, ... }: {
-      /*
-        User Identity
-        Home Manager uses this to know which user and directory to manage
-      */
-      home.username = "balisong";
-      home.homeDirectory = "/Users/balisong";
-
-      /*
-        User Packages
-        
-        These packages are installed in the user's profile only.
-        They won't be available to other users on the system.
-        
-        Categories:
-        - CLI tools & system utilities
-        - Editors
-        - Development tools
-      */
-      home.packages = with pkgs; [
-        # CLI tools & utilities
-        git
-        lazygit
-        curl
-        tree
-        htop
-        bat
-        ripgrep
-        fd
-        zoxide
-        tmux
-        starship
-
-        # Editors
-        
-        /* Development Tools */
-        # Nix
-        nil
+      home = {
         /*
-          Development Tools (commented out - uncomment as needed)
-          
-          # JavaScript/Node.js
-          nodejs
-          yarn
-          
-          # Python
-          python3
-          python3Packages.pip
-          
-          # Rust
-          rustc
-          cargo
-          
-          # Go
-          go
+          Home Manager Version
+          Should match the release branch you're using
         */
-      ];
+        stateVersion = "25.05";
+
+        /*
+          User Identity
+          Home Manager uses this to know which user and directory to manage
+        */
+        username = "balisong";
+        homeDirectory = "/Users/balisong";
+
+        /*
+          User Packages
+
+          These packages are installed in the user's profile only.
+          They won't be available to other users on the system.
+
+          Categories:
+          - CLI tools & system utilities
+          - Editors
+          - Development tools
+        */
+        packages = with pkgs; [
+          # CLI tools & utilities
+          git
+          lazygit
+          curl
+          tree
+          htop
+          bat
+          ripgrep
+          fd
+          zoxide
+          tmux
+          starship
+
+          # Editors
+
+          /* Development Tools */
+          # Nix
+          nil
+        ];
+      };
 
       /*
         Shell Configuration
@@ -547,11 +537,6 @@
       /* Allow Home Manager to manage itself */
       programs.home-manager.enable = true;
 
-      /*
-        Home Manager Version
-        Should match the release branch you're using
-      */
-      home.stateVersion = "25.05";
     };
 
     /*
