@@ -86,7 +86,9 @@ in
       
       # Shell
       zsh               # Modern shell
-      # Note: starship temporarily removed to fix initialization issue
+
+      # Development
+      direnv            # auto-{load,unload} env vars
     ];
 
     /*
@@ -169,6 +171,9 @@ in
 
       # Vim - minimal configuration since nix-darwin has limited vim options
       vim.enable = true;
+
+      # direnv - automatically load/unload env vars, virtualenvs, etc.
+      direnv.enable = true;
     };
   };
 }
