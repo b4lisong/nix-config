@@ -31,24 +31,15 @@
   };
 
   /*
-    macOS System Fonts
-    Install fonts system-wide for all users and applications
+    Darwin-Specific System Fonts (Optional)
+    
+    Base fonts are automatically inherited from configs/shared/fonts/base-fonts.nix
+
+    Add macOS-specific fonts here only if needed:
   */
-  fonts.packages = with pkgs; [
-    # Nerd Fonts for terminal and development
-    nerd-fonts.sauce-code-pro
-    nerd-fonts.symbols-only
-    
-    # Icon fonts for UI applications
-    font-awesome
-    material-design-icons
-    
-    # Emoji support
-    noto-fonts-emoji
-    
-    # High-quality general fonts
-    dejavu_fonts
-  ];
+  # fonts.packages = with pkgs; [
+  #   # placeholder-font
+  # ];
 
   /*
     macOS System Settings and Preferences

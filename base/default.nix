@@ -20,6 +20,12 @@ in
     All machines inherit these settings and can override them as needed.
   */
 
+  # Import essential modules & configs all systems need
+  imports = [
+    # Import baseline fonts for all systems
+    ../configs/shared/fonts/base-fonts.nix
+  ];
+
   # Make variables available to all other modules
   options.myVars = lib.mkOption {
     type = lib.types.attrs;
@@ -103,8 +109,6 @@ in
       
       # Set vim to use system vimrc
       VIMINIT = "source /etc/vimrc";
-      
-      # Note: STARSHIP_CONFIG temporarily removed with starship
     };
 
     /*
