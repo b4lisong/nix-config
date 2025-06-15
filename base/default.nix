@@ -96,19 +96,6 @@ in
     ];
 
     /*
-      Environment Variables
-      Global environment settings that should be consistent
-    */
-    environment.variables = {
-      # Default editor
-      EDITOR = vars.preferences.editor;
-      VISUAL = vars.preferences.editor;
-      
-      # Improve nix command output
-      NIXPKGS_ALLOW_UNFREE = "1";
-    };
-
-    /*
       User Account Configuration
       Set up the primary user account with basic settings
     */
