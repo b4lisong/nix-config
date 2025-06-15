@@ -108,7 +108,7 @@
     format = "via [$symbol($version )]($style)";
   };
 
-  go = {
+  golang = {
     disabled = false;
     format = "via [$symbol($version )]($style)";
   };
