@@ -280,5 +280,4 @@ in
       - Shared directory structure
       - Common environment variables
     */
-  };
 }
