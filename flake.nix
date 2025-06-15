@@ -315,226 +315,230 @@
         ];
       };
 
-      /*
-        Shell Configuration
-        
-        Sets up Zsh with useful defaults:
-        - Tab completion
-        - Command suggestions based on history
-        - Convenient aliases for common operations
-      */
-      programs.zsh = {
-        enable = true;
-        enableCompletion = true;
-        autosuggestion.enable = true;
-        shellAliases = {
-          # Navigation shortcuts
-          ll = "ls -l";
-          la = "ls -la";
-          ".." = "cd ..";
-          "..." = "cd ../..";
-          
-          # Git shortcuts
-          gs = "git status";
-          ga = "git add";
-          gc = "git commit";
-        };
-      };
-
-      /*
-        Git Configuration
-        
-        Declaratively manages your global Git settings.
-      */
-      programs.git = {
-        enable = true;
-        userName = "b4lisong";
-        userEmail = "5397809+b4lisong@users.noreply.github.com";
-        extraConfig = {
-          init.defaultBranch = "main";
-          pull.rebase = true;
-          # push.autoSetupRemote = true;
-        };
-      };
-
-      /*
-        Vim Configuration
-        
-        This replaces your .vimrc file with declarative Home Manager configuration.
-        All your vim settings are now managed by Nix.
-      */
-      programs.vim = {
-        enable = true;
-        
+      programs = {
         /*
-          Vim Settings
-          These correspond to the 'set' commands in your .vimrc
+          Shell Configuration
+        
+          Sets up Zsh with useful defaults:
+          - Tab completion
+          - Command suggestions based on history
+          - Convenient aliases for common operations
         */
-        settings = {
-          # Use spaces instead of tabs
-          expandtab = true;
-          
-          # Number of spaces per indentation level
-          tabstop = 4;
-          
-          # Number of spaces for automatic indentation
-          shiftwidth = 4;
-          
-          # Show line numbers
-          number = true;
-        };
-        
-        /*
-          Extra Vim Configuration
-          For settings that don't have direct Home Manager options,
-          we use extraConfig to include raw vim script
-        */
-        extraConfig = ''
-          " Number of spaces inserted when pressing Tab
-          set softtabstop=4
-
-          " Enable automatic indentation
-          set autoindent
-          
-          " Enable syntax highlighting
-          syntax on
-          
-          " Enable filetype detection, load any filetype-specific plugins, indentation, etc.
-          filetype plugin indent on
-          
-          " Highlight the current line
-          set cursorline
-
-          " Enable incremental search
-          set incsearch
-          
-          " Enable highlighting all the matches in incsearch mode
-          " But don't enable hlsearch always
-          augroup vimrc-incsearch-highlight
-            autocmd!
-            autocmd CmdlineEnter [/\?] :set hlsearch
-            autocmd CmdlineLeave [/\?] :set nohlsearch
-          augroup END
-
-          " Custom key bindings for faster vertical movement
-          " J moves down 5 lines, K moves up 5 lines
-          nnoremap J 5j
-          nnoremap K 5k
-          
-          " Set colorscheme (will be available after we create the color file)
-          " colorscheme catppuccin_mocha
-        '';
-      };
-
-      /*
-      Modern shell prompt
-      */
-      programs.starship = {
-        enable = true;
-        enableBashIntegration = true;
-        enableZshIntegration = true;
-
-        settings = {
-          # kali linux prompt copy (w/modifications)
-          # Inspo:
-          #   https://gist.githubusercontent.com/mIcHyAmRaNe/a6ee5ca3311d61ae6f181e691643925d/raw/cc26b710fce3c21fe15edf6623be5cd12e4d5a32/starship.toml
-
-          # Inserts a blank line between shell prompts
-          add_newline = true;
-
-          format = ''
-            [┌╴\(](bold green)[$username$os$hostname](bold blue)[\)](bold green)$container $time
-            [|](bold green) $all[└─](bold green) $character
-          '';
-
-          character = {
-            success_symbol = "[❯](bold green)";
-            error_symbol = "[✗](bold red)";
-            vicmd_symbol = "[CMD❮](bold yellow)";
-          };
-
-          username = {
-            style_user = "blue bold";
-            style_root = "red bold";
-            format = "[$user]($style)";
-            disabled = false;
-            show_always = true;
-          };
-
-          hostname = {
-            ssh_only = false;
-            format = "[$ssh_symbol](bold blue)[$hostname](bold blue)";
-            trim_at = ".companyname.com";
-            disabled = false;
-          };
-
-          # No need for env variables as starship provides a way to show your current distro
-          os = {
-            style = "bold white";
-            format = "@[$symbol$arch](style) ";
-            disabled = false;
-          };
-
-          os.symbols = {
-            Macos = "";
-            NixOS = "";
-            Kali = "";
-            Linux = "";
-            Windows = "";
-            Unknown = "";
-          };
-
-          git_branch = {
-            truncation_length = 16;
-            truncation_symbol = "...";
-            disabled = false;
-          };
-
-          git_status = {
-            disabled = false;
-          };
-
-          git_commit = {
-            commit_hash_length = 4;
-            tag_disabled = false;
-            only_detached = false;
-          };
-
-          directory = {
-            truncation_length = 8;
-            truncation_symbol = "…/";
-            truncate_to_repo = true;
-            read_only = "🔒";
-          };
-        };
-      };
-
-      /*
-        Direnv Configuration
-        
-        Enable direnv for automatic environment management
-      */
-      programs.direnv = {
-        enable = true;
-        enableZshIntegration = true;
-        nix-direnv.enable = true;
-      };
-
-      /*
-        Additional Program Configurations
-        
-        Uncomment and configure as needed:
-        
-        # Terminal multiplexer
-        programs.tmux = {
+        zsh = {
           enable = true;
-          shortcut = "a";
-          keyMode = "vi";
+          enableCompletion = true;
+          autosuggestion.enable = true;
+          shellAliases = {
+            # Navigation shortcuts
+            ll = "ls -l";
+            la = "ls -la";
+            ".." = "cd ..";
+            "..." = "cd ../..";
+            
+            # Git shortcuts
+            gs = "git status";
+            ga = "git add";
+            gc = "git commit";
+          };
         };
-        
-      /* Allow Home Manager to manage itself */
-      programs.home-manager.enable = true;
 
+        /*
+          Git Configuration
+          
+          Declaratively manages your global Git settings.
+        */
+        git = {
+          enable = true;
+          userName = "b4lisong";
+          userEmail = "5397809+b4lisong@users.noreply.github.com";
+          extraConfig = {
+            init.defaultBranch = "main";
+            pull.rebase = true;
+            # push.autoSetupRemote = true;
+          };
+        };
+
+        /*
+          Vim Configuration
+          
+          This replaces your .vimrc file with declarative Home Manager configuration.
+          All your vim settings are now managed by Nix.
+        */
+        vim = {
+          enable = true;
+          
+          /*
+            Vim Settings
+            These correspond to the 'set' commands in your .vimrc
+          */
+          settings = {
+            # Use spaces instead of tabs
+            expandtab = true;
+            
+            # Number of spaces per indentation level
+            tabstop = 4;
+            
+            # Number of spaces for automatic indentation
+            shiftwidth = 4;
+            
+            # Show line numbers
+            number = true;
+          };
+          
+          /*
+            Extra Vim Configuration
+            For settings that don't have direct Home Manager options,
+            we use extraConfig to include raw vim script
+          */
+          extraConfig = ''
+            " Number of spaces inserted when pressing Tab
+            set softtabstop=4
+
+            " Enable automatic indentation
+            set autoindent
+            
+            " Enable syntax highlighting
+            syntax on
+            
+            " Enable filetype detection, load any filetype-specific plugins, indentation, etc.
+            filetype plugin indent on
+            
+            " Highlight the current line
+            set cursorline
+
+            " Enable incremental search
+            set incsearch
+            
+            " Enable highlighting all the matches in incsearch mode
+            " But don't enable hlsearch always
+            augroup vimrc-incsearch-highlight
+              autocmd!
+              autocmd CmdlineEnter [/\?] :set hlsearch
+              autocmd CmdlineLeave [/\?] :set nohlsearch
+            augroup END
+
+            " Custom key bindings for faster vertical movement
+            " J moves down 5 lines, K moves up 5 lines
+            nnoremap J 5j
+            nnoremap K 5k
+            
+            " Set colorscheme (will be available after we create the color file)
+            " colorscheme catppuccin_mocha
+          '';
+        };
+
+        /*
+          Modern shell prompt
+        */
+        starship = {
+          enable = true;
+          enableBashIntegration = true;
+          enableZshIntegration = true;
+
+          settings = {
+            # kali linux prompt copy (w/modifications)
+            # Inspo:
+            #   https://gist.githubusercontent.com/mIcHyAmRaNe/a6ee5ca3311d61ae6f181e691643925d/raw/cc26b710fce3c21fe15edf6623be5cd12e4d5a32/starship.toml
+
+            # Inserts a blank line between shell prompts
+            add_newline = true;
+
+            format = ''
+              [┌╴\(](bold green)[$username$os$hostname](bold blue)[\)](bold green)$container $time
+              [|](bold green) $all[└─](bold green) $character
+            '';
+
+            character = {
+              success_symbol = "[❯](bold green)";
+              error_symbol = "[✗](bold red)";
+              vicmd_symbol = "[CMD❮](bold yellow)";
+            };
+
+            username = {
+              style_user = "blue bold";
+              style_root = "red bold";
+              format = "[$user]($style)";
+              disabled = false;
+              show_always = true;
+            };
+
+            hostname = {
+              ssh_only = false;
+              format = "[$ssh_symbol](bold blue)[$hostname](bold blue)";
+              trim_at = ".companyname.com";
+              disabled = false;
+            };
+
+            # No need for env variables as starship provides a way to show your current distro
+            os = {
+              style = "bold white";
+              format = "@[$symbol$arch](style) ";
+              disabled = false;
+            };
+
+            os.symbols = {
+              Macos = "";
+              NixOS = "";
+              Kali = "";
+              Linux = "";
+              Windows = "";
+              Unknown = "";
+            };
+
+            git_branch = {
+              truncation_length = 16;
+              truncation_symbol = "...";
+              disabled = false;
+            };
+
+            git_status = {
+              disabled = false;
+            };
+
+            git_commit = {
+              commit_hash_length = 4;
+              tag_disabled = false;
+              only_detached = false;
+            };
+
+            directory = {
+              truncation_length = 8;
+              truncation_symbol = "…/";
+              truncate_to_repo = true;
+              read_only = "🔒";
+            };
+          };
+        };
+
+        /*
+          Direnv Configuration
+        
+          Enable direnv for automatic environment management
+        */
+        direnv = {
+          enable = true;
+          enableZshIntegration = true;
+          nix-direnv.enable = true;
+        };
+
+        /*
+          Additional Program Configurations
+        
+          Uncomment and configure as needed:
+          
+          # Terminal multiplexer
+          tmux = {
+            enable = true;
+            shortcut = "a";
+            keyMode = "vi";
+          };
+        */
+
+        /* Allow Home Manager to manage itself */
+        home-manager = {
+          enable = true;
+        };
+      };
     };
 
     /*
@@ -608,9 +612,11 @@
             useGlobalPkgs: Allow Home Manager to use system packages
             useUserPackages: Install packages in user profile properly
           */
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.balisong = homeConfiguration;
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.balisong = homeConfiguration;
+          };
         }
       ];
     };
