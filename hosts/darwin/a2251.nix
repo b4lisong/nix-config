@@ -54,9 +54,6 @@
     Override or extend the Darwin defaults for this specific machine.
   */
   system = {
-    # Link the configuration revision to our flake
-    configurationRevision = null;  # This will be set by the flake
-    
     defaults = {
       # Host-specific dock configuration
       dock = {

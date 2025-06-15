@@ -67,9 +67,6 @@
     # Set the primary user for nix-darwin (required for user-specific options)
     primaryUser = config.myVars.user.username;
 
-    # Track configuration changes for system updates
-    configurationRevision = null;  # Will be set by flake
-    
     # nix-darwin state version - don't change unless upgrading nix-darwin
     stateVersion = 6;
 
