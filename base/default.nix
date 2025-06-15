@@ -15,7 +15,7 @@ in
     base/default.nix (this file)
     ├── systems/darwin/default.nix
     ├── systems/nixos/default.nix
-    └── hosts/*/
+    └── hosts/*
 
     All machines inherit these settings and can override them as needed.
   */
