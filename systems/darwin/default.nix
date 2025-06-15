@@ -64,6 +64,9 @@
 
   # System version and state management
   system = {
+    # Set the primary user for nix-darwin (required for user-specific options)
+    primaryUser = config.myVars.user.username;
+
     # Track configuration changes for system updates
     configurationRevision = null;  # Will be set by flake
     
