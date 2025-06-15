@@ -194,7 +194,6 @@ in
       # Vim - Basic editor configuration that works everywhere
       vim = {
         enable = true;
-        defaultEditor = true;
         
         # Essential vim settings
         settings = {
