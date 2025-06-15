@@ -5,7 +5,8 @@
     Core Utilities Module
     
     This module provides essential command-line tools and utilities that
-    enhance the basic Unix/Linux experience.
+    enhance the basic Unix/Linux experience. These are tools that most
+    users would want on any system they actively use.
     
     Included categories:
     - Modern replacements for classic Unix tools
@@ -60,6 +61,7 @@
     
     # Development and productivity
     tmux              # Terminal multiplexer
+    screen            # Terminal multiplexer (alternative to tmux)
     
     # Miscellaneous utilities
     ncdu              # NCurses disk usage analyzer
@@ -148,25 +150,43 @@
     
     Configure programs that are included in this module for optimal
     out-of-the-box experience.
+    
+    Note: Some programs like fzf and zoxide may need to be configured
+    via Home Manager or shell initialization rather than system-level
+    programs in nix-darwin.
   */
   programs = {
-    # Enable zoxide (smart cd replacement)
-    zoxide = {
+    # Enable zoxide (smart cd replacement) if available in nix-darwin
+    # Otherwise, it will be available as a package and can be configured via shell init
+    zoxide = lib.mkIf (lib.hasAttr "zoxide" config.programs) {
       enable = true;
       enableZshIntegration = true;
-    };
-    
-    # Configure fzf (fuzzy finder)
-    fzf = {
-      enable = true;
-      enableZshIntegration = true;
-      defaultCommand = "fd --type f";  # Use fd instead of find
-      defaultOptions = [
-        "--height 40%"
-        "--border"
-        "--layout=reverse"
-        "--inline-info"
-      ];
     };
   };
+
+  /*
+    Shell Integration for Tools Without System-Level Program Options
+    
+    Configure shell initialization for tools that don't have dedicated
+    program options in nix-darwin.
+  */
+  programs.zsh.interactiveShellInit = lib.mkAfter ''
+    # Initialize zoxide (smart cd replacement)
+    if command -v zoxide >/dev/null 2>&1; then
+      eval "$(zoxide init zsh --cmd cd)"
+    fi
+    
+    # Configure fzf if available
+    if command -v fzf >/dev/null 2>&1; then
+      # Set default command to use fd
+      export FZF_DEFAULT_COMMAND="fd --type f"
+      
+      # Set default options
+      export FZF_DEFAULT_OPTS="--height 40% --border --layout=reverse --inline-info"
+      
+      # Key bindings for fzf
+      source "$(fzf-share)/key-bindings.zsh" 2>/dev/null || true
+      source "$(fzf-share)/completion.zsh" 2>/dev/null || true
+    fi
+  '';
 }
