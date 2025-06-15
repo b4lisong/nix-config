@@ -1,7 +1,7 @@
 { config, lib, pkgs, myVars, ... }:
 
 let
-  # Import the master starship configuration from our organized configs
+  # Import configs which we want to define in Home Manager at the base level
   starshipConfig = import ../configs/home/programs/starship.nix;
 in
 {

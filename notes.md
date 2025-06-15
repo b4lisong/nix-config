@@ -1,3 +1,12 @@
+## TODO:
+-[] evaluation warning: 'vam' attribute is deprecated. Use 'packages' instead in your vim configuration
+-[] evaluation warning: `programs.zsh.initExtra` is deprecated, use `programs.zsh.initContent` instead.
+---
+## myVars
+- system: `config.myVars`
+- Home Manager & assoc. modules: `myVars.` import
+---
+## init setup
 1. curl -fsSL https://install.determinate.systems/nix | sh -s -- install
   - Choose 'no' when prompted to install the Determinate distribution to installthe recommended vanilla upstream Nix.
 2. nix flake init -t nix-darwin/nix-darwin-25.05
@@ -5,8 +14,3 @@
 4. Set nixpkgs.hostPlatform = "x86_64-darwin";
 5. sudo nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake .
 6. sudo darwin-rebuild switch --flake .
-
----
-TODO:
--[] evaluation warning: 'vam' attribute is deprecated. Use 'packages' instead in your vim configuration
--[] evaluation warning: `programs.zsh.initExtra` is deprecated, use `programs.zsh.initContent` instead.

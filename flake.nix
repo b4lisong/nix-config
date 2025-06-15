@@ -1,5 +1,5 @@
 {
-  description = "Modular nix-darwin system flake with inheritance hierarchy";
+  description = "Modular Nix{OS,-darwin} system flake with inheritance hierarchy";
 
   /*
     Input Dependencies

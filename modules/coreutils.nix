@@ -5,8 +5,7 @@
     Core Utilities Module
     
     This module provides essential command-line tools and utilities that
-    enhance the basic Unix/Linux experience. These are tools that most
-    users would want on any system they actively use.
+    enhance the basic Unix/Linux experience.
     
     Included categories:
     - Modern replacements for classic Unix tools

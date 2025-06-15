@@ -4,7 +4,7 @@
   /*
     a2251 - Personal MacBook Pro (Intel x86_64)
     
-    This is your primary development machine configuration.
+    This is my primary development machine configuration.
     It inherits from:
     - base/default.nix (common config for all machines)
     - systems/darwin/default.nix (macOS-specific config)

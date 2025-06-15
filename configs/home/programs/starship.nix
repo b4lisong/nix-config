@@ -1,7 +1,6 @@
 # configs/home/programs/starship.nix
-# Master starship configuration - your custom Kali Linux inspired prompt
+# Master starship configuration - custom Kali Linux inspired prompt
 {
-  # Custom format matching your original setup
   add_newline = true;
 
   format = ''
