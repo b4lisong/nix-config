@@ -1,5 +1,5 @@
 {
-  description = "Modular nix system flake with inheritance hierarchy";
+  description = "Modular nix-darwin system flake with inheritance hierarchy";
 
   /*
     Input Dependencies
@@ -92,20 +92,13 @@
     darwinConfigurations = {
       # Personal MacBook Pro (Intel)
       a2251 = nix-darwin.lib.darwinSystem {
-        /*
-          Note: statix linter doesn't like the following line,
-            preferring `inherit (vars.hosts.a2251) system;`.
-            For now, we're keeping the line as is. Why?
-              - More explicit, clearly shows value being used
-              - Easy to modify if variable names change
-              - Self-documenting
-              - Consistent with how we use vars elsewhere
-            TODO: configure statix to ignore?
-        */
         system = vars.hosts.a2251.system;  # "x86_64-darwin"
         modules = [ 
           # The host configuration handles all inheritance
           ./hosts/darwin/a2251.nix
+          
+          # Import Home Manager module
+          home-manager.darwinModules.home-manager
           
           # Set the configuration revision for system tracking
           {
@@ -120,6 +113,9 @@
         modules = [ 
           # Will create this file in a future step
           # ./hosts/darwin/sksm3.nix
+          
+          # Import Home Manager module
+          home-manager.darwinModules.home-manager
           
           # Temporary minimal config for testing
           {

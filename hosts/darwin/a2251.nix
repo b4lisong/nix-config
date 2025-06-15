@@ -4,7 +4,7 @@
   /*
     a2251 - Personal MacBook Pro (Intel x86_64)
     
-    This is my primary personal machine configuration.
+    This is your primary development machine configuration.
     It inherits from:
     - base/default.nix (common config for all machines)
     - systems/darwin/default.nix (macOS-specific config)
@@ -23,6 +23,31 @@
     # Include desired modules
     ../../modules/coreutils.nix
   ];
+
+  /*
+    Home Manager Integration
+    Configure user-specific settings and dotfiles
+  */
+  home-manager = {
+    # Use the system's nixpkgs for Home Manager
+    useGlobalPkgs = true;
+    
+    # Install packages to /etc/profiles instead of ~/.nix-profile
+    useUserPackages = true;
+    
+    # Make system variables available to Home Manager
+    extraSpecialArgs = { 
+      inherit (config) myVars; 
+    };
+    
+    # User-specific configuration
+    users.${config.myVars.user.username} = {
+      imports = [
+        # Import the Darwin-specific home configuration
+        ../../home/darwin.nix
+      ];
+    };
+  };
 
   /*
     Host-Specific System Configuration
@@ -121,10 +146,5 @@
        - Personal encryption settings
        - VPN configurations
        - Firewall rules
-
-    5. Creative/fun applications:
-       - Gaming
-       - DJ/Music prod.
-       - Random bullshit
   */
 }
