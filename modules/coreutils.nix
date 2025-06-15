@@ -151,24 +151,19 @@
     Configure programs that are included in this module for optimal
     out-of-the-box experience.
     
-    Note: Some programs like fzf and zoxide may need to be configured
-    via Home Manager or shell initialization rather than system-level
-    programs in nix-darwin.
+    Note: nix-darwin has very limited system-level program options.
+    Most tools are configured via shell initialization.
   */
   programs = {
-    # Enable zoxide (smart cd replacement) if available in nix-darwin
-    # Otherwise, it will be available as a package and can be configured via shell init
-    zoxide = lib.mkIf (lib.hasAttr "zoxide" config.programs) {
-      enable = true;
-      enableZshIntegration = true;
-    };
+    # No system-level program configurations for nix-darwin
+    # All tool configuration is handled via shell init below
   };
 
   /*
-    Shell Integration for Tools Without System-Level Program Options
+    Shell Integration for Tools
     
-    Configure shell initialization for tools that don't have dedicated
-    program options in nix-darwin.
+    Configure shell initialization for tools since nix-darwin doesn't
+    have system-level program options for most tools.
   */
   programs.zsh.interactiveShellInit = lib.mkAfter ''
     # Initialize zoxide (smart cd replacement)
@@ -184,9 +179,13 @@
       # Set default options
       export FZF_DEFAULT_OPTS="--height 40% --border --layout=reverse --inline-info"
       
-      # Key bindings for fzf
-      source "$(fzf-share)/key-bindings.zsh" 2>/dev/null || true
-      source "$(fzf-share)/completion.zsh" 2>/dev/null || true
+      # Key bindings for fzf (if available)
+      if [[ -f "$(fzf-share)/key-bindings.zsh" ]]; then
+        source "$(fzf-share)/key-bindings.zsh"
+      fi
+      if [[ -f "$(fzf-share)/completion.zsh" ]]; then
+        source "$(fzf-share)/completion.zsh"
+      fi
     fi
   '';
 }
