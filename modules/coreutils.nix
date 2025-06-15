@@ -99,80 +99,13 @@
   };
 
   /*
-    Shell Integration and Configuration
+    Future: Shell Integration and Configuration
     
-    Configure shell integration for the tools since nix-darwin doesn't
-    have extensive program configuration options.
+    For now, we'll rely on the packages being available and users can
+    set up aliases manually or via Home Manager. Once we get the basic
+    configuration working, we can add shell integration back.
   */
-  programs.zsh = {
-    # Modern tool aliases
-    shellAliases = {
-      # Modern tool replacements
-      cat = "bat --paging=never";  # Use bat but don't page for small files
-      ls = "eza --icons";          # Use eza with icons
-      ll = "eza -l --icons";       # Long format with icons
-      la = "eza -la --icons";      # Long format with hidden files
-      tree = "eza --tree";         # Tree view using eza
-      find = "fd";                 # Use fd as find replacement
-      
-      # Quick directory navigation
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      "...." = "cd ../../..";
-      
-      # Safety aliases
-      rm = "rm -i";               # Prompt before removing files
-      cp = "cp -i";               # Prompt before overwriting files
-      mv = "mv -i";               # Prompt before overwriting files
-      
-      # Convenience aliases
-      h = "history";
-      j = "jobs -l";
-      grep = "grep --color=auto";
-      
-      # System information
-      ports = "lsof -i";          # Show what's using network ports
-      psg = "ps aux | grep";      # Search running processes
-    };
-    
-    # Shell initialization for tools that need setup
-    interactiveShellInit = lib.mkAfter ''
-      # Initialize zoxide (smart cd replacement)
-      if command -v zoxide >/dev/null 2>&1; then
-        eval "$(zoxide init zsh --cmd cd)"
-      fi
-      
-      # Configure fzf if available
-      if command -v fzf >/dev/null 2>&1; then
-        # Set default command to use fd
-        export FZF_DEFAULT_COMMAND="fd --type f"
-        
-        # Set default options
-        export FZF_DEFAULT_OPTS="--height 40% --border --layout=reverse --inline-info"
-        
-        # Key bindings for fzf (try to source if available)
-        for fzf_completion in \
-          "/run/current-system/sw/share/fzf/completion.zsh" \
-          "/usr/local/share/zsh/site-functions/_fzf" \
-          "$(brew --prefix 2>/dev/null)/share/zsh/site-functions/_fzf" 2>/dev/null
-        do
-          if [[ -f "$fzf_completion" ]]; then
-            source "$fzf_completion"
-            break
-          fi
-        done
-        
-        for fzf_keybindings in \
-          "/run/current-system/sw/share/fzf/key-bindings.zsh" \
-          "/usr/local/share/fzf/shell/key-bindings.zsh" \
-          "$(brew --prefix 2>/dev/null)/share/fzf/shell/key-bindings.zsh" 2>/dev/null
-        do
-          if [[ -f "$fzf_keybindings" ]]; then
-            source "$fzf_keybindings"
-            break
-          fi
-        done
-      fi
-    '';
-  };
+  
+  # Note: Shell aliases and integration will be added later once we confirm
+  # the basic module system is working properly.
 }

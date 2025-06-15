@@ -180,68 +180,11 @@ in
 
     /*
       Program Configuration
-      Using nix-darwin's actual supported options
+      Start with minimal nix-darwin supported options
     */
     programs = {
-      # Zsh - using nix-darwin's actual option names
-      zsh = {
-        enable = true;
-        enableCompletion = true;
-        enableAutosuggestions = true;        # Note: different from NixOS
-        enableSyntaxHighlighting = true;     # Note: different from NixOS
-        
-        # Shell initialization for git, starship, and custom settings
-        shellInit = ''
-          # Configure git globally
-          git config --global init.defaultBranch "${vars.git.defaultBranch}"
-          git config --global pull.rebase ${if vars.git.pullRebase then "true" else "false"}
-          git config --global user.name "${vars.git.userName}"
-          git config --global user.email "${vars.git.userEmail}"
-        '';
-        
-        interactiveShellInit = ''
-          # Initialize starship prompt if available
-          if command -v starship >/dev/null 2>&1; then
-            eval "$(starship init zsh)"
-          fi
-          
-          # Set up history options
-          setopt autocd              # Change directory just by typing its name
-          setopt interactivecomments # Allow comments in interactive mode
-          setopt magicequalsubst     # Enable filename expansion for arguments
-          setopt nonomatch           # Hide error message if no match for pattern
-          setopt notify              # Report status of background jobs immediately
-          setopt numericglobsort     # Sort filenames numerically when it makes sense
-          setopt promptsubst         # Enable command substitution in prompt
-          
-          # History settings
-          HISTSIZE=1000
-          SAVEHIST=2000
-          setopt hist_ignore_dups
-          setopt hist_ignore_space
-          setopt hist_expire_dups_first
-        '';
-        
-        # Essential aliases
-        shellAliases = {
-          # Force zsh to show complete history
-          history = "history 0";
-          
-          # Useful ls aliases
-          ll = "ls -l";
-          la = "ls -alh";
-          l = "ls -CF";
-          
-          # Basic git shortcuts
-          gs = "git status";
-          ga = "git add";
-          gc = "git commit";
-          gp = "git pull";
-          gP = "git push";
-          gd = "git diff";
-          gdc = "git diff --cached";
-        };
-      };
+      # Zsh - very basic configuration to test
+      zsh.enable = true;
 
       # Vim - minimal configuration since nix-darwin has limited vim options
       vim.enable = true;
