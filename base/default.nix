@@ -194,41 +194,48 @@ in
       # Vim - Basic editor configuration that works everywhere
       vim = {
         enable = true;
-        
-        # Essential vim settings
-        settings = {
-          expandtab = true;     # Use spaces instead of tabs
-          tabstop = 4;          # Number of spaces per indentation level
-          shiftwidth = 4;       # Number of spaces for automatic indentation
-          number = true;        # Show line numbers
-        };
-
-        # Basic vim configuration
-        extraConfig = ''
-          " Basic usability settings
-          set softtabstop=4
-          set autoindent
-          syntax on
-          filetype plugin indent on
-          set cursorline
-          set incsearch
-          
-          " Search highlighting that only shows during search
-          augroup vimrc-incsearch-highlight
-            autocmd!
-            autocmd CmdlineEnter [/\?] :set hlsearch
-            autocmd CmdlineLeave [/\?] :set nohlsearch
-          augroup END
-          
-          " Custom key bindings for faster vertical movement
-          " J moves down 5 lines, K moves up 5 lines
-          nnoremap J 5j
-          nnoremap K 5k
-          
-          " Map 'jk' to ESC for faster mode switching
-          inoremap jk <Esc>
-        '';
       };
+    };
+
+    /*
+      Vim Configuration via System Files
+      
+      Since nix-darwin has very limited vim configuration options,
+      we create a system-wide vimrc file directly.
+    */
+    environment.etc."vimrc".text = ''
+      " Essential vim settings
+      set expandtab         " Use spaces instead of tabs
+      set tabstop=4         " Number of spaces per indentation level
+      set shiftwidth=4      " Number of spaces for automatic indentation
+      set number            " Show line numbers
+      
+      " Basic usability settings
+      set softtabstop=4
+      set autoindent
+      syntax on
+      filetype plugin indent on
+      set cursorline
+      set incsearch
+      
+      " Search highlighting that only shows during search
+      augroup vimrc-incsearch-highlight
+        autocmd!
+        autocmd CmdlineEnter [/\?] :set hlsearch
+        autocmd CmdlineLeave [/\?] :set nohlsearch
+      augroup END
+      
+      " Custom key bindings for faster vertical movement
+      " J moves down 5 lines, K moves up 5 lines
+      nnoremap J 5j
+      nnoremap K 5k
+      
+      " Map 'jk' to ESC for faster mode switching
+      inoremap jk <Esc>
+    '';
+
+    # Set vim to use system vimrc
+    environment.variables.VIMINIT = "source /etc/vimrc";
     };
 
     /*
