@@ -79,9 +79,9 @@
     
     # Enable colored output for various tools
     CLICOLOR = "1";
-    
-    # Configure ripgrep
-    RIPGREP_CONFIG_PATH = pkgs.writeText "ripgreprc" ''
+
+    # Configure ripgrep (convert derivation to string path)
+    RIPGREP_CONFIG_PATH = "${pkgs.writeText "ripgreprc" ''
       # Use smart case (case insensitive unless pattern contains uppercase)
       --smart-case
       
@@ -93,7 +93,7 @@
       --glob=!node_modules/*
       --glob=!target/*
       --glob=!*.lock
-    '';
+    ''}";  
   };
 
   /*
