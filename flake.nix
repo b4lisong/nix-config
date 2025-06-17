@@ -25,6 +25,7 @@
             ];
           }
         ];
+        specialArgs = { inherit self inputs vars; };
       };
       systems = [ "x86_64-darwin" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;

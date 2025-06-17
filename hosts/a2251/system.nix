@@ -1,4 +1,5 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, self, vars, ... }:
+
 let vars = import ../../variables;
 in {
   imports = [
