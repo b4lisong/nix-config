@@ -1,6 +1,7 @@
 { pkgs, lib, self, vars, ... }:
 
-{
+let vars = import ../../variables;
+in {
   imports = [
     ../../modules/base.nix
     ../../modules/darwin
