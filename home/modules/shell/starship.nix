@@ -132,7 +132,7 @@
      # Nix shell indicator (useful for your Nix workflow)
      nix_shell = {
        disabled = false;
-       format = "via[$symbol$state( \($name\))]($style) ";
+       format = "via [$symbol$state( \($name\))]($style) ";
        symbol = "️ ";
      };
 
