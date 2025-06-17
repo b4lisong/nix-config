@@ -1,7 +1,15 @@
+/*
+`home/profiles/base/default.nix`
+Defines the user-level (Home Manager) packages and configurations
+common to all systems.
+*/
 { pkgs, ... }:
 let vars = import ../../../variables;
 in {
-  imports = [ ../../modules/editors/vim.nix ];
+  imports = [ 
+    ../../modules/editors/vim.nix
+    ../../modules/shell/zsh.nix
+  ];
 
   home = {
     stateVersion = "25.05";
@@ -13,21 +21,6 @@ in {
   };
 
   programs = {
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestion.enable = true;
-      shellAliases = {
-        ll = "ls -l";
-        la = "ls -la";
-        ".." = "cd ..";
-        "..." = "cd ../..";
-        gs = "git status";
-        ga = "git add";
-        gc = "git commit";
-      };
-    };
-
     git = {
       enable = true;
       userName = vars.git.userName;
