@@ -1,0 +1,6 @@
+{ ... }:
+{
+  imports = [
+    ../../home/profiles/gui
+  ];
+}
