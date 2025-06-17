@@ -17,11 +17,22 @@ in {
     username = vars.user.username;
     homeDirectory = "/Users/${vars.user.username}";
     packages = with pkgs; [
-      git lazygit curl tree htop bat ripgrep fd zoxide tmux starship
+      git lazygit curl tree htop bat ripgrep fd zoxide tmux starship eza
     ];
   };
 
   programs = {
+    eza = {
+      enable = true;
+      enableZshIntegration = true;
+      icons = "auto";
+      git = true;
+      extraOptions = [
+        "--group-directories-first"
+        "--header"
+      ];
+    };
+
     git = {
       enable = true;
       userName = vars.git.userName;
