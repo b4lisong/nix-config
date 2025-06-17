@@ -9,6 +9,7 @@
       ll = "eza -l";
       la = "eza -la";
       lt = "eza --tree";
+      cat = "bat";
       ".." = "cd ..";
       "..." = "cd ../..";
       gs = "git status";

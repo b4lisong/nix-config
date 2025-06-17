@@ -22,6 +22,11 @@ in {
   };
 
   programs = {
+    bat = {
+        enable = true;
+        config.pager = "less -FR";
+    };
+
     eza = {
       enable = true;
       enableZshIntegration = true;
