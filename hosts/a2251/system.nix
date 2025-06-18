@@ -1,10 +1,4 @@
-{
-  pkgs,
-  lib,
-  self,
-  vars,
-  ...
-}: let
+_: let
   vars = import ../../variables;
 in {
   imports = [

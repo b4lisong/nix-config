@@ -4,7 +4,6 @@ modules/base.nix
 Defines the common system-level configuration shared by both NixOS and Darwin
 */
 {
-  lib,
   nixpkgs,
   pkgs,
   ...

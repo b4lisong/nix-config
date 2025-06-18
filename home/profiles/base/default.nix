@@ -17,7 +17,7 @@ in {
 
   home = {
     stateVersion = "25.05";
-    username = vars.user.username;
+    inherit (vars.user) username;
     homeDirectory = "/Users/${vars.user.username}";
     packages = with pkgs; [
       # Version Control
@@ -114,8 +114,8 @@ in {
 
     git = {
       enable = true;
-      userName = vars.git.userName;
-      userEmail = vars.git.userEmail;
+      inherit (vars.git) userName;
+      inherit (vars.git) userEmail;
       extraConfig = {
         init.defaultBranch = vars.git.defaultBranch;
         pull.rebase = vars.git.pullRebase;
