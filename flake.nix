@@ -48,7 +48,8 @@
         let pkgs = nixpkgsFor system;
         in pkgs.mkShell {
           buildInputs = with pkgs; [
-            nixpkgs-fmt    # Nix code formatter
+            alejandra      # Nix code formatter
+            pre-commit     # pre-commit automation
             statix         # Nix linter
             deadnix        # finds unused Nix code
             nix-tree       # visualize Nix store dependencies
