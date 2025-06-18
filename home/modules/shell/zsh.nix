@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -16,11 +15,11 @@
       ga = "git add";
       gc = "git commit";
       # zoxide aliases
-      cd = "z";           # replace cd with z
-      cdi = "zi";         # interactive selection
-      cdr = "z -";        # go to previous directory
-      cdf = "z -f";       # force directory change
-      cdh = "z ~";        # go to home directory
+      cd = "z"; # replace cd with z
+      cdi = "zi"; # interactive selection
+      cdr = "z -"; # go to previous directory
+      cdf = "z -f"; # force directory change
+      cdh = "z ~"; # go to home directory
     };
   };
-} 
+}

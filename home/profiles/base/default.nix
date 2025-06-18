@@ -3,10 +3,10 @@
 Defines the user-level (Home Manager) packages and configurations
 common to all systems.
 */
-{ pkgs, ... }:
-let vars = import ../../../variables;
+{pkgs, ...}: let
+  vars = import ../../../variables;
 in {
-  imports = [ 
+  imports = [
     ../../modules/editors/vim.nix
     ../../modules/shell/zsh.nix
     ../../modules/shell/starship.nix
@@ -21,33 +21,33 @@ in {
     homeDirectory = "/Users/${vars.user.username}";
     packages = with pkgs; [
       # Version Control
-      git        # Distributed version control system
-      lazygit    # Terminal UI for git commands
+      git # Distributed version control system
+      lazygit # Terminal UI for git commands
 
       # System Utilities
-      curl       # Command line tool for transferring data
-      tree       # Display directory structure as tree
-      htop       # Interactive process viewer
-      bat        # Cat clone with syntax highlighting
-      eza        # Modern replacement for ls
-      fd         # Alternative to find command
-      ripgrep    # Fast grep alternative
-      zoxide     # Smarter cd command
-      fzf        # Fuzzy finder
-      gdu        # Disk usage analyzer with TUI
-      duf        # Disk usage/free utility, better 'df'
-      delta      # Syntax-highlighting pager for git,diff
+      curl # Command line tool for transferring data
+      tree # Display directory structure as tree
+      htop # Interactive process viewer
+      bat # Cat clone with syntax highlighting
+      eza # Modern replacement for ls
+      fd # Alternative to find command
+      ripgrep # Fast grep alternative
+      zoxide # Smarter cd command
+      fzf # Fuzzy finder
+      gdu # Disk usage analyzer with TUI
+      duf # Disk usage/free utility, better 'df'
+      delta # Syntax-highlighting pager for git,diff
 
       # Terminal Enhancement
-      tmux       # Terminal multiplexer
-      starship   # Customizable command prompt
+      tmux # Terminal multiplexer
+      starship # Customizable command prompt
 
       # Development Tools
-      just       # Command runner, like `make` but simpler
-      sad        # CLI search and replace, a better `sed`
+      just # Command runner, like `make` but simpler
+      sad # CLI search and replace, a better `sed`
 
       # File Transfer
-      croc       # Easy secure file transfer tool
+      croc # Easy secure file transfer tool
     ];
   };
 
@@ -97,8 +97,8 @@ in {
     };
 
     bat = {
-        enable = true;
-        config.pager = "less -FR";
+      enable = true;
+      config.pager = "less -FR";
     };
 
     eza = {

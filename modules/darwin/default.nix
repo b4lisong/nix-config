@@ -3,8 +3,11 @@
 System-level configuration common to all Darwin/macOS hosts
 Extends base system configuration in `modules/base.nix`
 */
-{ pkgs, self, ... }:
 {
+  pkgs,
+  self,
+  ...
+}: {
   imports = [
     ./homebrew.nix # Import default Homebrew configuration
   ];
