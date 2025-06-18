@@ -1,0 +1,40 @@
+repos:
+  - repo: local
+    hooks:
+      # Nix formatting with alejandra
+      - id: alejandra
+        name: alejandra
+        description: "Format Nix files with alejandra"
+        entry: alejandra
+        language: system
+        files: '\.nix$'
+        pass_filenames: true
+
+      # Optional: Nix linting with statix
+      - id: statix-check
+        name: statix check
+        description: "Lint Nix files with statix"
+        entry: statix check
+        language: system
+        files: '\.nix$'
+        pass_filenames: false
+
+      # Optional: Find dead Nix code
+      - id: deadnix
+        name: deadnix
+        description: "Find unused Nix code"
+        entry: deadnix --fail
+        language: system
+        files: '\.nix$'
+        pass_filenames: true
+
+  # Optional: Format other file types
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
