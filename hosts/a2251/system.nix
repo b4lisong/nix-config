@@ -27,6 +27,7 @@ in {
       "cursor"        # AI-powered code editor
       "spotify"
       "burp-suite"
+      "firefox"
     ];
     brews = [ 
     ];
