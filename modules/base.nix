@@ -3,7 +3,7 @@ modules/base.nix
 
 Defines the common system-level configuration shared by both NixOS and Darwin
 */
-{ pkgs, ... }:
+{ lib, nixpkgs, pkgs, ... }:
 {
   # Define a minimum set of programs for all systems
   environment.systemPackages = with pkgs; [
@@ -60,4 +60,7 @@ Defines the common system-level configuration shared by both NixOS and Darwin
   # - nix-command: New CLI interface with better UX and features
   # - flakes: Reproducible and composable Nix packages and configurations
   nix.settings.experimental-features = "nix-command flakes";
+
+  # Enable unfree packages @ the system level
+  nixpkgs.config.allowUnfree = true;
 }
