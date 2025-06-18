@@ -17,9 +17,6 @@ This module provides sensible defaults while allowing hosts to override and exte
 
     # Homebrew packages for all Darwin/macOS systems
     casks = [
-      # Code editors
-      "cursor"           # AI-powered code editor
-      
       # System utilities
       "scroll-reverser"  # Fix mouse scroll direction
       "little-snitch"    # Network monitoring and security

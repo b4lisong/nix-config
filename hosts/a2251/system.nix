@@ -24,6 +24,7 @@ in {
     casks = [ 
       # Keep the default casks from `modules/darwin/homebrew.nix`
       # Add host-specific casks
+      "cursor"        # AI-powered code editor
     ];
     brews = [ 
     ];
