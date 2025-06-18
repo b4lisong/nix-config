@@ -1,9 +1,14 @@
 /*
+`modules/darwin/default.nix`
 System-level configuration common to all Darwin/macOS hosts
 Extends base system configuration in `modules/base.nix`
 */
 { pkgs, ... }:
 {
+  imports = [
+    ./homebrew.nix # Import default Homebrew configuration
+  ];
+
   # Enable Touch ID authentication for sudo
   # This allows using fingerprint authentication when running sudo commands
   security.pam.services.sudo_local.touchIdAuth = true;

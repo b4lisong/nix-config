@@ -17,12 +17,18 @@ in {
     home = "/Users/${vars.user.username}";
   };
 
+  # Host-specific Homebrew configuration
+  # This extends the defaults from `modules/darwin/homebrew.nix`
   homebrew = {
-    enable = true;
-    onActivation.cleanup = "zap";
-    casks = [ "cursor" "scroll-reverser" "little-snitch" ];
-    brews = [ ];
-    masApps = { };
+    # Inherit defaults from modules/darwin and extend casks
+    casks = [ 
+      # Keep the default casks from `modules/darwin/homebrew.nix`
+      # Add host-specific casks
+    ];
+    brews = [ 
+    ];
+    masApps = {
+    };
   };
 
   system.configurationRevision = self.rev or self.dirtyRev or null;
