@@ -1,6 +1,12 @@
-# nix-config
+# b4lisong's nix-config
 
 This repository provides a flake based configuration for managing macOS and future NixOS machines with [nix-darwin](https://github.com/nix-darwin/nix-darwin) and [home‑manager](https://github.com/nix-community/home-manager).
+
+Heavily inspired by:
+- [ryan4yin's nix-config](https://github.com/ryan4yin/nix-config)
+- [dustinlyons' nixos-config](https://github.com/dustinlyons/nixos-config)
+
+This repository is under constant development!
 
 ## Overview
 
