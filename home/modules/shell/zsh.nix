@@ -8,6 +8,7 @@ in {
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
+    autocd = true; # change dir just by typing its name
     shellAliases = {
       ls = "eza";
       ll = "eza -l";
@@ -48,15 +49,31 @@ in {
       # Replaces initExtraBeforeCompInit
       (mkOrder 550 ''
         # Completion styling
-        # zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
-        # zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
+        zstyle ':completion:*:*:*:*:*' menu select
+        zstyle ':completion:*' auto-description 'specify: %d'
+        zstyle ':completion:*' completer _expand _complete
+        zstyle ':completion:*' format 'Completing %d'
+        zstyle ':completion:*' group-name ""
+        zstyle ':completion:*' list-colors ""
+        zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+        zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+        zstyle ':completion:*' rehash true
+        zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+        zstyle ':completion:*' use-compctl false
+        zstyle ':completion:*' verbose true
+        zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
       '')
 
       # Main config (1000, default)
       # General config, replaces initExtra
       (mkOrder 1000 ''
         # Your main zsh configuration
-        # setopt GLOB_DOTS
+        setopt interactivecomments # allow comments in interactive mode
+        setopt magicequalsubst     # enable filename expansion for arguments of the form ‘anything=expression’
+        setopt nonomatch           # hide error message if there is no match for the pattern
+        setopt notify              # report the status of background jobs immediately
+        setopt numericglobsort     # sort filenames numerically when it makes sense
+        setopt promptsubst         # enable command substitution in prompt
       '')
 
       # Post-completion (1200)
