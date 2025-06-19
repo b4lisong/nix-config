@@ -6,7 +6,6 @@ in {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
     autocd = true; # change dir just by typing its name
     shellAliases = {
@@ -88,5 +87,64 @@ in {
         # echo "Welcome to zsh!"
       '')
     ];
+
+    # Syntax highlighting configuration using Home Manager options
+    syntaxHighlighting = {
+      enable = true;
+      # Highlighters to enable
+      highlighters = [
+        "main"
+        "brackets"
+        "pattern"
+      ];
+
+      # Custom styles for syntax highlighting
+      styles = {
+        # Main highlighter styles
+        default = "none";
+        unknown-token = "underline";
+        reserved-word = "fg=cyan,bold";
+        suffix-alias = "fg=green,underline";
+        global-alias = "fg=green,bold";
+        precommand = "fg=green,underline";
+        commandseparator = "fg=blue,bold";
+        autodirectory = "fg=green,underline";
+        path = "bold";
+        path_pathseparator = "";
+        path_prefix_pathseparator = "";
+        globbing = "fg=blue,bold";
+        history-expansion = "fg=blue,bold";
+        command-substitution = "none";
+        command-substitution-delimiter = "fg=magenta,bold";
+        process-substitution = "none";
+        process-substitution-delimiter = "fg=magenta,bold";
+        single-hyphen-option = "fg=green";
+        double-hyphen-option = "fg=green";
+        back-quoted-argument = "none";
+        back-quoted-argument-delimiter = "fg=blue,bold";
+        single-quoted-argument = "fg=yellow";
+        double-quoted-argument = "fg=yellow";
+        dollar-quoted-argument = "fg=yellow";
+        rc-quote = "fg=magenta";
+        dollar-double-quoted-argument = "fg=magenta,bold";
+        back-double-quoted-argument = "fg=magenta,bold";
+        back-dollar-quoted-argument = "fg=magenta,bold";
+        assign = "none";
+        redirection = "fg=blue,bold";
+        comment = "fg=black,bold";
+        named-fd = "none";
+        numeric-fd = "none";
+        arg0 = "fg=cyan";
+
+        # Bracket highlighter styles
+        bracket-error = "fg=red,bold";
+        bracket-level-1 = "fg=blue,bold";
+        bracket-level-2 = "fg=green,bold";
+        bracket-level-3 = "fg=magenta,bold";
+        bracket-level-4 = "fg=yellow,bold";
+        bracket-level-5 = "fg=cyan,bold";
+        cursor-matchingbracket = "standout";
+      };
+    };
   };
 }
