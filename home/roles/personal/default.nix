@@ -3,5 +3,6 @@
     spotify
     signal-desktop-bin
     gimp-with-plugins
+    zoom-us
   ];
 }
