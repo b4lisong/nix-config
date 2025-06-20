@@ -1,3 +1,5 @@
+[<img src="https://raw.githubusercontent.com/b4lisong/nix-config/refs/heads/main/_img/cirno_hexley_cosplay_simple_upscaled_nobg.png" width="200px" alt="logo" />](https://github.com/b4lisong/nix-config)
+
 # b4lisong's nix-config
 
 This repository provides a flake based configuration for managing macOS and future NixOS machines with [nix-darwin](https://github.com/nix-darwin/nix-darwin) and [home‑manager](https://github.com/nix-community/home-manager).
