@@ -24,6 +24,7 @@ in {
       # Add host-specific casks
       "cursor" # AI-powered code editor
       "parsec" # Remote desktop
+      "vmware-fusion" # Virtualization
     ];
     brews = [
     ];
