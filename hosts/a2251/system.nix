@@ -25,8 +25,10 @@ in {
       "cursor" # AI-powered code editor
       "parsec" # Remote desktop
       "vmware-fusion" # Virtualization
+      "wine@staging"  # Windows exe compatibility layer
     ];
     brews = [
+      "winetricks"    # Work around Wine problems
     ];
     masApps = {
     };
