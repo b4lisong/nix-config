@@ -51,6 +51,9 @@ in {
       # Set kitty as default terminal for command-line tools
       TERMINAL = "kitty";
     };
-    enableAllTerminfo = true;
+    # This option is available, but not in the 25.05 release
+    # Enable this once we migrate/upgrade from 25.05
+    # For now, we'll add `kitty.terminfo` to the base modules
+    # enableAllTerminfo = true;
   };
 }
