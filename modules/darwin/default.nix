@@ -72,7 +72,22 @@ Extends base system configuration in `modules/base.nix`
         NSAutomaticPeriodSubstitutionEnabled = false;
         NSAutomaticQuoteSubstitutionEnabled = false;
         NSAutomaticSpellingCorrectionEnabled = false;
+        AppleFontSmoothing = 1;
       };
+
+      universalaccess = {
+        reduceMotion = true;
+      };
+    };
+
+    environment = {
+      variables = {
+        # Ensure proper terminal behavior
+        TERM_PROGRAM = "kitty";
+        # Set kitty as default terminal for command-line tools
+        TERMINAL = "kitty";
+      };
+      enableAllTerminfo = true;
     };
   };
 }
