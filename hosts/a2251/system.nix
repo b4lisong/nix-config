@@ -25,10 +25,10 @@ in {
       "cursor" # AI-powered code editor
       "parsec" # Remote desktop
       "vmware-fusion" # Virtualization
-      "wine@staging"  # Windows exe compatibility layer
+      "wine@staging" # Windows exe compatibility layer
     ];
     brews = [
-      "winetricks"    # Work around Wine problems
+      "winetricks" # Work around Wine problems
     ];
     masApps = {
     };
@@ -42,5 +42,15 @@ in {
       #   "/Applications/Cursor.app"
       # ];
     };
+  };
+
+  environment = {
+    variables = {
+      # Ensure proper terminal behavior
+      TERM_PROGRAM = "kitty";
+      # Set kitty as default terminal for command-line tools
+      TERMINAL = "kitty";
+    };
+    enableAllTerminfo = true;
   };
 }

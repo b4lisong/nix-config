@@ -80,14 +80,6 @@ Extends base system configuration in `modules/base.nix`
       };
     };
 
-    environment = {
-      variables = {
-        # Ensure proper terminal behavior
-        TERM_PROGRAM = "kitty";
-        # Set kitty as default terminal for command-line tools
-        TERMINAL = "kitty";
-      };
-      enableAllTerminfo = true;
-    };
+    
   };
 }
