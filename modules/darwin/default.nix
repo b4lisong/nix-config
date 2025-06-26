@@ -74,10 +74,6 @@ Extends base system configuration in `modules/base.nix`
         NSAutomaticSpellingCorrectionEnabled = false;
         AppleFontSmoothing = 1;
       };
-
-      universalaccess = {
-        reduceMotion = true;
-      };
     };
 
     
