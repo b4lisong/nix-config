@@ -40,13 +40,12 @@ in {
   system = {
     # Configure the primary user for this system
     primaryUser = vars.user.username;
-  # Manage keyboard settings
+    # Manage keyboard settings
     keyboard = {
       enableKeyMapping = true;
       remapCapsLockToEscape = true; # More useful Caps Lock functionality (vim, etc.)
     };
   };
-
 
   # User account configuration
   users.users.${vars.user.username} = {
