@@ -99,9 +99,20 @@ Future Enhancement Areas:
       nnoremap <Leader>bp :bprevious<CR>
       nnoremap <Leader>bd :bdelete<CR>
       
-      " Quick file navigation (will be enhanced with telescope later)
-      nnoremap <Leader>ff :find<Space>
-      nnoremap <Leader>fb :buffers<CR>
+      " === TELESCOPE FILE NAVIGATION ===
+      
+      " Enhanced file navigation with telescope fuzzy finding
+      nnoremap <Leader>ff <cmd>Telescope find_files<CR>
+      nnoremap <Leader>fb <cmd>Telescope buffers<CR>
+      nnoremap <Leader>fg <cmd>Telescope live_grep<CR>
+      nnoremap <Leader>fh <cmd>Telescope help_tags<CR>
+      nnoremap <Leader>fc <cmd>Telescope commands<CR>
+      nnoremap <Leader>fk <cmd>Telescope keymaps<CR>
+      
+      " Git integration (when in git repo)
+      nnoremap <Leader>gf <cmd>Telescope git_files<CR>
+      nnoremap <Leader>gc <cmd>Telescope git_commits<CR>
+      nnoremap <Leader>gb <cmd>Telescope git_branches<CR>
       
       " Folding controls (enhanced by treesitter)
       nnoremap <Leader>zo :foldopen<CR>
@@ -156,9 +167,9 @@ Future Enhancement Areas:
       # fd       # Already in base profile
     ];
     
-    # Plugin configuration - Phase 1: Better Syntax Highlighting
+    # Plugin configuration - Building IDE capabilities incrementally
     plugins = with pkgs.vimPlugins; [
-      # Treesitter: Modern syntax highlighting and parsing
+      # Phase 1: Treesitter - Modern syntax highlighting and parsing
       # Provides foundation for better highlighting, folding, and future IDE features
       {
         plugin = nvim-treesitter.withAllGrammars;
@@ -194,9 +205,96 @@ Future Enhancement Areas:
           EOF
         '';
       }
+
+      # Phase 2: Telescope - Fuzzy finding and project navigation
+      # Dependency for telescope (required)
+      plenary-nvim
       
-      # Future plugins will be added here as we progress through phases:
-      # Phase 2: telescope.nvim (fuzzy finding)
+      # Telescope: Highly extendable fuzzy finder
+      {
+        plugin = telescope-nvim;
+        config = ''
+          lua << EOF
+          local telescope = require('telescope')
+          local actions = require('telescope.actions')
+          
+          telescope.setup {
+            defaults = {
+              -- Default configuration for telescope
+              prompt_prefix = "🔍 ",
+              selection_caret = "➤ ",
+              path_display = { "truncate" },
+              
+              -- File and text search configuration
+              file_ignore_patterns = {
+                "node_modules/.*",
+                "%.git/.*",
+                "%.DS_Store",
+                "target/.*",
+                "build/.*",
+                "dist/.*",
+              },
+              
+              -- Use existing tools from base profile
+              vimgrep_arguments = {
+                "rg",
+                "--color=never",
+                "--no-heading",
+                "--with-filename",
+                "--line-number",
+                "--column",
+                "--smart-case",
+                "--hidden",
+                "--glob=!.git/",
+              },
+              
+              -- Keymaps within telescope
+              mappings = {
+                i = {
+                  ["<C-j>"] = actions.move_selection_next,
+                  ["<C-k>"] = actions.move_selection_previous,
+                  ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+                  ["<Esc>"] = actions.close,
+                },
+                n = {
+                  ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+                },
+              },
+            },
+            
+            pickers = {
+              -- File finder configuration
+              find_files = {
+                hidden = true,  -- Show hidden files
+                follow = true,  -- Follow symlinks
+                -- Use fd from base profile for fast file finding
+                find_command = { "fd", "--type", "f", "--hidden", "--follow", "--exclude", ".git" },
+              },
+              
+              -- Live grep configuration
+              live_grep = {
+                additional_args = function()
+                  return { "--hidden", "--glob=!.git/" }
+                end,
+              },
+              
+              -- Buffer configuration
+              buffers = {
+                show_all_buffers = true,
+                sort_mru = true,  -- Sort by most recently used
+                mappings = {
+                  i = {
+                    ["<C-d>"] = actions.delete_buffer,
+                  },
+                },
+              },
+            },
+          }
+          EOF
+        '';
+      }
+      
+      # Future plugins (Phase 3 & 4):
       # Phase 3: nvim-lspconfig (language servers) 
       # Phase 4: nvim-cmp (completion)
     ];
