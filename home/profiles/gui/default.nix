@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ../tui
-    ../../modules/terminal/kitty.nix
+    ../../modules/terminal/kitty.nix # Baseline kitty config
   ];
 
   home.packages = with pkgs; [
