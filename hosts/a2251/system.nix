@@ -36,14 +36,17 @@ in {
   # Set the target platform for this host (Intel MacBook Pro)
   nixpkgs.hostPlatform = vars.hosts.a2251.system;
 
-  # Configure the primary user for this system
-  system.primaryUser = vars.user.username;
-
+  # Manage system settings
+  system = {
+    # Configure the primary user for this system
+    primaryUser = vars.user.username;
   # Manage keyboard settings
-  system.keyboard = {
-    enableKeyMapping = true;
-    remapCapsLockToEscape = true; # More useful Caps Lock functionality (vim, etc.)
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToEscape = true; # More useful Caps Lock functionality (vim, etc.)
+    };
   };
+
 
   # User account configuration
   users.users.${vars.user.username} = {
