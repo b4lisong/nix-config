@@ -16,9 +16,6 @@ Inherits from `/home/profiles/base/default.nix`
     # File management
     yazi # Terminal file manager with a modern interface and features
 
-    # Development
-    neovim # Modern Vim-based text editor with Lua scripting support
-
     # Security
     _1password-cli # Command-line interface for 1Password password manager
   ];

@@ -2,6 +2,7 @@
   imports = [
     ../../home/profiles/darwin  # Complete Darwin system (GUI + macOS-specific)
     ../../home/roles/personal
+    ../../home/roles/dev
   ];
 
   # Host-specific customizations can go here
