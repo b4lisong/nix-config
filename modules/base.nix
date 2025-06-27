@@ -47,6 +47,7 @@ Defines the common system-level configuration shared by both NixOS and Darwin
     tree # Display directory structure as tree
     gnutar # GNU version of the tar archiving utility
     rsync # Fast, versatile file copying and synchronization tool
+    kitty.terminfo # Terminal information for kitty
   ];
 
   # Define a minimum set of fonts for all systems

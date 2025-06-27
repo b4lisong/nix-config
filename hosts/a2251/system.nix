@@ -23,11 +23,12 @@ in {
       # Keep the default casks from `modules/darwin/homebrew.nix`
       # Add host-specific casks
       "cursor" # AI-powered code editor
-      "spotify"
-      "burp-suite"
-      "firefox"
+      "parsec" # Remote desktop
+      "vmware-fusion" # Virtualization
+      "wine@staging" # Windows exe compatibility layer
     ];
     brews = [
+      "winetricks" # Work around Wine problems
     ];
     masApps = {
     };
@@ -41,5 +42,18 @@ in {
       #   "/Applications/Cursor.app"
       # ];
     };
+  };
+
+  environment = {
+    variables = {
+      # Ensure proper terminal behavior
+      TERM_PROGRAM = "kitty";
+      # Set kitty as default terminal for command-line tools
+      TERMINAL = "kitty";
+    };
+    # This option is available, but not in the 25.05 release
+    # Enable this once we migrate/upgrade from 25.05
+    # For now, we'll add `kitty.terminfo` to the base modules
+    # enableAllTerminfo = true;
   };
 }

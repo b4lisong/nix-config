@@ -72,7 +72,10 @@ Extends base system configuration in `modules/base.nix`
         NSAutomaticPeriodSubstitutionEnabled = false;
         NSAutomaticQuoteSubstitutionEnabled = false;
         NSAutomaticSpellingCorrectionEnabled = false;
+        AppleFontSmoothing = 1;
       };
     };
+
+    
   };
 }
