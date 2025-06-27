@@ -10,10 +10,12 @@ This repository is under constant development!
 
 ## Overview
 
-`flake.nix` declares the inputs for `nixpkgs`, `nix-darwin`, and `home-manager` and exposes two main outputs:
+`flake.nix` declares the inputs for `nixpkgs` (stable), `nixpkgs-unstable`, `nix-darwin`, and `home-manager` and exposes two main outputs:
 
-* **Darwin configurations** – created by `mkDarwinHost` and assembled from a set of modules.
+* **Darwin configurations** – created by `mkDarwinHost` and assembled from a layered set of modules.
 * **Development shells** – a set of per-architecture `mkShell` environments containing tools such as `alejandra`, `pre-commit`, `statix`, and `deadnix`.
+
+The configuration supports both stable and bleeding-edge packages through dual nixpkgs inputs, with Home Manager integrated as a Darwin module rather than standalone.
 
 ## Layout
 
@@ -37,9 +39,12 @@ Within `home/` there are reusable modules for the shell and editor as well as la
 
 * `profiles/base` – base set of CLI tools and programs.
 * `profiles/tui` – additional TUI utilities (btop, gping, ncdu, yazi, etc.).
-* `profiles/gui` – placeholder that currently imports the TUI profile.
+* `profiles/gui` – desktop applications, imports TUI profile as foundation.
+* `profiles/darwin` – complete macOS profile with GUI apps and Darwin-specific integrations.
 
-Roles under `home/roles` are empty and can be used to group host specific packages later.
+Roles under `home/roles` group packages by purpose:
+* `roles/dev` – development tools (neovim, nodejs, claude-code)
+* `roles/personal`, `roles/work`, `roles/security`, `roles/docker` – organized by use case
 
 ### Hosts
 
@@ -48,7 +53,10 @@ Each host directory contains two files:
 * `system.nix` – system level configuration that imports the base modules and can override Homebrew packages or defaults.
 * `home.nix` – Home Manager entry point that imports one of the profiles.
 
-Currently only the `a2251` host is defined.
+Currently three hosts are defined:
+* `a2251` – Personal MacBook Pro (Intel, x86_64-darwin) - actively used
+* `sksm3` – Work MacBook (Apple Silicon, aarch64-darwin) - defined but inactive
+* `rpi4b` – Raspberry Pi 4B (aarch64-linux) - planned NixOS host
 
 ## Variables
 
@@ -56,16 +64,33 @@ Global settings are centralised in `variables/default.nix` and include the prima
 
 ## Using the flake
 
-A typical rebuild on macOS looks like:
+### System Management
+A typical rebuild on macOS:
 
 ```bash
 sudo darwin-rebuild switch --flake .#a2251
 ```
 
-For editing or testing the configuration, a development shell can be started with:
+### Development Workflow
+Enter development shell with Nix tools:
 
 ```bash
 nix develop
+```
+
+Format, lint, and check code:
+
+```bash
+alejandra .          # Format Nix code
+statix check .       # Lint Nix code
+deadnix .            # Find unused code
+nix flake check      # Validate flake
+```
+
+Update dependencies:
+
+```bash
+nix flake update     # Update all inputs
 ```
 
 More manual setup notes live in `notes.md`.
