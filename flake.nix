@@ -3,7 +3,8 @@
 
   # Declare external dependencies needed by this flake
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin"; # stable pkgs
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # bleeding-edge pkgs
     nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs"; # nix-darwin nixpkgs version = nixpkgs version
     home-manager.url = "github:nix-community/home-manager/release-25.05";
@@ -16,6 +17,7 @@
   outputs = inputs @ {
     self,
     nixpkgs,
+    nixpkgs-unstable,
     nix-darwin,
     home-manager,
   }: let
@@ -40,7 +42,14 @@
         }
       ];
       # `specialArgs` passes additional arguments to all modules
-      specialArgs = {inherit self inputs vars;};
+      specialArgs = {
+        inherit self inputs vars;
+        # Make unstable pkgs available to all modules via pkgs-unstable
+        pkgs-unstable = import nixpkgs-unstable {
+          system = vars.hosts.${hostName}.system;
+          config.allowUnfree = true;
+        };
+      };
     };
     # Declare supported architectures
     # TODO: aarch64-linux
@@ -52,19 +61,30 @@
     # `mkDevShell` creates a development env for a given system
     mkDevShell = system: let
       pkgs = nixpkgsFor system;
+      # Also make unstable pkgs available in dev shells
+      pkgs-unstable = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
       pkgs.mkShell {
-        buildInputs = with pkgs; [
-          alejandra # Nix code formatter
-          pre-commit # pre-commit automation
-          statix # Nix linter
-          deadnix # finds unused Nix code
-          nix-tree # visualize Nix store dependencies
-          manix # searches Nix docs
-          nil # Nix language server
-          jq # JSON processor
-          git # Version control
-        ];
+        buildInputs = with pkgs;
+          [
+            alejandra # Nix code formatter
+            pre-commit # pre-commit automation
+            statix # Nix linter
+            deadnix # finds unused Nix code
+            nix-tree # visualize Nix store dependencies
+            manix # searches Nix docs
+            nil # Nix language server
+            jq # JSON processor
+            git # Version control
+          ]
+          ++ [
+            # Example unstable pkgs for development
+            # pkgs-unstable.nodejs_24
+            # pkgs-unstable.bun
+          ];
       };
   in {
     # Begin actual outputs definition
