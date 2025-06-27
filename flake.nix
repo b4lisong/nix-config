@@ -1,3 +1,68 @@
+/*
+FLAKE.NIX - Main Configuration Entry Point
+
+This flake provides a modular, cross-platform Nix configuration supporting
+both macOS (via nix-darwin) and future NixOS systems. It implements a
+layered architecture with clear separation of concerns.
+
+ARCHITECTURE OVERVIEW:
+
+System Configuration Layers (applied bottom-to-top):
+1. Base Layer (modules/base.nix):
+   - Core system packages (vim, git, archives, networking tools)
+   - Essential fonts (Nerd Fonts, emoji, programming fonts)
+   - Nix settings (experimental features, unfree packages)
+
+2. Platform Layer (modules/darwin/ or modules/nixos/):
+   - Platform-specific system configuration
+   - Darwin: macOS defaults, Touch ID, Homebrew integration
+   - NixOS: Hardware, systemd services, desktop environments
+
+3. Host Layer (hosts/<hostname>/system.nix):
+   - Machine-specific system configuration
+   - Host-specific Homebrew packages
+   - Hardware-specific settings and overrides
+
+User Configuration Layers (Home Manager):
+4. Profile Layer (home/profiles/):
+   - base: Core CLI tools and git configuration
+   - tui: Terminal applications (btop, gping, yazi, etc.)
+   - gui: Cross-platform desktop applications
+   - darwin: macOS-specific applications and optimizations
+
+5. Role Layer (home/roles/):
+   - dev: Development tools (neovim, nodejs, claude-code)
+   - personal: Entertainment and personal apps
+   - work: Work-specific tools and compliance
+   - security: Security and penetration testing tools
+   - docker: Container and orchestration tools
+
+6. Host Layer (hosts/<hostname>/home.nix):
+   - Host-specific user configuration
+   - Combines profiles and roles for complete environment
+   - Machine-specific overrides and customizations
+
+DUAL PACKAGE SYSTEM:
+- nixpkgs: Stable packages for reliability
+- nixpkgs-unstable: Bleeding-edge packages for development
+- Both available to all modules via specialArgs
+
+CONFIGURATION FLOW:
+flake.nix → mkDarwinHost() → system modules → Home Manager → user profiles/roles
+
+VARIABLES SYSTEM:
+- Centralized in variables/default.nix
+- User info, git settings, host metadata
+- Shared across all configuration layers
+- Enables consistent configuration
+
+This architecture provides:
+- Modular, composable configuration
+- Clear separation between system and user levels
+- Platform independence with specific optimizations
+- Role-based package organization
+- Reproducible, declarative system management
+*/
 {
   description = "Modular nix{-darwin,OS} config";
 
@@ -12,8 +77,9 @@
   };
 
   # Main function that generates what this flake provides
+  # This function takes the declared inputs and produces the flake outputs
   # = inputs@{ ... } destructures inputs while keeping full set as `inputs`
-  #   `self` refers to this flake itself
+  #   `self` refers to this flake itself for accessing git revision info
   outputs = inputs @ {
     self,
     nixpkgs,
@@ -28,18 +94,33 @@
     # `vars` imports shared vars/constants (usernames, host configs, etc.)
     vars = import ./variables;
     # Helper function that creates a Darwin system config for a given hostname
+    # This function encapsulates the entire system assembly process:
+    # 1. System-level configuration (modules/base.nix + modules/darwin)
+    # 2. Host-specific system configuration (hosts/<hostname>/system.nix)
+    # 3. Home Manager integration with user-level configuration
+    # 4. Makes both stable and unstable packages available to all modules
     mkDarwinHost = hostName: {
       modules = [
-        # `modules` array defines what gets included in each system
-        ./modules/base.nix # shared base config, all machines
-        ./modules/darwin # Darwin-specific modules
-        ./hosts/${hostName}/system.nix # Host-specific system configuration
-        home-manager.darwinModules.home-manager # integrates Home Manager
+        # System configuration hierarchy (applied in order):
+        # 1. Base system configuration (shared across all platforms)
+        ./modules/base.nix # Core packages, fonts, Nix settings for all systems
+
+        # 2. Platform-specific system configuration
+        ./modules/darwin # macOS-specific settings, Homebrew, system defaults
+
+        # 3. Host-specific system configuration
+        ./hosts/${hostName}/system.nix # Machine-specific overrides and additions
+
+        # 4. Home Manager integration as a nix-darwin module
+        home-manager.darwinModules.home-manager # Enables user-level configuration
         {
+          # Home Manager user configuration
           home-manager.users.${vars.user.username}.imports = [
-            ./hosts/${hostName}/home.nix # import host-specific HM config
+            ./hosts/${hostName}/home.nix # Host-specific user config (profiles + roles)
           ];
-          # Pass pkgs-unstable to home-manager modules
+
+          # Provide unstable packages to Home Manager modules
+          # This enables using bleeding-edge packages in user configuration
           home-manager.extraSpecialArgs = {
             pkgs-unstable = import nixpkgs-unstable {
               system = vars.hosts.${hostName}.system;

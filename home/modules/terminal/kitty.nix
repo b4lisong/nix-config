@@ -9,26 +9,26 @@ from the original dotfiles configuration.
   # Kitty terminal configuration using Home Manager's built-in module
   programs.kitty = {
     enable = true;
-    
+
     # Font configuration
     font = {
       name = "SauceCodePro Nerd Font Mono";
       size = 10; # Baseline size, platform-specific modules can override
     };
-    
+
     # Cross-platform settings (from your dotfiles)
     settings = {
       # Scrollback and audio
       scrollback_lines = 99999;
       enable_audio_bell = true;
-      
+
       # Window settings
       window_margin_width = 0;
       window_padding_width = 20; # Baseline padding, platform-specific modules can override
       remember_window_size = true;
       placement_strategy = "center";
       confirm_os_window_close = -1;
-      
+
       # Cursor settings
       shell_integration = "no-cursor";
       cursor_shape = "block";
@@ -36,7 +36,7 @@ from the original dotfiles configuration.
       cursor_underline_thickness = "2.0";
       cursor_blink_interval = "0.75";
       cursor_stop_blinking_after = 15;
-      
+
       # Tab bar settings
       tab_bar_edge = "bottom";
       tab_bar_margin_width = "20.0";
@@ -49,11 +49,11 @@ from the original dotfiles configuration.
       tab_activity_symbol = "none";
       tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}";
       active_tab_title_template = "none";
-      
+
       # Mouse settings
       mouse_hide_wait = "3.0";
       click_interval = "1.0";
-      
+
       # Appearance settings
       url_style = "straight";
       active_tab_font_style = "bold-italic";
@@ -64,7 +64,7 @@ from the original dotfiles configuration.
       dynamic_background_opacity = false;
       background_tint = "0.0";
       dim_opacity = "1.0";
-      
+
       # Catppuccin Mocha theme colors
       foreground = "#cdd6f4";
       background = "#1e1e2e";
@@ -83,7 +83,7 @@ from the original dotfiles configuration.
       inactive_tab_foreground = "#cdd6f4";
       inactive_tab_background = "#181825";
       tab_bar_background = "#11111b";
-      
+
       # Mark colors
       mark1_foreground = "#1e1e2e";
       mark1_background = "#b4befe";
@@ -91,7 +91,7 @@ from the original dotfiles configuration.
       mark2_background = "#cba6f7";
       mark3_foreground = "#1e1e2e";
       mark3_background = "#74c7ec";
-      
+
       # Terminal colors
       color0 = "#45475a";
       color8 = "#585b70";
@@ -110,7 +110,7 @@ from the original dotfiles configuration.
       color7 = "#bac2de";
       color15 = "#a6adc8";
     };
-    
+
     # Key bindings (from your keybinds.conf)
     keybindings = {
       # General scrolling and navigation
@@ -125,7 +125,7 @@ from the original dotfiles configuration.
       "ctrl+shift+j" = "scroll_line_down";
       "ctrl+shift+x" = "scroll_to_prompt 1";
       "ctrl+shift+z" = "scroll_to_prompt -1";
-      
+
       # Window management
       "ctrl+shift+enter" = "new_window";
       "ctrl+shift+w" = "close_window";
@@ -145,7 +145,7 @@ from the original dotfiles configuration.
       "ctrl+shift+8" = "eighth_window";
       "ctrl+shift+9" = "ninth_window";
       "ctrl+shift+0" = "tenth_window";
-      
+
       # Tab management
       "ctrl+shift+t" = "new_tab";
       "ctrl+shift+q" = "close_tab";
@@ -154,7 +154,7 @@ from the original dotfiles configuration.
       "ctrl+shift+." = "move_tab_forward";
       "ctrl+shift+," = "move_tab_backward";
       "ctrl+shift+alt+t" = "set_tab_title";
-      
+
       # Font size
       "ctrl+plus" = "increase_font_size";
       "ctrl+minus" = "decrease_font_size";
