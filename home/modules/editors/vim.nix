@@ -12,9 +12,9 @@ _: {
       set expandtab
 
       " Indentation settings
-      set tabstop=2           " Number of spaces per tab character
-      set shiftwidth=2        " Number of spaces for automatic indentation  
-      set softtabstop=2       " Number of spaces inserted when pressing Tab
+      set tabstop=4           " Number of spaces per tab character
+      set shiftwidth=4        " Number of spaces for automatic indentation  
+      set softtabstop=4       " Number of spaces inserted when pressing Tab
       set autoindent          " Enable automatic indentation
 
       " === DISPLAY SETTINGS ===
