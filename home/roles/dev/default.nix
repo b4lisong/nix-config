@@ -33,9 +33,13 @@ Package Selection Strategy:
   pkgs-unstable, # Unstable nixpkgs package set (bleeding-edge)
   ...
 }: {
+  imports = [
+    ../../modules/editors/neovim.nix  # Modern neovim with IDE enhancements
+  ];
+  
   home.packages = with pkgs; [
     ## Stable packages - reliable, well-tested versions
-    neovim # Text editor - stable version for reliability in daily work
+    # neovim is now provided by the imported neovim.nix module above
 
     ## Unstable packages - latest features and versions for development
     pkgs-unstable.nodePackages_latest.nodejs # Latest Node.js with newest features
