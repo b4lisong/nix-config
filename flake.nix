@@ -39,6 +39,13 @@
           home-manager.users.${vars.user.username}.imports = [
             ./hosts/${hostName}/home.nix # import host-specific HM config
           ];
+          # Pass pkgs-unstable to home-manager modules
+          home-manager.extraSpecialArgs = {
+            pkgs-unstable = import nixpkgs-unstable {
+              system = vars.hosts.${hostName}.system;
+              config.allowUnfree = true;
+            };
+          };
         }
       ];
       # `specialArgs` passes additional arguments to all modules
