@@ -103,7 +103,26 @@ Future Enhancement Areas:
       nnoremap <Leader>ff :find<Space>
       nnoremap <Leader>fb :buffers<CR>
       
-      " === PREPARATION FOR PLUGINS ===
+      " Folding controls (enhanced by treesitter)
+      nnoremap <Leader>zo :foldopen<CR>
+      nnoremap <Leader>zc :foldclose<CR>
+      nnoremap <Leader>za :foldopen!<CR>
+      nnoremap <Leader>zm :foldclose!<CR>
+      
+      " === TREESITTER ENHANCEMENTS ===
+      
+      " Enable treesitter-based folding (better than syntax-based)
+      if has('nvim')
+        set foldmethod=expr
+        set foldexpr=nvim_treesitter#foldexpr()
+        set nofoldenable  " Start with folds open
+        set foldlevel=99  " High fold level means most folds will be open
+        
+        " Treesitter-based text objects and navigation
+        " These will be enhanced as we add more treesitter features
+      endif
+      
+      " === PREPARATION FOR FUTURE PLUGINS ===
       
       " These settings optimize neovim for future plugin integration
       
@@ -137,13 +156,49 @@ Future Enhancement Areas:
       # fd       # Already in base profile
     ];
     
-    # Plugin configuration (currently empty, will be expanded)
-    plugins = [
-      # Future: Plugins will be added here as we enhance IDE capabilities
-      # pkgs.vimPlugins.nvim-lspconfig
-      # pkgs.vimPlugins.nvim-treesitter
-      # pkgs.vimPlugins.telescope-nvim
-      # pkgs.vimPlugins.nvim-cmp
+    # Plugin configuration - Phase 1: Better Syntax Highlighting
+    plugins = with pkgs.vimPlugins; [
+      # Treesitter: Modern syntax highlighting and parsing
+      # Provides foundation for better highlighting, folding, and future IDE features
+      {
+        plugin = nvim-treesitter.withAllGrammars;
+        config = ''
+          lua << EOF
+          require('nvim-treesitter.configs').setup {
+            -- Enable syntax highlighting
+            highlight = {
+              enable = true,
+              -- Disable vim regex highlighting in favor of treesitter
+              additional_vim_regex_highlighting = false,
+            },
+            
+            -- Enable incremental selection based on treesitter
+            incremental_selection = {
+              enable = true,
+              keymaps = {
+                init_selection = "gnn",    -- Start selection
+                node_incremental = "grn",  -- Increment to next node
+                scope_incremental = "grc", -- Increment to next scope
+                node_decremental = "grm",  -- Decrement to previous node
+              },
+            },
+            
+            -- Enable indentation based on treesitter
+            indent = {
+              enable = true,
+            },
+            
+            -- Enable treesitter-based folding
+            -- This will be configured in the main vim config
+          }
+          EOF
+        '';
+      }
+      
+      # Future plugins will be added here as we progress through phases:
+      # Phase 2: telescope.nvim (fuzzy finding)
+      # Phase 3: nvim-lspconfig (language servers) 
+      # Phase 4: nvim-cmp (completion)
     ];
   };
   
