@@ -16,66 +16,93 @@ Extends base system configuration in `modules/base.nix`
   nixpkgs.config.allowUnfree = true;
 
   system = {
-    # System state version for compatibility
-    # This should be incremented when making breaking changes to the system configuration
+    # System state version for nix-darwin compatibility
+    # This tracks the nix-darwin configuration format version
+    # Increment only when making breaking changes to the system configuration
     stateVersion = 6;
 
+    # Git revision tracking for reproducible builds
+    # Shows which commit was used to build this configuration
     configurationRevision = self.rev or self.dirtyRev or null;
 
+    # macOS system preferences and defaults
+    # These settings configure the native macOS user interface and behavior
     defaults = {
-      menuExtraClock.Show24Hour = true;
+      # Menu bar configuration
+      menuExtraClock.Show24Hour = true; # Use 24-hour time format in menu bar
+
+      # Dock behavior and appearance
       dock = {
-        autohide = true;
-        show-recents = false;
-        mru-spaces = false;
-        expose-group-apps = true;
-        showhidden = true;
-        autohide-delay = 0.0;
-        autohide-time-modifier = 0.2;
-        orientation = "bottom";
-        tilesize = 48;
-        magnification = true;
-        largesize = 64;
-        minimize-to-application = true;
+        autohide = true; # Hide dock when not in use for more screen space
+        show-recents = false; # Don't show recently used apps in dock
+        mru-spaces = false; # Don't rearrange spaces based on usage
+        expose-group-apps = true; # Group windows by application in Mission Control
+        showhidden = true; # Show indicators for hidden applications
+        autohide-delay = 0.0; # No delay before dock appears when cursor hovers
+        autohide-time-modifier = 0.2; # Fast dock show/hide animation (0.2s)
+        orientation = "bottom"; # Position dock at bottom of screen
+        tilesize = 48; # Normal icon size in dock
+        magnification = true; # Enable icon magnification on hover
+        largesize = 64; # Maximum icon size when magnified
+        minimize-to-application = true; # Minimize windows into app icon rather than dock
       };
+
+      # Finder file manager configuration
       finder = {
-        _FXShowPosixPathInTitle = true;
-        AppleShowAllExtensions = true;
-        FXEnableExtensionChangeWarning = false;
-        QuitMenuItem = true;
-        ShowPathbar = true;
-        ShowStatusBar = true;
-        FXDefaultSearchScope = "SCcf";
-        FXPreferredViewStyle = "Nlsv";
+        _FXShowPosixPathInTitle = true; # Show full POSIX path in Finder title bar
+        AppleShowAllExtensions = true; # Always show file extensions
+        FXEnableExtensionChangeWarning = false; # Don't warn when changing file extensions
+        QuitMenuItem = true; # Enable Quit option in Finder menu
+        ShowPathbar = true; # Show path bar at bottom of Finder windows
+        ShowStatusBar = true; # Show status bar with file counts and storage info
+        FXDefaultSearchScope = "SCcf"; # Search current folder by default (not entire Mac)
+        FXPreferredViewStyle = "Nlsv"; # Use list view as default Finder view
       };
+
+      # Trackpad gesture and behavior settings
       trackpad = {
-        Clicking = true;
-        TrackpadRightClick = true;
-        TrackpadThreeFingerDrag = true;
+        Clicking = true; # Enable tap to click
+        TrackpadRightClick = true; # Enable two-finger right click
+        TrackpadThreeFingerDrag = true; # Enable three-finger window dragging
       };
-      ".GlobalPreferences"."com.apple.mouse.scaling" = 1.0;
-      controlcenter.Sound = true;
+
+      # Mouse behavior
+      ".GlobalPreferences"."com.apple.mouse.scaling" = 1.0; # Normal mouse tracking speed
+
+      # Control Center configuration
+      controlcenter.Sound = true; # Show sound controls in Control Center
+
+      # Global system preferences (NSGlobalDomain affects all applications)
       NSGlobalDomain = {
-        AppleInterfaceStyle = "Dark";
-        AppleKeyboardUIMode = 3;
-        ApplePressAndHoldEnabled = true;
-        InitialKeyRepeat = 15;
-        KeyRepeat = 2;
-        AppleShowAllExtensions = true;
-        AppleShowScrollBars = "Automatic";
-        NSNavPanelExpandedStateForSaveMode = true;
-        NSNavPanelExpandedStateForSaveMode2 = true;
-        PMPrintingExpandedStateForPrint = true;
-        PMPrintingExpandedStateForPrint2 = true;
-        NSAutomaticCapitalizationEnabled = false;
-        NSAutomaticDashSubstitutionEnabled = false;
-        NSAutomaticPeriodSubstitutionEnabled = false;
-        NSAutomaticQuoteSubstitutionEnabled = false;
-        NSAutomaticSpellingCorrectionEnabled = false;
-        AppleFontSmoothing = 1;
+        # Interface and appearance
+        AppleInterfaceStyle = "Dark"; # Use dark mode system-wide
+        AppleKeyboardUIMode = 3; # Full keyboard access for dialogs and controls
+        ApplePressAndHoldEnabled = true; # Enable press-and-hold for accented characters
+
+        # Keyboard repeat behavior
+        InitialKeyRepeat = 15; # Delay before key repeat starts (15 = ~250ms)
+        KeyRepeat = 2; # Key repeat rate (2 = ~30ms between repeats)
+
+        # File and interface behavior
+        AppleShowAllExtensions = true; # Show file extensions in all apps
+        AppleShowScrollBars = "Automatic"; # Show scroll bars when needed
+
+        # Dialog box behavior (expand by default)
+        NSNavPanelExpandedStateForSaveMode = true; # Expand save dialogs
+        NSNavPanelExpandedStateForSaveMode2 = true; # Expand save dialogs (newer apps)
+        PMPrintingExpandedStateForPrint = true; # Expand print dialogs
+        PMPrintingExpandedStateForPrint2 = true; # Expand print dialogs (newer apps)
+
+        # Text input behavior (disable autocorrect features for development work)
+        NSAutomaticCapitalizationEnabled = false; # Don't auto-capitalize
+        NSAutomaticDashSubstitutionEnabled = false; # Don't convert -- to em dash
+        NSAutomaticPeriodSubstitutionEnabled = false; # Don't add period after double-space
+        NSAutomaticQuoteSubstitutionEnabled = false; # Don't convert quotes to curly quotes
+        NSAutomaticSpellingCorrectionEnabled = false; # Don't auto-correct spelling
+
+        # Font rendering
+        AppleFontSmoothing = 1; # Minimal font smoothing for crisp text
       };
     };
-
-    
   };
 }
