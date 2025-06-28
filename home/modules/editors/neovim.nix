@@ -178,7 +178,7 @@ Future Enhancement Areas:
       nixd                                    # Nix language server (modern, feature-rich)
       nodePackages.typescript-language-server # TypeScript/JavaScript LSP
       lua-language-server                     # Lua LSP (for neovim config)
-      python-lsp-server                       # Python LSP with good plugin ecosystem
+      python3Packages.python-lsp-server       # Python LSP with good plugin ecosystem
       vscode-langservers-extracted           # JSON, HTML, CSS, ESLint language servers
       
       # Additional development tools
