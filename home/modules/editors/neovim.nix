@@ -621,7 +621,7 @@ Future Enhancement Areas:
           EOF
         '';
       }
-      cmp-luasnip       # Snippet completion source
+      cmp_luasnip       # Snippet completion source
       friendly-snippets # Pre-built snippet collection
     ];
   };
