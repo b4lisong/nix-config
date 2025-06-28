@@ -366,7 +366,7 @@ Future Enhancement Areas:
           vim.diagnostic.config({
             virtual_text = {
               prefix = '●',
-              source = "if_many",
+              source = "if_many"
             },
             signs = true,
             underline = true,
