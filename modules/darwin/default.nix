@@ -78,6 +78,7 @@ Extends base system configuration in `modules/base.nix`
         AppleInterfaceStyle = "Dark"; # Use dark mode system-wide
         AppleKeyboardUIMode = 3; # Full keyboard access for dialogs and controls
         ApplePressAndHoldEnabled = true; # Enable press-and-hold for accented characters
+        NSWindowShouldDragOnGesture = true; # Move windows w/ctrl+cmd and drag
 
         # Keyboard repeat behavior
         InitialKeyRepeat = 15; # Delay before key repeat starts (15 = ~250ms)
