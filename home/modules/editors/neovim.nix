@@ -373,10 +373,10 @@ Future Enhancement Areas:
             update_in_insert = false,
             severity_sort = true,
             float = {
-              border = 'rounded',
-              source = 'always',
-              header = ''
-              prefix = ''
+              border = "rounded",
+              source = "always",
+              header = "",
+              prefix = ""
             }
           })
           
