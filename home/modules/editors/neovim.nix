@@ -376,7 +376,7 @@ Future Enhancement Areas:
               border = 'rounded',
               source = 'always',
               header = '',
-              prefix = '',
+              prefix = ''
             },
           })
           
