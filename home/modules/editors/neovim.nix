@@ -462,8 +462,167 @@ Future Enhancement Areas:
         '';
       }
       
-      # Future plugins (Phase 4):
-      # Phase 4: nvim-cmp (completion)
+      # Phase 4: Completion System - nvim-cmp with multiple sources
+      # Completion engine (required first)
+      {
+        plugin = nvim-cmp;
+        config = ''
+          lua << EOF
+          local cmp = require('cmp')
+          local luasnip = require('luasnip')
+          
+          -- Helper function for completion navigation
+          local has_words_before = function()
+            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+            return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+          end
+          
+          cmp.setup({
+            snippet = {
+              expand = function(args)
+                luasnip.lsp_expand(args.body)
+              end,
+            },
+            
+            -- Completion window appearance
+            window = {
+              completion = cmp.config.window.bordered(),
+              documentation = cmp.config.window.bordered(),
+            },
+            
+            -- Completion behavior
+            completion = {
+              completeopt = 'menu,menuone,noinsert',
+            },
+            
+            -- Key mappings for completion
+            mapping = cmp.mapping.preset.insert({
+              -- Navigate completion menu
+              ['<C-k>'] = cmp.mapping.select_prev_item(),
+              ['<C-j>'] = cmp.mapping.select_next_item(),
+              
+              -- Scroll documentation
+              ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+              ['<C-f>'] = cmp.mapping.scroll_docs(4),
+              
+              -- Trigger completion manually
+              ['<C-Space>'] = cmp.mapping.complete(),
+              
+              -- Close completion
+              ['<C-e>'] = cmp.mapping.abort(),
+              
+              -- Accept completion
+              ['<CR>'] = cmp.mapping.confirm({ select = false }),
+              
+              -- Tab completion with snippet support
+              ['<Tab>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_next_item()
+                elseif luasnip.expand_or_jumpable() then
+                  luasnip.expand_or_jump()
+                elseif has_words_before() then
+                  cmp.complete()
+                else
+                  fallback()
+                end
+              end, { 'i', 's' }),
+              
+              ['<S-Tab>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  cmp.select_prev_item()
+                elseif luasnip.jumpable(-1) then
+                  luasnip.jump(-1)
+                else
+                  fallback()
+                end
+              end, { 'i', 's' }),
+            }),
+            
+            -- Completion sources (in priority order)
+            sources = cmp.config.sources({
+              { name = 'nvim_lsp' },           -- LSP completions (highest priority)
+              { name = 'luasnip' },            -- Snippet completions
+              { name = 'path' },               -- File path completions
+            }, {
+              { name = 'buffer' },             -- Buffer text completions (fallback)
+            }),
+            
+            -- Completion formatting
+            formatting = {
+              format = function(entry, vim_item)
+                -- Add completion source indicator
+                vim_item.menu = ({
+                  nvim_lsp = "[LSP]",
+                  luasnip = "[Snip]",
+                  buffer = "[Buf]",
+                  path = "[Path]",
+                })[entry.source.name]
+                
+                return vim_item
+              end,
+            },
+          })
+          
+          -- LSP capabilities for completion
+          local capabilities = require('cmp_nvim_lsp').default_capabilities()
+          
+          -- Update existing LSP configurations to use completion capabilities
+          -- This enhances the LSP servers we configured in Phase 3
+          local lspconfig = require('lspconfig')
+          
+          -- Re-setup servers with completion capabilities
+          lspconfig.nixd.setup({
+            capabilities = capabilities,
+            -- (existing nixd config will be inherited)
+          })
+          
+          lspconfig.ts_ls.setup({
+            capabilities = capabilities,
+          })
+          
+          lspconfig.lua_ls.setup({
+            capabilities = capabilities,
+          })
+          
+          lspconfig.pylsp.setup({
+            capabilities = capabilities,
+          })
+          
+          lspconfig.jsonls.setup({
+            capabilities = capabilities,
+          })
+          
+          EOF
+        '';
+      }
+      
+      # Completion source plugins
+      cmp-nvim-lsp      # LSP completion source
+      cmp-buffer        # Buffer text completion source  
+      cmp-path          # File path completion source
+      cmp-cmdline       # Command line completion
+      
+      # Snippet engine and completion source
+      {
+        plugin = luasnip;
+        config = ''
+          lua << EOF
+          local luasnip = require('luasnip')
+          
+          -- Enable friendly snippets
+          require('luasnip.loaders.from_vscode').lazy_load()
+          
+          -- Custom snippet configuration
+          luasnip.config.setup({
+            history = true,
+            updateevents = "TextChanged,TextChangedI",
+            enable_autosnippets = true,
+          })
+          EOF
+        '';
+      }
+      cmp-luasnip       # Snippet completion source
+      friendly-snippets # Pre-built snippet collection
     ];
   };
   
