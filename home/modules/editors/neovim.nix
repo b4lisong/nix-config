@@ -114,6 +114,23 @@ Future Enhancement Areas:
       nnoremap <Leader>gc <cmd>Telescope git_commits<CR>
       nnoremap <Leader>gb <cmd>Telescope git_branches<CR>
       
+      " === LSP INTEGRATION WITH TELESCOPE ===
+      
+      " LSP symbol navigation (enhanced by telescope)
+      nnoremap <Leader>ls <cmd>Telescope lsp_document_symbols<CR>
+      nnoremap <Leader>lw <cmd>Telescope lsp_workspace_symbols<CR>
+      nnoremap <Leader>ld <cmd>Telescope diagnostics<CR>
+      nnoremap <Leader>li <cmd>Telescope lsp_implementations<CR>
+      nnoremap <Leader>lt <cmd>Telescope lsp_type_definitions<CR>
+      
+      " === DIAGNOSTIC NAVIGATION ===
+      
+      " Navigate between diagnostics (errors, warnings, etc.)
+      nnoremap ]d <cmd>lua vim.diagnostic.goto_next()<CR>
+      nnoremap [d <cmd>lua vim.diagnostic.goto_prev()<CR>
+      nnoremap <Leader>dl <cmd>lua vim.diagnostic.setloclist()<CR>
+      nnoremap <Leader>df <cmd>lua vim.diagnostic.open_float()<CR>
+      
       " Folding controls (enhanced by treesitter)
       nnoremap <Leader>zo :foldopen<CR>
       nnoremap <Leader>zc :foldclose<CR>
@@ -154,17 +171,20 @@ Future Enhancement Areas:
     # Configure neovim package and build options
     package = pkgs.neovim-unwrapped;
     
-    # Neovim-specific packages (can be extended as we add features)
-    # These don't affect vim, only neovim
+    # Language servers and IDE tools
+    # These packages provide intelligent language features
     extraPackages = with pkgs; [
-      # Future: Language servers can be added here
-      # nodePackages.typescript-language-server
-      # lua-language-server
-      # rust-analyzer
+      # Language servers for IDE intelligence
+      nixd                                    # Nix language server (modern, feature-rich)
+      nodePackages.typescript-language-server # TypeScript/JavaScript LSP
+      lua-language-server                     # Lua LSP (for neovim config)
+      python-lsp-server                       # Python LSP with good plugin ecosystem
+      vscode-langservers-extracted           # JSON, HTML, CSS, ESLint language servers
       
-      # Future: Additional tools for IDE features
-      # ripgrep  # Already in base profile
-      # fd       # Already in base profile
+      # Additional development tools
+      # ripgrep  # Already in base profile - used by telescope
+      # fd       # Already in base profile - used by telescope
+      # alejandra # Already in base profile - used by nixd for formatting
     ];
     
     # Plugin configuration - Building IDE capabilities incrementally
@@ -294,8 +314,155 @@ Future Enhancement Areas:
         '';
       }
       
-      # Future plugins (Phase 3 & 4):
-      # Phase 3: nvim-lspconfig (language servers) 
+      # Phase 3: Language Server Protocol - IDE Intelligence
+      # LSP Configuration for intelligent language features
+      {
+        plugin = nvim-lspconfig;
+        config = ''
+          lua << EOF
+          local lspconfig = require('lspconfig')
+          local capabilities = vim.lsp.protocol.make_client_capabilities()
+          
+          -- Common LSP configuration function
+          local on_attach = function(client, bufnr)
+            -- Enable completion triggered by <c-x><c-o>
+            vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+            
+            -- Buffer local mappings
+            local bufopts = { noremap=true, silent=true, buffer=bufnr }
+            
+            -- Core LSP navigation
+            vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+            vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+            vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<CR>', bufopts)
+            vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+            vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, bufopts)
+            
+            -- Documentation and help
+            vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+            vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+            
+            -- Code actions and refactoring
+            vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+            vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+            vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+            
+            -- Workspace management
+            vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+            vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+            vim.keymap.set('n', '<leader>wl', function()
+              print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+            end, bufopts)
+          end
+          
+          -- Configure diagnostic signs and display
+          local signs = { Error = "✗", Warn = "⚠", Hint = "💡", Info = "ℹ" }
+          for type, icon in pairs(signs) do
+            local hl = "DiagnosticSign" .. type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+          end
+          
+          -- Configure diagnostic display
+          vim.diagnostic.config({
+            virtual_text = {
+              prefix = '●',
+              source = "if_many",
+            },
+            signs = true,
+            underline = true,
+            update_in_insert = false,
+            severity_sort = true,
+            float = {
+              border = 'rounded',
+              source = 'always',
+              header = '',
+              prefix = '',
+            },
+          })
+          
+          -- Language server configurations
+          
+          -- Nix language server (for your configuration files)
+          lspconfig.nixd.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+              nixd = {
+                nixpkgs = {
+                  expr = "import <nixpkgs> { }",
+                },
+                formatting = {
+                  command = { "alejandra" },
+                },
+                options = {
+                  nixos = {
+                    expr = "(builtins.getFlake \"/path/to/your/flake\").nixosConfigurations.your-host.options",
+                  },
+                  home_manager = {
+                    expr = "(builtins.getFlake \"/path/to/your/flake\").homeConfigurations.your-user.options",
+                  },
+                },
+              },
+            },
+          })
+          
+          -- TypeScript/JavaScript language server
+          lspconfig.ts_ls.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+          })
+          
+          -- Lua language server (for neovim configuration)
+          lspconfig.lua_ls.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+              Lua = {
+                runtime = {
+                  version = 'LuaJIT',
+                },
+                diagnostics = {
+                  globals = {'vim'},
+                },
+                workspace = {
+                  library = vim.api.nvim_get_runtime_file("", true),
+                  checkThirdParty = false,
+                },
+                telemetry = {
+                  enable = false,
+                },
+              },
+            },
+          })
+          
+          -- Python language server
+          lspconfig.pylsp.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+              pylsp = {
+                plugins = {
+                  pycodestyle = {
+                    ignore = {'W391'},
+                    maxLineLength = 100,
+                  }
+                }
+              }
+            }
+          })
+          
+          -- JSON language server
+          lspconfig.jsonls.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+          })
+          
+          EOF
+        '';
+      }
+      
+      # Future plugins (Phase 4):
       # Phase 4: nvim-cmp (completion)
     ];
   };
