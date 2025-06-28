@@ -375,9 +375,9 @@ Future Enhancement Areas:
             float = {
               border = 'rounded',
               source = 'always',
-              header = '',
+              header = ''
               prefix = ''
-            },
+            }
           })
           
           -- Language server configurations
