@@ -78,10 +78,8 @@ in {
       "winetricks" # Helper tool for Wine Windows compatibility
     ];
 
-    # Mac App Store applications (none currently needed)
+    # Mac App Store applications
     masApps = {
-      # Future Mac App Store apps can be added here with their IDs
-      # Example: "Xcode" = 497799835;
       "NextDNS" = 1464122853; # DNS service
     };
   };
