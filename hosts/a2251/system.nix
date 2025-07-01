@@ -68,6 +68,9 @@ in {
 
       # Compatibility and gaming
       "wine@staging" # Windows application compatibility layer
+
+      # Browsers
+      "google-chrome" # Chrome browser (not available in nixpkgs)
     ];
 
     # Command-line tools via Homebrew
