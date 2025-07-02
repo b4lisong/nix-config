@@ -106,4 +106,25 @@ Extends base system configuration in `modules/base.nix`
       };
     };
   };
+
+  # Darwin-wide system services
+  services = {
+    # JankyBorders - Adds colored borders around windows for visual focus indication
+    # Particularly useful for window managers like yabai or when using multiple windows
+    jankyborders = {
+      enable = true; # Enable the JankyBorders service
+      hidpi = true; # Enable high-DPI support for crisp borders on retina displays
+      
+      # Active window border: Green to blue gradient (top-left to bottom-right)
+      # Uses Catppuccin color scheme - a6e3a1 (green) to 89b4fa (blue)
+      active_color = "gradient(top_left=0xffa6e3a1,bottom_right=0xff89b4fa)";
+      
+      # Inactive window border: Dark gray from Catppuccin base theme (1e1e2e)
+      # Low opacity (0x00) makes it very subtle for inactive windows
+      inactive_color = "0x001e1e2e";
+      
+      # Layer order: Draw borders above window content for better visibility
+      order = "above";
+    };
+  };
 }

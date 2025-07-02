@@ -37,7 +37,7 @@ Extension Points:
 - macOS system integration modules
 - Performance optimizations for Apple hardware
 */
-{...}: {
+{pkgs, ...}: {
   imports = [
     # Import cross-platform GUI baseline (includes tui and base profiles)
     ../gui
@@ -62,9 +62,11 @@ Extension Points:
     # Additional macOS-specific configurations can be added here
   };
 
-  # Darwin-specific environment variables
-  home.sessionVariables = {
-    # Ensure proper macOS integration
-    # These are set automatically by the system, but can be overridden if needed
+  home = {
+    # Darwin-specific environment variables
+    sessionVariables = {
+      # Ensure proper macOS integration
+      # These are set automatically by the system, but can be overridden if needed
+    };
   };
 }
