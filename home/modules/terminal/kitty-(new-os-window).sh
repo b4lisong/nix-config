@@ -11,4 +11,4 @@
 # Documentation:
 # @raycast.description Launch kitty in a new OS window
 
-/Users/balisong/.nix-profile/bin/kitty --single-instance
+/Users/balisong/.nix-profile/bin/kitty --single-instance &
