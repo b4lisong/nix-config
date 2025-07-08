@@ -128,6 +128,9 @@ Extends base system configuration in `modules/base.nix`
     };
   };
 
-  # Add `~/.local/bin` to PATH
-  environment.systemPath = [ "$HOME/.local/bin" ];
+  # Add extra directories to PATH
+  environment.systemPath = [
+    "$HOME/.local/bin"
+    "$HOME/.local/npm-global/bin"
+  ];
 }
