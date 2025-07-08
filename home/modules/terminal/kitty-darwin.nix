@@ -63,6 +63,13 @@ settings and keybindings on top of the cross-platform baseline.
         # Window management
         "cmd+enter" = "new_window";
         "cmd+d" = "close_window";
+        # Split windows (macOS style)
+        "cmd+shift+d" = "new_window_with_cwd";
+        # Move the active window in the indicated direction (vi-style)
+        "cmd+shift+k" = "move_window up";
+        "cmd+shift+j" = "move_window down";
+        "cmd+shift+h" = "move_window left";
+        "cmd+shift+l" = "move_window right";
 
         # Tab navigation
         "cmd+shift+]" = "next_tab";
@@ -81,9 +88,6 @@ settings and keybindings on top of the cross-platform baseline.
         "cmd+plus" = "increase_font_size";
         "cmd+minus" = "decrease_font_size";
         "cmd+0" = "restore_font_size";
-
-        # Split windows (macOS style)
-        "cmd+shift+d" = "new_window_with_cwd";
 
         # Scrolling
         "cmd+k" = "scroll_line_up";
