@@ -36,10 +36,11 @@ Package Selection Strategy:
   imports = [
     ../../modules/editors/neovim.nix  # Modern neovim with IDE enhancements
   ];
-  
+
   home.packages = with pkgs; [
     ## Stable packages - reliable, well-tested versions
     # neovim is now provided by the imported neovim.nix module above
+    uv # Extremely fast Python package installer and resolver
 
     ## Unstable packages - latest features and versions for development
     pkgs-unstable.nodePackages_latest.nodejs # Latest Node.js with newest features
