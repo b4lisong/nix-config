@@ -41,6 +41,7 @@ Package Selection Strategy:
     ## Stable packages - reliable, well-tested versions
     # neovim is now provided by the imported neovim.nix module above
     uv # Extremely fast Python package installer and resolver
+    gh # GitHub CLI tool
 
     ## Unstable packages - latest features and versions for development
     pkgs-unstable.nodePackages_latest.nodejs # Latest Node.js with newest features
