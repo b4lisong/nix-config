@@ -65,6 +65,7 @@ in {
       # Remote access and virtualization
       "parsec" # Low-latency remote desktop for gaming/work
       "vmware-fusion" # Virtualization for testing different OS environments
+      "orbstack" # Docker replacement and CLI VMs
 
       # Compatibility and gaming
       "wine@staging" # Windows application compatibility layer
