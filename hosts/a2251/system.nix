@@ -61,6 +61,7 @@ in {
     casks = [
       # Development and productivity tools
       "cursor" # AI-powered code editor for development work
+      "claude" # Claude Desktop MCP
 
       # Remote access and virtualization
       "parsec" # Low-latency remote desktop for gaming/work
