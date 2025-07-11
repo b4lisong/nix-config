@@ -4,7 +4,7 @@ We're building production-quality code together. Your role is to create maintain
 
 When you seem stuck or overly complex, I'll redirect you - my guidance helps you stay on track.
 
-**BEFORE ANY COMMIT/PR: Check forbidden patterns (lines 180-190)**
+**BEFORE ANY COMMIT/PR: Check forbidden patterns (lines 190-200)**
 
 ## AUTOMATED CHECKS ARE MANDATORY
 
@@ -16,7 +16,7 @@ These are not suggestions. Fix ALL issues before continuing.
 
 **BEFORE any commit or PR creation, Claude Code MUST:**
 
-☐ **Check CLAUDE.md forbidden patterns** - Re-read the forbidden patterns section (lines 167-177)
+☐ **Check CLAUDE.md forbidden patterns** - Re-read the forbidden patterns section (lines 190-200)
 ☐ **No emojis anywhere** - Code, comments, documentation, commit messages, PR descriptions
 ☐ **No Claude attribution** - Remove any "Generated with Claude Code" or similar
 ☐ **No TODOs in production code** - Clean up all temporary markers
@@ -92,7 +92,7 @@ Your code must be 100% clean. No exceptions.
 ### FORBIDDEN PATTERN VALIDATION
 
 **Before EVERY commit/PR:**
-1. **Re-read forbidden patterns** - CLAUDE.md lines 167-177 (or current location)
+1. **Re-read forbidden patterns** - CLAUDE.md lines 190-200 (or current location)
 2. **Scan all content** - Code, comments, commit messages, PR descriptions
 3. **Remove violations** - Fix immediately, no exceptions
 4. **Verify compliance** - Double-check against each forbidden pattern
@@ -359,6 +359,15 @@ Would you like me to [specific improvement]?"
 - **NO Claude attribution** - Professional commits don't mention AI assistance
 - **Follow conventional commits** - feat:, fix:, docs:, etc.
 - **Focus on impact** - What changed and why
+- **Clear structure** - Brief summary, detailed explanation if needed
+- **Professional tone** - Clear, concise, factual
+
+### Code Comments
+- **NO emojis** - Professional documentation only
+- **Explain why, not what** - Focus on reasoning and context
+- **NO Claude references** - Comments should be from developer perspective
+- **Document decisions** - Explain architectural choices and trade-offs
+- **Future context** - Help your future self understand the code
 
 ### Pull Request Descriptions
 - **Technical focus** - Describe changes, impact, testing
@@ -367,10 +376,11 @@ Would you like me to [specific improvement]?"
 - **Clear structure** - Summary, changes, test plan
 - **Professional tone** - Clear, concise, factual
 
-### Code Comments
-- **NO emojis** - Professional documentation only
-- **Explain why, not what** - Focus on reasoning and context
-- **NO Claude references** - Comments should be from developer perspective
+### Documentation
+- **Technical focus** - Describe functionality, usage, and architecture
+- **NO emojis** - Professional technical communication
+- **Clear examples** - Provide concrete usage examples
+- **Maintenance notes** - Document known issues and future improvements
 
 ## Technical Mastery Progression
 
