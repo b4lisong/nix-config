@@ -7,7 +7,7 @@ common to all systems.
   vars = import ../../../variables;
 in {
   imports = [
-    ../../modules/editors/vim.nix
+    ../../modules/editors/vim.nix     # Traditional vim with shared configuration
     ../../modules/shell/zsh.nix
     ../../modules/shell/starship.nix
   ];

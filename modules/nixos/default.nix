@@ -26,4 +26,7 @@ _: {
   # - Desktop environment setup
   # - Security policies (firewall, user permissions)
   # - Platform-specific optimizations
+
+  # Add `~/.local/bin` to PATH
+  environment.localBinInPath = true;
 }

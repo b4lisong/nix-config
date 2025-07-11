@@ -36,8 +36,16 @@ in {
   # Set the target platform for this host (Intel MacBook Pro)
   nixpkgs.hostPlatform = vars.hosts.a2251.system;
 
-  # Configure the primary user for this system
-  system.primaryUser = vars.user.username;
+  # Manage system settings
+  system = {
+    # Configure the primary user for this system
+    primaryUser = vars.user.username;
+    # Manage keyboard settings
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToEscape = true; # More useful Caps Lock functionality (vim, etc.)
+    };
+  };
 
   # User account configuration
   users.users.${vars.user.username} = {
@@ -53,13 +61,21 @@ in {
     casks = [
       # Development and productivity tools
       "cursor" # AI-powered code editor for development work
+      "claude" # Claude Desktop MCP
 
       # Remote access and virtualization
       "parsec" # Low-latency remote desktop for gaming/work
       "vmware-fusion" # Virtualization for testing different OS environments
+      "orbstack" # Docker replacement and CLI VMs
 
       # Compatibility and gaming
       "wine@staging" # Windows application compatibility layer
+
+      # Browsers
+      "google-chrome" # Chrome browser (not available in nixpkgs)
+
+      # Messaging & communications
+      "discord" # Voice and text chat
     ];
 
     # Command-line tools via Homebrew
@@ -67,10 +83,9 @@ in {
       "winetricks" # Helper tool for Wine Windows compatibility
     ];
 
-    # Mac App Store applications (none currently needed)
+    # Mac App Store applications
     masApps = {
-      # Future Mac App Store apps can be added here with their IDs
-      # Example: "Xcode" = 497799835;
+      "NextDNS" = 1464122853; # DNS service
     };
   };
 
