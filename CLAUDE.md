@@ -354,6 +354,353 @@ Would you like me to [specific improvement]?"
 - **Advanced**: Can use TDD to drive architecture - Tests reveal design decisions
 - **Expert**: Can teach TDD patterns to others - Mentor others in test-first thinking
 
+# NIX CONFIGURATION DEVELOPMENT STANDARDS
+
+## Architecture Overview
+
+This is a **Nix flake-based configuration** managing macOS systems with nix-darwin and Home Manager integration.
+
+### System Architecture:
+```
+flake.nix → mkDarwinHost() → system modules → Home Manager → user profiles/roles
+```
+
+**Configuration Layers (applied bottom-to-top):**
+1. **Base Layer** (`modules/base.nix`): Core packages, fonts, Nix settings
+2. **Platform Layer** (`modules/darwin/`): macOS-specific system configuration  
+3. **Host Layer** (`hosts/<hostname>/system.nix`): Machine-specific overrides
+4. **Profile Layer** (`home/profiles/`): User environments (base, tui, gui, darwin)
+5. **Role Layer** (`home/roles/`): Purpose-based packages (dev, personal, work, security)
+
+### Dual Package System:
+- **nixpkgs**: Stable packages for reliability
+- **nixpkgs-unstable**: Bleeding-edge packages for development tools
+- Both available via `specialArgs` throughout the configuration
+
+## Nix Development Workflow
+
+### 1. Development Environment Setup
+```bash
+nix develop  # Enter development shell with quality tools
+```
+
+**Available Tools in Dev Shell:**
+- `alejandra` - Nix code formatter (MANDATORY)
+- `statix` - Nix linter (MANDATORY) 
+- `deadnix` - Dead code detection (MANDATORY)
+- `pre-commit` - Pre-commit automation
+- `nil` - Nix language server (for editor integration)
+
+### 2. Quality Enforcement Pipeline
+**Pre-commit hooks are MANDATORY and BLOCKING:**
+
+```bash
+# These run automatically on commit:
+alejandra .          # Format all .nix files
+statix check .       # Lint all .nix files  
+deadnix --fail .     # Check for dead code
+```
+
+**Manual Quality Checks:**
+```bash
+nix flake check      # Validate flake structure
+nix build .#darwinConfigurations.a2251.system  # Test build
+```
+
+## File Type → Tool Mapping
+
+**CRITICAL**: Always match tools to correct file types. Never apply language-specific tools to other file types.
+
+| File Type | Extensions | Formatter | Linter | Validation | Notes |
+|-----------|------------|-----------|---------|------------|--------|
+| **Nix** | `*.nix` | `alejandra` | `statix` | `deadnix` | Core configuration files |
+| **Markdown** | `*.md` | *(none)* | *(none)* | generic hooks | Documentation - manual review |
+| **YAML** | `*.yaml`, `*.yml` | *(none)* | *(none)* | `check-yaml` | Configuration validation only |
+| **TOML** | `*.toml` | *(none)* | *(none)* | `check-toml` | Configuration validation only |
+| **All Files** | `*` | *(none)* | *(none)* | `trailing-whitespace`, `end-of-file-fixer` | Generic cleanup |
+
+### Tool Selection Protocol
+
+**ALWAYS Follow This Process:**
+
+1. **Check file extension** before applying any formatter or linter
+2. **Match tool to file type** using the table above
+3. **Never apply language-specific tools** to other file types
+4. **Use generic hooks** for basic cleanup across all files
+
+### Common Mistakes to Avoid
+
+❌ **WRONG**: `alejandra CLAUDE.md` (Nix tool on Markdown)
+❌ **WRONG**: `statix check README.md` (Nix linter on Markdown)  
+❌ **WRONG**: `deadnix notes.md` (Nix analyzer on Markdown)
+
+✅ **CORRECT**: `alejandra *.nix` (Nix tool on Nix files)
+✅ **CORRECT**: Manual review for Markdown files
+✅ **CORRECT**: `nix flake check` for project-wide validation
+
+### Validation Commands by File Type
+
+**Nix Files (`*.nix`):**
+```bash
+alejandra *.nix     # Format Nix files
+statix check .      # Lint Nix files
+deadnix .          # Check for dead code
+```
+
+**Markdown Files (`*.md`):**
+```bash
+# No automated formatting - manual review only
+# Generic hooks handle trailing whitespace, etc.
+```
+
+**YAML Files (`*.yaml`, `*.yml`):**
+```bash
+# Pre-commit hooks handle validation automatically
+# No manual formatting commands needed
+```
+
+**Project-Wide Validation:**
+```bash
+nix flake check     # Validate entire project
+pre-commit run --all-files  # Run all configured hooks
+```
+
+### 3. System Rebuild Process
+```bash
+# Standard rebuild for active development
+sudo darwin-rebuild switch --flake .#a2251
+
+# Safe rebuild (build without switching)
+sudo darwin-rebuild build --flake .#a2251
+
+# Rollback if issues occur
+sudo darwin-rebuild rollback
+```
+
+### 4. Dependency Management
+```bash
+nix flake update     # Update all inputs (nixpkgs, home-manager, etc.)
+nix flake lock       # Generate lockfile without updating
+```
+
+## Nix-Specific Quality Rules
+
+### FORBIDDEN PATTERNS IN NIX:
+
+- **NO** `lib.mkForce` unless absolutely necessary - use `lib.mkDefault` first
+- **NO** hardcoded store paths - use `${pkgs.package}` references
+- **NO** `fetchTarball` without hash - use flake inputs instead
+- **NO** `builtins.fetchurl` - use proper fetchers (fetchFromGitHub, etc.)
+- **NO** `with pkgs;` in large scopes - prefer explicit package references
+- **NO** recursive attribute sets without clear necessity
+- **NO** `import <nixpkgs> {}` in modules - use function arguments
+- **NO** mixing tabs and spaces - use consistent indentation (2 spaces)
+- **NO** `.override` without understanding - prefer `.overrideAttrs`
+- **NO** `callPackage` without proper package structure
+
+### REQUIRED PATTERNS:
+
+- **USE** `lib.mkDefault` for host-overridable defaults
+- **USE** `lib.mkIf` for conditional configuration
+- **USE** `lib.mkMerge` for combining attribute sets
+- **USE** proper function signatures: `{pkgs, lib, ...}:`
+- **USE** `inherit` for variable passing: `inherit (vars.git) userName;`
+- **USE** `let ... in` for local variable scoping
+- **USE** string interpolation: `"${vars.user.username}"`
+- **USE** proper list formatting (one item per line for readability)
+
+### Module Development Standards:
+
+**1. Module Structure:**
+```nix
+# modules/example.nix
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Other modules
+  ];
+  
+  # Configuration options
+  options = {
+    # Define options if creating reusable modules
+  };
+  
+  # Configuration implementation
+  config = {
+    # Implementation
+  };
+}
+```
+
+**2. Home Manager Module Structure:**
+```nix
+# home/modules/example.nix
+{
+  config,
+  lib,
+  pkgs,
+  pkgs-unstable,  # Available via specialArgs
+  ...
+}: {
+  home.packages = with pkgs; [
+    # Stable packages
+  ] ++ [
+    # Unstable packages
+    pkgs-unstable.claude-code
+  ];
+  
+  programs.example = {
+    enable = true;
+    # Configuration
+  };
+}
+```
+
+### Package Selection Strategy:
+
+**Use Stable Packages For:**
+- Core system tools (editors, shells, essential utilities)
+- Well-established development tools
+- Packages where stability is crucial
+
+**Use Unstable Packages For:**
+- Rapidly evolving development tools
+- Latest language versions (Node.js, Python, Go)
+- Cutting-edge CLI tools
+- Packages where newest features matter
+
+**Example:**
+```nix
+home.packages = with pkgs; [
+  # Stable - core tools
+  git
+  vim
+  curl
+] ++ [
+  # Unstable - latest features
+  pkgs-unstable.nodejs_latest
+  pkgs-unstable.claude-code
+];
+```
+
+## File Organization Patterns
+
+### Configuration Location Rules:
+- **System-level**: `modules/` and `hosts/<hostname>/system.nix`
+- **User-level**: `home/profiles/` and `home/roles/`
+- **Variables**: `variables/default.nix` (centralized configuration)
+- **Host-specific**: `hosts/<hostname>/` (both system and user config)
+
+### Import Patterns:
+```nix
+# Good - explicit imports
+imports = [
+  ./modules/base.nix
+  ./modules/darwin
+  ../../variables  # Relative paths OK for variables
+];
+
+# Bad - implicit or unclear imports
+imports = [ ./default.nix ];
+```
+
+### Variable Usage:
+```nix
+# Good - use centralized variables
+let
+  vars = import ../../variables;
+in {
+  home.homeDirectory = "/Users/${vars.user.username}";
+  programs.git.inherit (vars.git) userName userEmail;
+}
+
+# Bad - hardcoded values
+home.homeDirectory = "/Users/balisong";
+```
+
+## Development Integration
+
+### Editor Setup (Neovim + nixd):
+- **LSP**: `nixd` provides intelligent Nix language support
+- **Formatting**: `alejandra` integration for automatic formatting
+- **Linting**: `statix` integration for real-time feedback
+
+### VS Code Integration:
+- **Extension**: Nix IDE extension with nixd language server
+- **Formatting**: Configure alejandra as default formatter
+- **Linting**: Enable statix for real-time error detection
+
+### Git Integration:
+```bash
+# Standard development workflow
+git add .
+git commit -m "feat: description"  # Triggers pre-commit hooks
+sudo darwin-rebuild switch --flake .#a2251
+```
+
+## Troubleshooting & Recovery
+
+### Common Issues:
+1. **Build failures**: Check `nix flake check` output
+2. **Hook failures**: Run quality tools manually and fix issues
+3. **System issues**: Use `sudo darwin-rebuild rollback`
+4. **Dependency conflicts**: Update with `nix flake update`
+
+### Recovery Commands:
+```bash
+# Reset to working state
+sudo darwin-rebuild rollback
+
+# Clean rebuild
+sudo darwin-rebuild switch --flake .#a2251 --recreate-lock-file
+
+# Force rebuild ignoring cache
+sudo darwin-rebuild switch --flake .#a2251 --refresh
+```
+
+### Debug Mode:
+```bash
+# Verbose output for debugging
+sudo darwin-rebuild switch --flake .#a2251 --show-trace --verbose
+
+# Build only (no activation)
+sudo darwin-rebuild build --flake .#a2251
+```
+
+## Testing & Validation
+
+### Configuration Testing:
+```bash
+# Validate flake structure
+nix flake check
+
+# Test build without switching
+sudo darwin-rebuild build --flake .#a2251
+
+# Evaluate configuration
+nix eval .#darwinConfigurations.a2251.config.system.build.toplevel
+```
+
+### No Traditional Unit Tests:
+- **Declarative validation**: Nix's type system prevents many errors
+- **Build-time validation**: Configuration errors caught during build
+- **Runtime validation**: System rebuild tests the complete configuration
+
+## Performance Considerations
+
+### Build Optimization:
+- **Nix store**: Shared dependencies reduce rebuild times
+- **Binary cache**: Use official caches for faster builds
+- **Incremental builds**: Only changed modules rebuild
+
+### Resource Management:
+- **Garbage collection**: `nix-collect-garbage -d` to clean old generations
+- **Store optimization**: `nix-store --optimize` to deduplicate files
+
 ## Working Together
 
 - This is always a feature branch - no backwards compatibility needed
