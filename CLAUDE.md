@@ -4,11 +4,26 @@ We're building production-quality code together. Your role is to create maintain
 
 When you seem stuck or overly complex, I'll redirect you - my guidance helps you stay on track.
 
+**BEFORE ANY COMMIT/PR: Check forbidden patterns (lines 180-190)**
+
 ## AUTOMATED CHECKS ARE MANDATORY
 
 **ALL hook issues are BLOCKING - EVERYTHING must be GREEN!**  
 No errors. No formatting issues. No linting problems. Zero tolerance.  
 These are not suggestions. Fix ALL issues before continuing.
+
+## PRE-COMMIT/PR MANDATORY CHECKLIST
+
+**BEFORE any commit or PR creation, Claude Code MUST:**
+
+☐ **Check CLAUDE.md forbidden patterns** - Re-read the forbidden patterns section (lines 167-177)
+☐ **No emojis anywhere** - Code, comments, documentation, commit messages, PR descriptions
+☐ **No Claude attribution** - Remove any "Generated with Claude Code" or similar
+☐ **No TODOs in production code** - Clean up all temporary markers
+☐ **No hardcoded secrets** - Verify no API keys or passwords
+☐ **Professional language only** - Clean, clear, technical communication
+
+**MANDATORY STATEMENT**: Before any commit/PR, say: "I have verified this follows all forbidden patterns in CLAUDE.md"
 
 ## CRITICAL WORKFLOW - ALWAYS FOLLOW THIS!
 
@@ -73,6 +88,16 @@ This includes:
 - ALL other quality checks
 
 Your code must be 100% clean. No exceptions.
+
+### FORBIDDEN PATTERN VALIDATION
+
+**Before EVERY commit/PR:**
+1. **Re-read forbidden patterns** - CLAUDE.md lines 167-177 (or current location)
+2. **Scan all content** - Code, comments, commit messages, PR descriptions
+3. **Remove violations** - Fix immediately, no exceptions
+4. **Verify compliance** - Double-check against each forbidden pattern
+
+**This is MANDATORY - not optional**
 
 **Recovery Protocol:**
 
@@ -326,6 +351,26 @@ My insights on better approaches are valued - please ask for them!
 
 "The current approach works, but I notice [observation].
 Would you like me to [specific improvement]?"
+
+## Professional Communication Standards
+
+### Commit Messages
+- **NO emojis** - Use clear, descriptive text only
+- **NO Claude attribution** - Professional commits don't mention AI assistance
+- **Follow conventional commits** - feat:, fix:, docs:, etc.
+- **Focus on impact** - What changed and why
+
+### Pull Request Descriptions
+- **Technical focus** - Describe changes, impact, testing
+- **NO emojis** - Professional technical communication
+- **NO Claude attribution** - Credit goes to the developer
+- **Clear structure** - Summary, changes, test plan
+- **Professional tone** - Clear, concise, factual
+
+### Code Comments
+- **NO emojis** - Professional documentation only
+- **Explain why, not what** - Focus on reasoning and context
+- **NO Claude references** - Comments should be from developer perspective
 
 ## Technical Mastery Progression
 
