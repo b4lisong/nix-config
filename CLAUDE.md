@@ -458,6 +458,7 @@ deadnix --fail .     # Check for dead code
 
 **Manual Quality Checks:**
 ```bash
+# Only run these for .nix file changes
 nix flake check      # Validate flake structure
 nix build .#darwinConfigurations.a2251.system  # Test build
 ```
@@ -466,13 +467,13 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 
 **CRITICAL**: Always match tools to correct file types. Never apply language-specific tools to other file types.
 
-| File Type | Extensions | Formatter | Linter | Validation | Notes |
-|-----------|------------|-----------|---------|------------|--------|
-| **Nix** | `*.nix` | `alejandra` | `statix` | `deadnix` | Core configuration files |
-| **Markdown** | `*.md` | *(none)* | *(none)* | generic hooks | Documentation - manual review |
-| **YAML** | `*.yaml`, `*.yml` | *(none)* | *(none)* | `check-yaml` | Configuration validation only |
-| **TOML** | `*.toml` | *(none)* | *(none)* | `check-toml` | Configuration validation only |
-| **All Files** | `*` | *(none)* | *(none)* | `trailing-whitespace`, `end-of-file-fixer` | Generic cleanup |
+| File Type | Extensions | Formatter | Linter | Validation | When to Validate | Notes |
+|-----------|------------|-----------|---------|------------|------------------|--------|
+| **Nix** | `*.nix` | `alejandra` | `statix` | `deadnix`, `nix flake check` | **Always** | Affects system configuration |
+| **Markdown** | `*.md` | *(manual)* | *(none)* | generic hooks | **Never** | Documentation only |
+| **YAML** | `*.yaml`, `*.yml` | *(none)* | *(none)* | `check-yaml` | **If system config** | Only if affects Nix configuration |
+| **TOML** | `*.toml` | *(none)* | *(none)* | `check-toml` | **If system config** | Only if affects Nix configuration |
+| **All Files** | `*` | *(none)* | *(none)* | `trailing-whitespace`, `end-of-file-fixer` | **Always** | Generic cleanup |
 
 ### Tool Selection Protocol
 
@@ -482,6 +483,27 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 2. **Match tool to file type** using the table above
 3. **Never apply language-specific tools** to other file types
 4. **Use generic hooks** for basic cleanup across all files
+
+### Validation Decision Tree
+
+**Step 1: What files changed?**
+- `.nix` files included? → **YES** → Run full Nix validation
+- `.nix` files included? → **NO** → Skip Nix validation
+
+**Step 2: Run appropriate validation**
+- **Nix files changed**: `alejandra`, `statix`, `deadnix`, `nix flake check`, `nix build`
+- **Documentation only**: Generic hooks only (automatic)
+- **Mixed changes**: Run validation for each file type
+
+**Step 3: Always run**
+- Pre-commit hooks (automatically scoped to file types)
+- Generic quality checks (trailing whitespace, etc.)
+
+**Never run for documentation-only changes:**
+- `nix flake check`
+- `nix build`
+- `alejandra` (Nix-specific)
+- `statix` (Nix-specific)
 
 ### Common Mistakes to Avoid
 
@@ -493,31 +515,35 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 ✅ **CORRECT**: Manual review for Markdown files
 ✅ **CORRECT**: `nix flake check` for project-wide validation
 
-### Validation Commands by File Type
+### Context-Specific Validation
 
-**Nix Files (`*.nix`):**
+**For Nix Configuration Changes (`.nix` files):**
 ```bash
+# MANDATORY after any .nix file changes
 alejandra *.nix     # Format Nix files
 statix check .      # Lint Nix files
 deadnix .          # Check for dead code
+nix flake check     # Validate flake structure
+nix build .#darwinConfigurations.a2251.system  # Test build
 ```
 
-**Markdown Files (`*.md`):**
+**For Documentation Changes (`.md` files):**
 ```bash
-# No automated formatting - manual review only
-# Generic hooks handle trailing whitespace, etc.
+# No additional validation needed
+# Generic hooks handle basic formatting automatically
 ```
 
-**YAML Files (`*.yaml`, `*.yml`):**
+**For Mixed Changes:**
 ```bash
-# Pre-commit hooks handle validation automatically
-# No manual formatting commands needed
-```
-
-**Project-Wide Validation:**
-```bash
-nix flake check     # Validate entire project
+# Run validation based on file types changed
+# Only run nix commands if .nix files were modified
 pre-commit run --all-files  # Run all configured hooks
+```
+
+**Always Run (regardless of file types):**
+```bash
+# Generic quality checks apply to all files
+# Pre-commit hooks automatically scope to relevant file types
 ```
 
 ### 3. System Rebuild Process
