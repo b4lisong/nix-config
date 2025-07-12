@@ -259,5 +259,6 @@ Future Enhancement Areas:
     ".config/nvim/lua/plugins/lsp.lua".source = ./lua/plugins/lsp.lua;
     ".config/nvim/lua/plugins/completion.lua".source = ./lua/plugins/completion.lua;
     ".config/nvim/lua/plugins/lualine.lua".source = ./lua/plugins/lualine.lua;
+    ".config/nvim/lua/plugins/catppuccin.lua".source = ./lua/plugins/catppuccin.lua;
   };
 }
