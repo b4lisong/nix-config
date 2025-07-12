@@ -15,14 +15,14 @@ Architecture:
 _: {
   programs.vim = {
     enable = true;
-    
+
     # Source the shared vim configuration file
     # This file contains all settings that work in both vim and neovim
     extraConfig = ''
       " Source shared vim/neovim configuration
       " This provides consistent behavior between both editors
       source ${./shared-vim-config.vim}
-      
+
       " Vim-specific settings can be added here if needed
       " (Currently all settings are shared between vim and neovim)
     '';
