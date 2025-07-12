@@ -3,7 +3,8 @@
 return {
   'akinsho/toggleterm.nvim',
   version = "*",
-  event = 'VeryLazy',
+  cmd = { 'ToggleTerm', 'TermExec' },
+  keys = { '<F12>', '<leader>Tf', '<leader>Th', '<leader>Tv', '<leader>Tt' },
   config = function()
     require('toggleterm').setup({
       -- Basic configuration
@@ -14,7 +15,7 @@ return {
           return vim.o.columns * 0.4
         end
       end,
-      open_mapping = [[<C-\>]], -- Ctrl+backslash to toggle
+      open_mapping = [[<F12>]], -- F12 to toggle (more reliable than Ctrl+backslash)
       hide_numbers = true,
       shade_filetypes = {},
       autochdir = false,
@@ -75,16 +76,16 @@ return {
     -- Apply terminal keymaps when terminal opens
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
     
-    -- Additional keymaps for different terminal orientations
+    -- Additional keymaps for different terminal orientations (using T prefix to avoid conflicts)
     local keymap = vim.keymap.set
-    keymap('n', '<leader>tf', '<cmd>ToggleTerm direction=float<cr>', { desc = 'Toggle floating terminal' })
-    keymap('n', '<leader>th', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
-    keymap('n', '<leader>tv', '<cmd>ToggleTerm direction=vertical<cr>', { desc = 'Toggle vertical terminal' })
-    keymap('n', '<leader>tt', '<cmd>ToggleTerm direction=tab<cr>', { desc = 'Toggle terminal in new tab' })
+    keymap('n', '<leader>Tf', '<cmd>ToggleTerm direction=float<cr>', { desc = 'Toggle floating terminal' })
+    keymap('n', '<leader>Th', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
+    keymap('n', '<leader>Tv', '<cmd>ToggleTerm direction=vertical<cr>', { desc = 'Toggle vertical terminal' })
+    keymap('n', '<leader>Tt', '<cmd>ToggleTerm direction=tab<cr>', { desc = 'Toggle terminal in new tab' })
     
     -- Terminal instance management
-    keymap('n', '<leader>t1', '<cmd>1ToggleTerm<cr>', { desc = 'Toggle terminal 1' })
-    keymap('n', '<leader>t2', '<cmd>2ToggleTerm<cr>', { desc = 'Toggle terminal 2' })
-    keymap('n', '<leader>t3', '<cmd>3ToggleTerm<cr>', { desc = 'Toggle terminal 3' })
+    keymap('n', '<leader>T1', '<cmd>1ToggleTerm<cr>', { desc = 'Toggle terminal 1' })
+    keymap('n', '<leader>T2', '<cmd>2ToggleTerm<cr>', { desc = 'Toggle terminal 2' })
+    keymap('n', '<leader>T3', '<cmd>3ToggleTerm<cr>', { desc = 'Toggle terminal 3' })
   end,
 }
