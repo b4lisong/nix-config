@@ -66,6 +66,7 @@ Use the Task tool and systematic workflows whenever a problem has multiple indep
 - **Before implementing external interfaces**: Verify all APIs/options exist in YOUR version
 - **API assumption check**: "Did I verify this option exists in MY version's documentation?"
 - **Version alignment check**: "Am I using docs for the same version as my flake?"
+- **Before every commit**: Validate commit message contains NO emojis or Claude attribution
 
 **Knowledge checkpoints:**
 - After every major component: Explain the design choices made
@@ -207,6 +208,24 @@ Your code must be 100% clean. No exceptions.
 - **NO** console.log/print statements in production
 - **NO** hardcoded secrets or API keys
 - **NO** broad exception catching without specific handling
+
+### COMMIT MESSAGE VALIDATION (MANDATORY):
+
+**Before every commit, validate the message contains ZERO:**
+- Emojis (🤖, ✅, 🔧, etc.)
+- Claude attribution phrases
+- "Generated with Claude Code"
+- "Co-Authored-By: Claude"
+- Robot/AI references
+
+**REQUIRED commit message format:**
+```
+type: brief description
+
+Optional longer explanation of what and why.
+```
+
+**Valid types:** feat, fix, docs, style, refactor, test, chore
 
 ### Language-Specific Additions:
 
@@ -476,7 +495,7 @@ deadnix --fail .     # Check for dead code
 ```bash
 # Only run these for .nix file changes
 nix flake check      # Validate flake structure
-nix build .#darwinConfigurations.a2251.system  # Test build
+nix build .#darwinConfigurations.<SYSTEM>.system  # Test build (replace <SYSTEM> with actual system)
 ```
 
 ## File Type → Tool Mapping
@@ -485,7 +504,7 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 
 | File Type | Extensions | Formatter | Linter | Validation | When to Validate | Notes |
 |-----------|------------|-----------|---------|------------|------------------|--------|
-| **Nix** | `*.nix` | `alejandra` | `statix` | `deadnix`, `nix flake check` | **Always** | Affects system configuration |
+| **Nix** | `*.nix` | `alejandra` | `statix` | `deadnix`, `nix flake check`, `sudo darwin-rebuild check --flake .#<SYSTEM>` | **Always** | Affects system configuration |
 | **Markdown** | `*.md` | *(manual)* | *(none)* | generic hooks | **Never** | Documentation only |
 | **YAML** | `*.yaml`, `*.yml` | *(none)* | *(none)* | `check-yaml` | **If system config** | Only if affects Nix configuration |
 | **TOML** | `*.toml` | *(none)* | *(none)* | `check-toml` | **If system config** | Only if affects Nix configuration |
@@ -507,7 +526,7 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 - `.nix` files included? → **NO** → Skip Nix validation
 
 **Step 2: Run appropriate validation**
-- **Nix files changed**: `alejandra`, `statix`, `deadnix`, `nix flake check`, `nix build`
+- **Nix files changed**: `alejandra`, `statix`, `deadnix`, `nix flake check`, `sudo darwin-rebuild check --flake .#<SYSTEM>`
 - **Documentation only**: Generic hooks only (automatic)
 - **Mixed changes**: Run validation for each file type
 
@@ -517,7 +536,7 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 
 **Never run for documentation-only changes:**
 - `nix flake check`
-- `nix build`
+- `sudo darwin-rebuild check --flake .#<SYSTEM>`
 - `alejandra` (Nix-specific)
 - `statix` (Nix-specific)
 
@@ -529,7 +548,7 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 
 ✅ **CORRECT**: `alejandra *.nix` (Nix tool on Nix files)
 ✅ **CORRECT**: Manual review for Markdown files
-✅ **CORRECT**: `nix flake check` for project-wide validation
+✅ **CORRECT**: `sudo darwin-rebuild check --flake .#<SYSTEM>` for system validation
 
 ### Context-Specific Validation
 
@@ -539,9 +558,14 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 alejandra *.nix     # Format Nix files
 statix check .      # Lint Nix files
 deadnix .          # Check for dead code
-nix flake check     # Validate flake structure
-nix build .#darwinConfigurations.a2251.system  # Test build
+nix flake check     # Validate flake structure only
+sudo darwin-rebuild check --flake .#<SYSTEM>  # Test actual system build (CRITICAL)
 ```
+
+**Important**: 
+- `nix flake check` only validates flake syntax and structure 
+- `sudo darwin-rebuild check --flake .#<SYSTEM>` tests the actual system configuration that will be deployed
+- Replace `<SYSTEM>` with your actual system name (e.g., `a2251`)
 
 **For Documentation Changes (`.md` files):**
 ```bash
@@ -565,10 +589,10 @@ pre-commit run --all-files  # Run all configured hooks
 ### 3. System Rebuild Process
 ```bash
 # Standard rebuild for active development
-sudo darwin-rebuild switch --flake .#a2251
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 
 # Safe rebuild (build without switching)
-sudo darwin-rebuild build --flake .#a2251
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 
 # Rollback if issues occur
 sudo darwin-rebuild rollback
@@ -620,6 +644,43 @@ nix flake metadata | grep home-manager
 # Check current branch/version in use
 cat flake.lock | jq '.nodes.nixpkgs.locked'
 ```
+
+## System-Specific Testing Requirements
+
+**CRITICAL**: Always test the actual system configuration, not just flake structure.
+
+**IMPORTANT**: Throughout this documentation, `<SYSTEM>` is a placeholder that must be replaced with the actual system name:
+- Current primary system: `a2251`
+- Find available systems: `ls hosts/` 
+- Examples: `sudo darwin-rebuild check --flake .#a2251`, `sudo darwin-rebuild check --flake .#macbook-pro`, etc.
+
+### Testing Command Hierarchy:
+1. **Flake structure validation**: `nix flake check` (fast, validates flake syntax)
+2. **System configuration test**: `sudo darwin-rebuild check --flake .#<SYSTEM>` (comprehensive)
+3. **Build verification**: `sudo darwin-rebuild build --flake .#<SYSTEM>` (creates but doesn't apply)
+
+### System Identification:
+- **Current system**: `a2251` (primary development machine)
+- **Command pattern**: `sudo darwin-rebuild check --flake .#<SYSTEM>`
+- **Replace `<SYSTEM>` with**: Actual system name from `hosts/` directory (e.g., `a2251`)
+- **System determination**: `ls hosts/` to see available system configurations
+
+### Testing Protocol:
+```bash
+# 1. Quick flake validation (structure only)
+nix flake check
+
+# 2. Full system validation (REQUIRED for .nix changes)
+sudo darwin-rebuild check --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system name
+
+# 3. Build test without applying (optional verification)
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system name
+
+# Example for a2251 system:
+sudo darwin-rebuild check --flake .#a2251
+```
+
+**NEVER rely solely on `nix flake check` for system configuration changes!**
 
 ## Nix-Specific Quality Rules
 
@@ -777,7 +838,7 @@ home.homeDirectory = "/Users/balisong";
 # Standard development workflow
 git add .
 git commit -m "feat: description"  # Triggers pre-commit hooks
-sudo darwin-rebuild switch --flake .#a2251
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 ```
 
 ## Version Change Protocol
@@ -794,13 +855,13 @@ sudo darwin-rebuild switch --flake .#a2251
 - [ ] Identify all external module options in use (Home Manager, etc.)
 - [ ] Re-verify each option exists in the new version's documentation
 - [ ] Update inline documentation comments with new version URLs
-- [ ] Test build: `nix flake check` and `sudo darwin-rebuild check --flake .#a2251`
+- [ ] Test build: `nix flake check` (structure) and `sudo darwin-rebuild check --flake .#<SYSTEM>` (system)
 - [ ] Update CLAUDE.md version references if changing major versions
 
 ## Troubleshooting & Recovery
 
 ### Common Issues:
-1. **Build failures**: Check `nix flake check` output
+1. **Build failures**: Check `sudo darwin-rebuild check --flake .#<SYSTEM>` output
 2. **Hook failures**: Run quality tools manually and fix issues
 3. **System issues**: Use `sudo darwin-rebuild rollback`
 4. **Dependency conflicts**: Update with `nix flake update`
@@ -811,19 +872,19 @@ sudo darwin-rebuild switch --flake .#a2251
 sudo darwin-rebuild rollback
 
 # Clean rebuild
-sudo darwin-rebuild switch --flake .#a2251 --recreate-lock-file
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system --recreate-lock-file
 
 # Force rebuild ignoring cache
-sudo darwin-rebuild switch --flake .#a2251 --refresh
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system --refresh
 ```
 
 ### Debug Mode:
 ```bash
 # Verbose output for debugging
-sudo darwin-rebuild switch --flake .#a2251 --show-trace --verbose
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system --show-trace --verbose
 
 # Build only (no activation)
-sudo darwin-rebuild build --flake .#a2251
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 ```
 
 ## Testing & Validation
@@ -834,10 +895,10 @@ sudo darwin-rebuild build --flake .#a2251
 nix flake check
 
 # Test build without switching
-sudo darwin-rebuild build --flake .#a2251
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 
 # Evaluate configuration
-nix eval .#darwinConfigurations.a2251.config.system.build.toplevel
+nix eval .#darwinConfigurations.<SYSTEM>.config.system.build.toplevel  # Replace <SYSTEM> with actual system
 ```
 
 ### No Traditional Unit Tests:
