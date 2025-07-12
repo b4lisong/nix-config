@@ -66,9 +66,6 @@ Future Enhancement Areas:
         nnoremap <C-k> <C-w>k
         nnoremap <C-l> <C-w>l
 
-        " Open terminal in split
-        nnoremap <Leader>t :split<CR>:terminal<CR>:startinsert<CR>
-        nnoremap <Leader>vt :vsplit<CR>:terminal<CR>:startinsert<CR>
       endif
 
       " === MODERN NEOVIM FEATURES ===

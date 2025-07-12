@@ -4,7 +4,7 @@ return {
   'akinsho/toggleterm.nvim',
   version = "*",
   cmd = { 'ToggleTerm', 'TermExec' },
-  keys = { '<F12>', '<leader>Tf', '<leader>Th', '<leader>Tv', '<leader>Tt' },
+  keys = { '<F12>', '<leader>t', '<leader>Tf', '<leader>Th', '<leader>Tv', '<leader>Tt' },
   config = function()
     require('toggleterm').setup({
       -- Basic configuration
@@ -26,11 +26,11 @@ return {
       terminal_mappings = true,
       persist_size = true,
       persist_mode = true,
-      direction = 'float', -- Default to floating terminal
+      direction = 'horizontal', -- Default to horizontal terminal
       close_on_exit = true,
       shell = vim.o.shell,
       auto_scroll = true,
-      
+
       -- Floating terminal configuration
       float_opts = {
         border = 'curved',
@@ -46,7 +46,7 @@ return {
           background = "Normal",
         },
       },
-      
+
       -- Window highlighting
       highlights = {
         Normal = {
@@ -60,7 +60,7 @@ return {
         },
       },
     })
-    
+
     -- Terminal-specific keymaps
     function _G.set_terminal_keymaps()
       local opts = {buffer = 0}
@@ -72,17 +72,18 @@ return {
       vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
       vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
     end
-    
+
     -- Apply terminal keymaps when terminal opens
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-    
+
     -- Additional keymaps for different terminal orientations (using T prefix to avoid conflicts)
     local keymap = vim.keymap.set
     keymap('n', '<leader>Tf', '<cmd>ToggleTerm direction=float<cr>', { desc = 'Toggle floating terminal' })
     keymap('n', '<leader>Th', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
+    keymap('n', '<leader>t', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
     keymap('n', '<leader>Tv', '<cmd>ToggleTerm direction=vertical<cr>', { desc = 'Toggle vertical terminal' })
     keymap('n', '<leader>Tt', '<cmd>ToggleTerm direction=tab<cr>', { desc = 'Toggle terminal in new tab' })
-    
+
     -- Terminal instance management
     keymap('n', '<leader>T1', '<cmd>1ToggleTerm<cr>', { desc = 'Toggle terminal 1' })
     keymap('n', '<leader>T2', '<cmd>2ToggleTerm<cr>', { desc = 'Toggle terminal 2' })
