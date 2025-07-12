@@ -1,81 +1,150 @@
--- Completion configuration for intelligent autocompletion
--- Integrates with LSP servers for context-aware suggestions
+-- Blink Completion: High-performance completion with fuzzy matching
+-- Migrated from nvim-cmp for better performance and modern features
 return {
-  'hrsh7th/nvim-cmp',
+  'saghen/blink.cmp',
   event = 'InsertEnter',
   dependencies = {
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-nvim-lua',
     'L3MON4D3/LuaSnip',
-    'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
   },
-  config = function()
-    local cmp = require('cmp')
-    local luasnip = require('luasnip')
-    
-    -- Load snippets from friendly-snippets
+  version = '*', -- Use latest stable version
+  opts = {
+    -- Keymap configuration
+    keymap = {
+      preset = 'default',
+      ['<Tab>'] = {
+        function(cmp)
+          if cmp.snippet_active() then
+            return cmp.accept()
+          elseif cmp.is_visible() then
+            return cmp.select_next()
+          else
+            return cmp.show()
+          end
+        end,
+        'snippet_forward',
+        'fallback'
+      },
+      ['<S-Tab>'] = {
+        function(cmp)
+          if cmp.is_visible() then
+            return cmp.select_prev()
+          end
+        end,
+        'snippet_backward',
+        'fallback'
+      },
+      ['<CR>'] = { 'accept', 'fallback' },
+      ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-e>'] = { 'hide', 'fallback' },
+      ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
+      ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+    },
+
+    -- Appearance configuration
+    appearance = {
+      use_nvim_cmp_as_default = true,
+      nerd_font_variant = 'mono',
+    },
+
+    -- Completion sources configuration
+    sources = {
+      default = { 'lsp', 'path', 'luasnip', 'buffer' },
+      providers = {
+        lsp = {
+          name = 'LSP',
+          module = 'blink.cmp.sources.lsp',
+          enabled = true,
+          score_offset = 100, -- Prioritize LSP completions
+        },
+        path = {
+          name = 'Path',
+          module = 'blink.cmp.sources.path',
+          enabled = true,
+          score_offset = 3,
+        },
+        luasnip = {
+          name = 'LuaSnip',
+          module = 'blink.cmp.sources.luasnip',
+          enabled = true,
+          score_offset = 85, -- High priority for snippets
+        },
+        buffer = {
+          name = 'Buffer',
+          module = 'blink.cmp.sources.buffer',
+          enabled = true,
+          score_offset = 5, -- Lower priority fallback
+        },
+      },
+    },
+
+    -- Completion behavior configuration
+    completion = {
+      accept = {
+        auto_brackets = {
+          enabled = true,
+        },
+      },
+      menu = {
+        enabled = true,
+        min_width = 15,
+        max_height = 10,
+        border = 'rounded',
+        winblend = 0,
+        winhighlight = 'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
+        -- Source indicators similar to nvim-cmp format
+        draw = {
+          columns = {
+            { 'label', 'label_description', gap = 1 },
+            { 'kind_icon', 'kind' }
+          },
+        },
+      },
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 250,
+        update_delay_ms = 50,
+        window = {
+          min_width = 10,
+          max_width = 60,
+          max_height = 20,
+          border = 'rounded',
+          winblend = 0,
+          winhighlight = 'Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:Visual,Search:None',
+        },
+      },
+      ghost_text = {
+        enabled = false, -- Disable ghost text for cleaner experience
+      },
+    },
+
+    -- Fuzzy matching configuration for better search
+    fuzzy = {
+      use_typo_resistance = true,
+      use_frecency = true,
+      use_proximity = true,
+      max_items = 200,
+      sorts = { 'score', 'sort_text' },
+    },
+
+    -- Signature help configuration
+    signature = {
+      enabled = true,
+      window = {
+        min_width = 1,
+        max_width = 100,
+        max_height = 10,
+        border = 'rounded',
+        winblend = 0,
+        winhighlight = 'Normal:BlinkCmpSignatureHelp,FloatBorder:BlinkCmpSignatureHelpBorder',
+      },
+    },
+  },
+  config = function(_, opts)
+    -- Load friendly-snippets for LuaSnip
     require('luasnip.loaders.from_vscode').lazy_load()
     
-    cmp.setup({
-      snippet = {
-        expand = function(args)
-          luasnip.lsp_expand(args.body)
-        end,
-      },
-      window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-      },
-      mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        ['<Tab>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          else
-            fallback()
-          end
-        end, { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-          else
-            fallback()
-          end
-        end, { 'i', 's' }),
-      }),
-      sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'nvim_lua' },
-        { name = 'luasnip' },
-      }, {
-        { name = 'buffer' },
-        { name = 'path' },
-      }),
-      formatting = {
-        format = function(entry, vim_item)
-          -- Keep the original kind format
-          -- vim_item.kind remains unchanged to display the completion type
-          vim_item.menu = ({
-            buffer = '[Buffer]',
-            nvim_lsp = '[LSP]',
-            nvim_lua = '[Lua]',
-            luasnip = '[LuaSnip]',
-            path = '[Path]',
-          })[entry.source.name]
-          return vim_item
-        end,
-      },
-    })
+    -- Setup blink.cmp with our configuration
+    require('blink.cmp').setup(opts)
   end,
 }
