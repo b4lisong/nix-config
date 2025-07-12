@@ -167,6 +167,10 @@ This architecture provides:
             nil # Nix language server
             jq # JSON processor
             git # Version control
+            # Lua development tools for neovim configuration
+            lua-language-server # Lua LSP support
+            stylua # Lua code formatter
+            luacheck # Lua linter
           ]
           ++ [
             # Example unstable pkgs for development
