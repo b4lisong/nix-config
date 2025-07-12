@@ -4,14 +4,11 @@ return {
   'neovim/nvim-lspconfig',
   event = { 'BufReadPre', 'BufNewFile' },
   dependencies = {
-    'hrsh7th/cmp-nvim-lsp',
     { 'antosha417/nvim-lsp-file-operations', config = true },
     { 'folke/neodev.nvim', opts = {} },
   },
   config = function()
     local lspconfig = require('lspconfig')
-    local cmp_nvim_lsp = require('cmp_nvim_lsp')
-    
     local keymap = vim.keymap
     
     -- LSP keymaps (set when LSP attaches to buffer)
@@ -44,7 +41,8 @@ return {
     end
     
     -- Enhanced capabilities for autocompletion
-    local capabilities = cmp_nvim_lsp.default_capabilities()
+    -- blink.cmp will automatically handle LSP capabilities
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
     
     -- Configure diagnostic display
     vim.diagnostic.config({

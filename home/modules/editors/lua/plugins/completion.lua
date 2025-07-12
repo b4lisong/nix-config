@@ -49,7 +49,7 @@ return {
 
     -- Completion sources configuration
     sources = {
-      default = { 'lsp', 'path', 'luasnip', 'buffer' },
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
       providers = {
         lsp = {
           name = 'LSP',
@@ -63,9 +63,9 @@ return {
           enabled = true,
           score_offset = 3,
         },
-        luasnip = {
-          name = 'LuaSnip',
-          module = 'blink.cmp.sources.luasnip',
+        snippets = {
+          name = 'Snippets',
+          module = 'blink.cmp.sources.snippets',
           enabled = true,
           score_offset = 85, -- High priority for snippets
         },
@@ -76,6 +76,11 @@ return {
           score_offset = 5, -- Lower priority fallback
         },
       },
+    },
+
+    -- Snippet configuration for new API
+    snippets = {
+      preset = 'luasnip', -- Use LuaSnip as snippet engine
     },
 
     -- Completion behavior configuration
