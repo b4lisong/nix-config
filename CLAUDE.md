@@ -227,6 +227,50 @@ Optional longer explanation of what and why.
 
 **Valid types:** feat, fix, docs, style, refactor, test, chore
 
+### Commit Message Standards for Nix Development:
+
+**Essential Guidelines:**
+- **Be specific about what changed**: Don't use vague terms like "update config"
+- **Mention the component**: Include plugin name, module, or system affected
+- **Testing context**: Indicate if this is for testing, fixing, or final implementation
+- **Impact scope**: Make clear what systems/features are affected
+
+**Examples for Common Scenarios:**
+
+**New Features:**
+```
+feat: add catppuccin theme plugin via lazy.nvim
+feat: implement telescope fuzzy finder configuration
+feat: add LSP support for TypeScript and Lua
+```
+
+**Bug Fixes:**
+```
+fix: update deprecated tsserver to ts_ls in LSP configuration
+fix: correct nix file references for catppuccin plugin
+fix: resolve lazy.nvim bootstrap path issues
+```
+
+**Testing/Iteration:**
+```
+test: verify catppuccin integration with lualine
+fix: resolve build errors in neovim plugin configuration
+refactor: improve plugin loading priority order
+```
+
+**Documentation:**
+```
+docs: add nix testing requirements for git state
+docs: update system-specific testing commands
+```
+
+**Configuration Changes:**
+```
+style: format neovim.nix with alejandra
+refactor: reorganize plugin configurations for clarity
+chore: update flake inputs to latest versions
+```
+
 ### Language-Specific Additions:
 
 **Rust:** No unwrap(), expect(), panic!() - use Result<T, E>
@@ -645,6 +689,37 @@ nix flake metadata | grep home-manager
 cat flake.lock | jq '.nodes.nixpkgs.locked'
 ```
 
+## Nix Testing Requirements (CRITICAL)
+
+**BEFORE running `darwin-rebuild check --flake .#<SYSTEM>`:**
+
+### Mandatory Git State Requirements:
+1. **COMMIT ALL CHANGES** - Nix requires committed state for local file references
+2. **Test after each logical change** - Don't batch multiple features  
+3. **Use descriptive commit messages** - Document what you're testing/fixing
+
+### Required Workflow:
+```bash
+# Make changes to .nix files or plugin configurations
+git add .
+git commit -m "feat: add catppuccin theme plugin"
+# THEN test (will fail without commit)
+sudo darwin-rebuild check --flake .#<SYSTEM>
+# If build fails, commit the fix
+git commit -m "fix: correct nix file references for catppuccin"
+```
+
+**Why This Matters**: Nix flakes operate on **committed git state** for reproducibility. Uncommitted files don't exist in the Nix store context.
+
+**Anti-pattern**: Making changes → testing → committing (will always fail)
+**Correct pattern**: Making changes → committing → testing → fixing → committing fix
+
+### Pre-Test Checklist (Mandatory for Nix changes):
+- [ ] All changes committed to git
+- [ ] Commit message describes what's being tested
+- [ ] Ready to commit fixes if test fails
+- [ ] Using proper system identifier in commands (`<SYSTEM>` = actual system name)
+
 ## System-Specific Testing Requirements
 
 **CRITICAL**: Always test the actual system configuration, not just flake structure.
@@ -667,6 +742,10 @@ cat flake.lock | jq '.nodes.nixpkgs.locked'
 
 ### Testing Protocol:
 ```bash
+# 0. PREREQUISITE: Commit all changes (see "Nix Testing Requirements" above)
+git add .
+git commit -m "feat: describe your changes"
+
 # 1. Quick flake validation (structure only)
 nix flake check
 
@@ -680,7 +759,9 @@ sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual sys
 sudo darwin-rebuild check --flake .#a2251
 ```
 
-**NEVER rely solely on `nix flake check` for system configuration changes!**
+**CRITICAL REMINDERS**:
+- **NEVER run `darwin-rebuild check` without committing changes first** - will fail with path errors
+- **NEVER rely solely on `nix flake check`** - it only validates flake structure, not system configuration
 
 ## Nix-Specific Quality Rules
 
