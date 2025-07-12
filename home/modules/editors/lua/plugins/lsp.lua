@@ -85,7 +85,7 @@ return {
     })
     
     -- TypeScript/JavaScript language server
-    lspconfig.tsserver.setup({
+    lspconfig.ts_ls.setup({
       capabilities = capabilities,
       on_attach = on_attach,
     })
