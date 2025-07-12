@@ -36,6 +36,10 @@ Complete workflow to update roadmap, validate quality, and commit changes.
 ### **3. Commit Preparation**
 - Analyze git diff to understand scope of changes
 - Generate meaningful commit message if not provided
+- **VALIDATE commit message against forbidden patterns:**
+  - NO emojis (🤖, ✅, 🔧, etc.)
+  - NO Claude attribution ("Generated with Claude Code", "Co-Authored-By: Claude")
+  - NO robot/AI references
 - Stage all relevant files for commit
 - Follow project commit message conventions
 

@@ -4,7 +4,7 @@ We're building production-quality code together. Your role is to create maintain
 
 When you seem stuck or overly complex, I'll redirect you - my guidance helps you stay on track.
 
-**BEFORE ANY COMMIT/PR: Check forbidden patterns (lines 180-190)**
+**BEFORE ANY COMMIT/PR: Check forbidden patterns (lines 190-200)**
 
 ## AUTOMATED CHECKS ARE MANDATORY
 
@@ -16,7 +16,7 @@ These are not suggestions. Fix ALL issues before continuing.
 
 **BEFORE any commit or PR creation, Claude Code MUST:**
 
-☐ **Check CLAUDE.md forbidden patterns** - Re-read the forbidden patterns section (lines 167-177)
+☐ **Check CLAUDE.md forbidden patterns** - Re-read the forbidden patterns section (lines 190-200)
 ☐ **No emojis anywhere** - Code, comments, documentation, commit messages, PR descriptions
 ☐ **No Claude attribution** - Remove any "Generated with Claude Code" or similar
 ☐ **No TODOs in production code** - Clean up all temporary markers
@@ -32,6 +32,10 @@ These are not suggestions. Fix ALL issues before continuing.
 **NEVER JUMP STRAIGHT TO CODING!** Always follow this sequence:
 
 1. **Research**: Explore the codebase, understand existing patterns
+   - **External Interface Verification**: Before using any external module options (Home Manager, cloud APIs), verify they exist in official documentation
+   - **Version-specific documentation**: Always check documentation for the EXACT version being used  
+   - **Documentation checkpoint**: Research phase MUST include checking authoritative sources with version alignment
+   - **No assumption-based development**: All external interfaces require version-specific verification
 2. **Plan**: Create a detailed implementation plan and verify it with me
 3. **Implement**: Execute the plan with validation checkpoints
 
@@ -59,6 +63,10 @@ Use the Task tool and systematic workflows whenever a problem has multiple indep
 - When something feels wrong
 - Before declaring "done"
 - **WHEN HOOKS FAIL WITH ERRORS** (BLOCKING)
+- **Before implementing external interfaces**: Verify all APIs/options exist in YOUR version
+- **API assumption check**: "Did I verify this option exists in MY version's documentation?"
+- **Version alignment check**: "Am I using docs for the same version as my flake?"
+- **Before every commit**: Validate commit message contains NO emojis or Claude attribution
 
 **Knowledge checkpoints:**
 - After every major component: Explain the design choices made
@@ -92,7 +100,7 @@ Your code must be 100% clean. No exceptions.
 ### FORBIDDEN PATTERN VALIDATION
 
 **Before EVERY commit/PR:**
-1. **Re-read forbidden patterns** - CLAUDE.md lines 167-177 (or current location)
+1. **Re-read forbidden patterns** - CLAUDE.md lines 190-200 (or current location)
 2. **Scan all content** - Code, comments, commit messages, PR descriptions
 3. **Remove violations** - Fix immediately, no exceptions
 4. **Verify compliance** - Double-check against each forbidden pattern
@@ -201,6 +209,24 @@ Your code must be 100% clean. No exceptions.
 - **NO** hardcoded secrets or API keys
 - **NO** broad exception catching without specific handling
 
+### COMMIT MESSAGE VALIDATION (MANDATORY):
+
+**Before every commit, validate the message contains ZERO:**
+- Emojis (🤖, ✅, 🔧, etc.)
+- Claude attribution phrases
+- "Generated with Claude Code"
+- "Co-Authored-By: Claude"
+- Robot/AI references
+
+**REQUIRED commit message format:**
+```
+type: brief description
+
+Optional longer explanation of what and why.
+```
+
+**Valid types:** feat, fix, docs, style, refactor, test, chore
+
 ### Language-Specific Additions:
 
 **Rust:** No unwrap(), expect(), panic!() - use Result<T, E>
@@ -220,6 +246,15 @@ When you see "FORBIDDEN PATTERN", you MUST fix it immediately!
 - **Comprehensive tests** for complex logic
 - **Consistent code style** following project/language conventions
 - **Clear separation of concerns** - single responsibility principle
+
+### Version-Specific Validation Requirements:
+
+- **Nix module options**: Must be verified against module documentation for your nixpkgs version
+- **Home Manager options**: Must exist in your Home Manager version's documentation  
+- **External APIs**: Must be verified against version-specific official documentation
+- **No cross-version assumptions**: Options may not exist in all versions
+- **Version documentation**: Always comment the version/branch used for verification
+- **Documentation reference requirement**: Include links with version/branch information
 
 ### Example Patterns:
 
@@ -359,6 +394,15 @@ Would you like me to [specific improvement]?"
 - **NO Claude attribution** - Professional commits don't mention AI assistance
 - **Follow conventional commits** - feat:, fix:, docs:, etc.
 - **Focus on impact** - What changed and why
+- **Clear structure** - Brief summary, detailed explanation if needed
+- **Professional tone** - Clear, concise, factual
+
+### Code Comments
+- **NO emojis** - Professional documentation only
+- **Explain why, not what** - Focus on reasoning and context
+- **NO Claude references** - Comments should be from developer perspective
+- **Document decisions** - Explain architectural choices and trade-offs
+- **Future context** - Help your future self understand the code
 
 ### Pull Request Descriptions
 - **Technical focus** - Describe changes, impact, testing
@@ -367,10 +411,11 @@ Would you like me to [specific improvement]?"
 - **Clear structure** - Summary, changes, test plan
 - **Professional tone** - Clear, concise, factual
 
-### Code Comments
-- **NO emojis** - Professional documentation only
-- **Explain why, not what** - Focus on reasoning and context
-- **NO Claude references** - Comments should be from developer perspective
+### Documentation
+- **Technical focus** - Describe functionality, usage, and architecture
+- **NO emojis** - Professional technical communication
+- **Clear examples** - Provide concrete usage examples
+- **Maintenance notes** - Document known issues and future improvements
 
 ## Technical Mastery Progression
 
@@ -448,21 +493,22 @@ deadnix --fail .     # Check for dead code
 
 **Manual Quality Checks:**
 ```bash
+# Only run these for .nix file changes
 nix flake check      # Validate flake structure
-nix build .#darwinConfigurations.a2251.system  # Test build
+nix build .#darwinConfigurations.<SYSTEM>.system  # Test build (replace <SYSTEM> with actual system)
 ```
 
 ## File Type → Tool Mapping
 
 **CRITICAL**: Always match tools to correct file types. Never apply language-specific tools to other file types.
 
-| File Type | Extensions | Formatter | Linter | Validation | Notes |
-|-----------|------------|-----------|---------|------------|--------|
-| **Nix** | `*.nix` | `alejandra` | `statix` | `deadnix` | Core configuration files |
-| **Markdown** | `*.md` | *(none)* | *(none)* | generic hooks | Documentation - manual review |
-| **YAML** | `*.yaml`, `*.yml` | *(none)* | *(none)* | `check-yaml` | Configuration validation only |
-| **TOML** | `*.toml` | *(none)* | *(none)* | `check-toml` | Configuration validation only |
-| **All Files** | `*` | *(none)* | *(none)* | `trailing-whitespace`, `end-of-file-fixer` | Generic cleanup |
+| File Type | Extensions | Formatter | Linter | Validation | When to Validate | Notes |
+|-----------|------------|-----------|---------|------------|------------------|--------|
+| **Nix** | `*.nix` | `alejandra` | `statix` | `deadnix`, `nix flake check`, `sudo darwin-rebuild check --flake .#<SYSTEM>` | **Always** | Affects system configuration |
+| **Markdown** | `*.md` | *(manual)* | *(none)* | generic hooks | **Never** | Documentation only |
+| **YAML** | `*.yaml`, `*.yml` | *(none)* | *(none)* | `check-yaml` | **If system config** | Only if affects Nix configuration |
+| **TOML** | `*.toml` | *(none)* | *(none)* | `check-toml` | **If system config** | Only if affects Nix configuration |
+| **All Files** | `*` | *(none)* | *(none)* | `trailing-whitespace`, `end-of-file-fixer` | **Always** | Generic cleanup |
 
 ### Tool Selection Protocol
 
@@ -473,6 +519,27 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 3. **Never apply language-specific tools** to other file types
 4. **Use generic hooks** for basic cleanup across all files
 
+### Validation Decision Tree
+
+**Step 1: What files changed?**
+- `.nix` files included? → **YES** → Run full Nix validation
+- `.nix` files included? → **NO** → Skip Nix validation
+
+**Step 2: Run appropriate validation**
+- **Nix files changed**: `alejandra`, `statix`, `deadnix`, `nix flake check`, `sudo darwin-rebuild check --flake .#<SYSTEM>`
+- **Documentation only**: Generic hooks only (automatic)
+- **Mixed changes**: Run validation for each file type
+
+**Step 3: Always run**
+- Pre-commit hooks (automatically scoped to file types)
+- Generic quality checks (trailing whitespace, etc.)
+
+**Never run for documentation-only changes:**
+- `nix flake check`
+- `sudo darwin-rebuild check --flake .#<SYSTEM>`
+- `alejandra` (Nix-specific)
+- `statix` (Nix-specific)
+
 ### Common Mistakes to Avoid
 
 ❌ **WRONG**: `alejandra CLAUDE.md` (Nix tool on Markdown)
@@ -481,42 +548,51 @@ nix build .#darwinConfigurations.a2251.system  # Test build
 
 ✅ **CORRECT**: `alejandra *.nix` (Nix tool on Nix files)
 ✅ **CORRECT**: Manual review for Markdown files
-✅ **CORRECT**: `nix flake check` for project-wide validation
+✅ **CORRECT**: `sudo darwin-rebuild check --flake .#<SYSTEM>` for system validation
 
-### Validation Commands by File Type
+### Context-Specific Validation
 
-**Nix Files (`*.nix`):**
+**For Nix Configuration Changes (`.nix` files):**
 ```bash
+# MANDATORY after any .nix file changes
 alejandra *.nix     # Format Nix files
 statix check .      # Lint Nix files
 deadnix .          # Check for dead code
+nix flake check     # Validate flake structure only
+sudo darwin-rebuild check --flake .#<SYSTEM>  # Test actual system build (CRITICAL)
 ```
 
-**Markdown Files (`*.md`):**
+**Important**: 
+- `nix flake check` only validates flake syntax and structure 
+- `sudo darwin-rebuild check --flake .#<SYSTEM>` tests the actual system configuration that will be deployed
+- Replace `<SYSTEM>` with your actual system name (e.g., `a2251`)
+
+**For Documentation Changes (`.md` files):**
 ```bash
-# No automated formatting - manual review only
-# Generic hooks handle trailing whitespace, etc.
+# No additional validation needed
+# Generic hooks handle basic formatting automatically
 ```
 
-**YAML Files (`*.yaml`, `*.yml`):**
+**For Mixed Changes:**
 ```bash
-# Pre-commit hooks handle validation automatically
-# No manual formatting commands needed
-```
-
-**Project-Wide Validation:**
-```bash
-nix flake check     # Validate entire project
+# Run validation based on file types changed
+# Only run nix commands if .nix files were modified
 pre-commit run --all-files  # Run all configured hooks
+```
+
+**Always Run (regardless of file types):**
+```bash
+# Generic quality checks apply to all files
+# Pre-commit hooks automatically scope to relevant file types
 ```
 
 ### 3. System Rebuild Process
 ```bash
 # Standard rebuild for active development
-sudo darwin-rebuild switch --flake .#a2251
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 
 # Safe rebuild (build without switching)
-sudo darwin-rebuild build --flake .#a2251
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 
 # Rollback if issues occur
 sudo darwin-rebuild rollback
@@ -527,6 +603,84 @@ sudo darwin-rebuild rollback
 nix flake update     # Update all inputs (nixpkgs, home-manager, etc.)
 nix flake lock       # Generate lockfile without updating
 ```
+
+## Home Manager Option Verification (MANDATORY)
+
+**CRITICAL**: Always verify options against the EXACT version you're using.
+
+### Version Identification:
+1. **Check flake.lock**: Identify Home Manager commit/version
+2. **Identify nixpkgs branch**: Currently using 25.05 stable (may change)
+3. **Match documentation version**: Use docs for the same version/branch
+
+### Option Verification Process:
+1. **Check version-specific docs**: 
+   - https://mynixos.com/home-manager/options/ (latest)
+   - https://nix-community.github.io/home-manager/options.html (specific releases)
+   - GitHub: https://github.com/nix-community/home-manager (for exact commits)
+2. **Search for exact option**: Use browser search for `programs.neovim.extraFiles`
+3. **Version compatibility check**: Verify option exists in YOUR version
+4. **If not found**: Identify correct alternative for your version
+5. **Document source & version**: Comment the documentation URL and version in code
+
+**FORBIDDEN**: 
+- Using Home Manager options without version-specific verification
+- Assuming options exist across all versions
+- Using documentation from different versions
+
+**REQUIRED**: 
+- Every option verified against YOUR EXACT version
+- Version documentation URL in comments
+- Branch/version awareness (currently 25.05 stable)
+
+### Version Identification Commands:
+```bash
+# Check nixpkgs version in flake
+nix flake metadata | grep nixpkgs
+
+# Check Home Manager version
+nix flake metadata | grep home-manager
+
+# Check current branch/version in use
+cat flake.lock | jq '.nodes.nixpkgs.locked'
+```
+
+## System-Specific Testing Requirements
+
+**CRITICAL**: Always test the actual system configuration, not just flake structure.
+
+**IMPORTANT**: Throughout this documentation, `<SYSTEM>` is a placeholder that must be replaced with the actual system name:
+- Current primary system: `a2251`
+- Find available systems: `ls hosts/` 
+- Examples: `sudo darwin-rebuild check --flake .#a2251`, `sudo darwin-rebuild check --flake .#macbook-pro`, etc.
+
+### Testing Command Hierarchy:
+1. **Flake structure validation**: `nix flake check` (fast, validates flake syntax)
+2. **System configuration test**: `sudo darwin-rebuild check --flake .#<SYSTEM>` (comprehensive)
+3. **Build verification**: `sudo darwin-rebuild build --flake .#<SYSTEM>` (creates but doesn't apply)
+
+### System Identification:
+- **Current system**: `a2251` (primary development machine)
+- **Command pattern**: `sudo darwin-rebuild check --flake .#<SYSTEM>`
+- **Replace `<SYSTEM>` with**: Actual system name from `hosts/` directory (e.g., `a2251`)
+- **System determination**: `ls hosts/` to see available system configurations
+
+### Testing Protocol:
+```bash
+# 1. Quick flake validation (structure only)
+nix flake check
+
+# 2. Full system validation (REQUIRED for .nix changes)
+sudo darwin-rebuild check --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system name
+
+# 3. Build test without applying (optional verification)
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system name
+
+# Example for a2251 system:
+sudo darwin-rebuild check --flake .#a2251
+```
+
+**NEVER rely solely on `nix flake check` for system configuration changes!**
 
 ## Nix-Specific Quality Rules
 
@@ -684,13 +838,30 @@ home.homeDirectory = "/Users/balisong";
 # Standard development workflow
 git add .
 git commit -m "feat: description"  # Triggers pre-commit hooks
-sudo darwin-rebuild switch --flake .#a2251
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 ```
+
+## Version Change Protocol
+
+### When Changing Versions (nixpkgs/Home Manager)
+
+1. **Re-verify all external options**: Options may be added/removed/changed between versions
+2. **Update documentation references**: Change comments to reference new version docs
+3. **Test configuration**: Some options may have different behavior or requirements
+4. **Update CLAUDE.md**: If switching from 25.05 stable, update version references throughout
+5. **Version validation check**: Run version identification commands to confirm alignment
+
+### Version Change Checklist:
+- [ ] Identify all external module options in use (Home Manager, etc.)
+- [ ] Re-verify each option exists in the new version's documentation
+- [ ] Update inline documentation comments with new version URLs
+- [ ] Test build: `nix flake check` (structure) and `sudo darwin-rebuild check --flake .#<SYSTEM>` (system)
+- [ ] Update CLAUDE.md version references if changing major versions
 
 ## Troubleshooting & Recovery
 
 ### Common Issues:
-1. **Build failures**: Check `nix flake check` output
+1. **Build failures**: Check `sudo darwin-rebuild check --flake .#<SYSTEM>` output
 2. **Hook failures**: Run quality tools manually and fix issues
 3. **System issues**: Use `sudo darwin-rebuild rollback`
 4. **Dependency conflicts**: Update with `nix flake update`
@@ -701,19 +872,19 @@ sudo darwin-rebuild switch --flake .#a2251
 sudo darwin-rebuild rollback
 
 # Clean rebuild
-sudo darwin-rebuild switch --flake .#a2251 --recreate-lock-file
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system --recreate-lock-file
 
 # Force rebuild ignoring cache
-sudo darwin-rebuild switch --flake .#a2251 --refresh
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system --refresh
 ```
 
 ### Debug Mode:
 ```bash
 # Verbose output for debugging
-sudo darwin-rebuild switch --flake .#a2251 --show-trace --verbose
+sudo darwin-rebuild switch --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system --show-trace --verbose
 
 # Build only (no activation)
-sudo darwin-rebuild build --flake .#a2251
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 ```
 
 ## Testing & Validation
@@ -724,10 +895,10 @@ sudo darwin-rebuild build --flake .#a2251
 nix flake check
 
 # Test build without switching
-sudo darwin-rebuild build --flake .#a2251
+sudo darwin-rebuild build --flake .#<SYSTEM>  # Replace <SYSTEM> with actual system
 
 # Evaluate configuration
-nix eval .#darwinConfigurations.a2251.config.system.build.toplevel
+nix eval .#darwinConfigurations.<SYSTEM>.config.system.build.toplevel  # Replace <SYSTEM> with actual system
 ```
 
 ### No Traditional Unit Tests:
