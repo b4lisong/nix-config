@@ -32,6 +32,10 @@ These are not suggestions. Fix ALL issues before continuing.
 **NEVER JUMP STRAIGHT TO CODING!** Always follow this sequence:
 
 1. **Research**: Explore the codebase, understand existing patterns
+   - **External Interface Verification**: Before using any external module options (Home Manager, cloud APIs), verify they exist in official documentation
+   - **Version-specific documentation**: Always check documentation for the EXACT version being used  
+   - **Documentation checkpoint**: Research phase MUST include checking authoritative sources with version alignment
+   - **No assumption-based development**: All external interfaces require version-specific verification
 2. **Plan**: Create a detailed implementation plan and verify it with me
 3. **Implement**: Execute the plan with validation checkpoints
 
@@ -59,6 +63,9 @@ Use the Task tool and systematic workflows whenever a problem has multiple indep
 - When something feels wrong
 - Before declaring "done"
 - **WHEN HOOKS FAIL WITH ERRORS** (BLOCKING)
+- **Before implementing external interfaces**: Verify all APIs/options exist in YOUR version
+- **API assumption check**: "Did I verify this option exists in MY version's documentation?"
+- **Version alignment check**: "Am I using docs for the same version as my flake?"
 
 **Knowledge checkpoints:**
 - After every major component: Explain the design choices made
@@ -220,6 +227,15 @@ When you see "FORBIDDEN PATTERN", you MUST fix it immediately!
 - **Comprehensive tests** for complex logic
 - **Consistent code style** following project/language conventions
 - **Clear separation of concerns** - single responsibility principle
+
+### Version-Specific Validation Requirements:
+
+- **Nix module options**: Must be verified against module documentation for your nixpkgs version
+- **Home Manager options**: Must exist in your Home Manager version's documentation  
+- **External APIs**: Must be verified against version-specific official documentation
+- **No cross-version assumptions**: Options may not exist in all versions
+- **Version documentation**: Always comment the version/branch used for verification
+- **Documentation reference requirement**: Include links with version/branch information
 
 ### Example Patterns:
 
@@ -564,6 +580,47 @@ nix flake update     # Update all inputs (nixpkgs, home-manager, etc.)
 nix flake lock       # Generate lockfile without updating
 ```
 
+## Home Manager Option Verification (MANDATORY)
+
+**CRITICAL**: Always verify options against the EXACT version you're using.
+
+### Version Identification:
+1. **Check flake.lock**: Identify Home Manager commit/version
+2. **Identify nixpkgs branch**: Currently using 25.05 stable (may change)
+3. **Match documentation version**: Use docs for the same version/branch
+
+### Option Verification Process:
+1. **Check version-specific docs**: 
+   - https://mynixos.com/home-manager/options/ (latest)
+   - https://nix-community.github.io/home-manager/options.html (specific releases)
+   - GitHub: https://github.com/nix-community/home-manager (for exact commits)
+2. **Search for exact option**: Use browser search for `programs.neovim.extraFiles`
+3. **Version compatibility check**: Verify option exists in YOUR version
+4. **If not found**: Identify correct alternative for your version
+5. **Document source & version**: Comment the documentation URL and version in code
+
+**FORBIDDEN**: 
+- Using Home Manager options without version-specific verification
+- Assuming options exist across all versions
+- Using documentation from different versions
+
+**REQUIRED**: 
+- Every option verified against YOUR EXACT version
+- Version documentation URL in comments
+- Branch/version awareness (currently 25.05 stable)
+
+### Version Identification Commands:
+```bash
+# Check nixpkgs version in flake
+nix flake metadata | grep nixpkgs
+
+# Check Home Manager version
+nix flake metadata | grep home-manager
+
+# Check current branch/version in use
+cat flake.lock | jq '.nodes.nixpkgs.locked'
+```
+
 ## Nix-Specific Quality Rules
 
 ### FORBIDDEN PATTERNS IN NIX:
@@ -722,6 +779,23 @@ git add .
 git commit -m "feat: description"  # Triggers pre-commit hooks
 sudo darwin-rebuild switch --flake .#a2251
 ```
+
+## Version Change Protocol
+
+### When Changing Versions (nixpkgs/Home Manager)
+
+1. **Re-verify all external options**: Options may be added/removed/changed between versions
+2. **Update documentation references**: Change comments to reference new version docs
+3. **Test configuration**: Some options may have different behavior or requirements
+4. **Update CLAUDE.md**: If switching from 25.05 stable, update version references throughout
+5. **Version validation check**: Run version identification commands to confirm alignment
+
+### Version Change Checklist:
+- [ ] Identify all external module options in use (Home Manager, etc.)
+- [ ] Re-verify each option exists in the new version's documentation
+- [ ] Update inline documentation comments with new version URLs
+- [ ] Test build: `nix flake check` and `sudo darwin-rebuild check --flake .#a2251`
+- [ ] Update CLAUDE.md version references if changing major versions
 
 ## Troubleshooting & Recovery
 
