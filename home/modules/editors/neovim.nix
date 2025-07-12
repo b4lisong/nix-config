@@ -37,15 +37,9 @@ Future Enhancement Areas:
     vimAlias = false;
     viAlias = false;
 
-    # Include lua configuration files for lazy.nvim plugins
-    extraFiles = {
-      "lua/plugins/init.lua".source = ./lua/plugins/init.lua;
-      "lua/plugins/telescope.lua".source = ./lua/plugins/telescope.lua;
-      "lua/plugins/treesitter.lua".source = ./lua/plugins/treesitter.lua;
-      "lua/plugins/lsp.lua".source = ./lua/plugins/lsp.lua;
-      "lua/plugins/completion.lua".source = ./lua/plugins/completion.lua;
-      "lua/plugins/lualine.lua".source = ./lua/plugins/lualine.lua;
-    };
+    # Lua configuration for lazy.nvim plugins
+    # Since extraFiles doesn't exist, we'll manage lua files through the Nix store
+    # and reference them in extraLuaConfig or put them in ~/.config/nvim/lua manually
 
     # Additional neovim-specific configuration
     extraConfig = ''
@@ -255,5 +249,15 @@ Future Enhancement Areas:
   programs.zsh.shellAliases = lib.mkIf config.programs.zsh.enable {
     v = "vim"; # Keep v for traditional vim (quick edits)
     nv = "nvim"; # Explicit neovim alias for IDE features
+  };
+
+  # Place Lua plugin files in the correct location for lazy.nvim
+  home.file = {
+    ".config/nvim/lua/plugins/init.lua".source = ./lua/plugins/init.lua;
+    ".config/nvim/lua/plugins/telescope.lua".source = ./lua/plugins/telescope.lua;
+    ".config/nvim/lua/plugins/treesitter.lua".source = ./lua/plugins/treesitter.lua;
+    ".config/nvim/lua/plugins/lsp.lua".source = ./lua/plugins/lsp.lua;
+    ".config/nvim/lua/plugins/completion.lua".source = ./lua/plugins/completion.lua;
+    ".config/nvim/lua/plugins/lualine.lua".source = ./lua/plugins/lualine.lua;
   };
 }
