@@ -170,7 +170,6 @@ This architecture provides:
             # Lua development tools for neovim configuration
             lua-language-server # Lua LSP support
             stylua # Lua code formatter
-            luacheck # Lua linter
           ]
           ++ [
             # Example unstable pkgs for development
