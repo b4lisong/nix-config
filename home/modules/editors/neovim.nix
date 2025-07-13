@@ -259,5 +259,6 @@ Future Enhancement Areas:
     ".config/nvim/lua/plugins/catppuccin.lua".source = ./lua/plugins/catppuccin.lua;
     ".config/nvim/lua/plugins/neo-tree.lua".source = ./lua/plugins/neo-tree.lua;
     ".config/nvim/lua/plugins/toggleterm.lua".source = ./lua/plugins/toggleterm.lua;
+    ".config/nvim/lua/plugins/snacks.lua".source = ./lua/plugins/snacks.lua;
   };
 }
