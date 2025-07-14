@@ -44,7 +44,10 @@ Package Selection Strategy:
     gh # GitHub CLI tool
 
     ## Unstable packages - latest features and versions for development
-    pkgs-unstable.nodePackages_latest.nodejs # Latest Node.js with newest features
+    # TODO: Revert to unstable nodejs once packaging issue is resolved
+    # Issue: https://github.com/NixOS/nixpkgs/issues/423244
+    # Temporarily using stable nodejs to avoid build failures
+    nodejs # Stable Node.js (was: pkgs-unstable.nodePackages_latest.nodejs)
     pkgs-unstable.claude-code # Latest Claude Code CLI tool
 
     # Additional development tools can be added here:

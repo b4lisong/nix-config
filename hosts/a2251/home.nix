@@ -49,6 +49,13 @@ Override Examples:
   # Host-specific Home Manager customizations
   # These override or extend the imported profiles and roles
 
+  # Personal machine package overrides
+  home.packages = [
+    # Override dev role's stable nodejs with bleeding-edge version
+    # Personal machine can handle potential instability for latest features
+    pkgs-unstable.nodePackages_latest.nodejs
+  ];
+
   # Display and interface customizations for this specific machine
   # (Darwin profile sets font.size = 14 by default for high-DPI displays)
   programs.kitty = {
