@@ -73,6 +73,9 @@ in {
 
       # Browsers
       "google-chrome" # Chrome browser (not available in nixpkgs)
+
+      # Messaging & communications
+      "discord" # Voice and text chat
     ];
 
     # Command-line tools via Homebrew
