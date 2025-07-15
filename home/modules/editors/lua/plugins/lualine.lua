@@ -76,8 +76,70 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
-      winbar = {},
-      inactive_winbar = {},
+      winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {
+          {
+            'filename',
+            file_status = true,        -- Show modification status
+            newfile_status = true,     -- Show [New] for new files
+            path = 1,                  -- Show relative path
+            shorting_target = 40,      -- Shorten long paths
+            symbols = {
+              modified = '●',          -- Dot for modified files
+              readonly = '',          -- Lock icon for readonly
+              unnamed = '[No Name]',   -- Unnamed buffers
+              newfile = '[New]',       -- New files
+            },
+          },
+          {
+            'diagnostics',
+            sources = { 'nvim_lsp', 'nvim_diagnostic' },
+            sections = { 'error', 'warn', 'info', 'hint' },
+            diagnostics_color = {
+              error = 'DiagnosticError',
+              warn  = 'DiagnosticWarn',
+              info  = 'DiagnosticInfo',
+              hint  = 'DiagnosticHint',
+            },
+            symbols = {
+              error = ' ',
+              warn = ' ',
+              info = ' ',
+              hint = ' ',
+            },
+          }
+        },
+        lualine_x = {
+          {
+            'filetype',
+            colored = true,
+            icon_only = false,
+          }
+        },
+        lualine_y = {},
+        lualine_z = {}
+      },
+      inactive_winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {
+          {
+            'filename',
+            file_status = true,
+            path = 1,
+            symbols = {
+              modified = '●',
+              readonly = '',
+              unnamed = '[No Name]',
+            },
+          }
+        },
+        lualine_x = {'filetype'},
+        lualine_y = {},
+        lualine_z = {}
+      },
       extensions = {},
     })
   end,
