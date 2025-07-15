@@ -136,6 +136,9 @@ sudo darwin-rebuild build --flake .#a2251
 
 ## System Rebuild Process
 
+**IMPORTANT**: This configuration uses Home Manager as a module (nix-darwin or NixOS), NOT standalone Home Manager.
+
+### For nix-darwin systems (macOS):
 ```bash
 # Standard rebuild for active development
 sudo darwin-rebuild switch --flake .#a2251
@@ -146,6 +149,20 @@ sudo darwin-rebuild build --flake .#a2251
 # Rollback if issues occur
 sudo darwin-rebuild rollback
 ```
+
+### For NixOS systems (Linux):
+```bash
+# Standard rebuild for active development
+sudo nixos-rebuild switch --flake .#<hostname>
+
+# Safe rebuild (build without switching)
+sudo nixos-rebuild build --flake .#<hostname>
+
+# Rollback if issues occur
+sudo nixos-rebuild rollback
+```
+
+**NEVER suggest `home-manager switch`** - this configuration uses Home Manager as a system module, not standalone.
 
 ## Nix-Specific Quality Rules
 
