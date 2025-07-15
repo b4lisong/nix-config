@@ -42,6 +42,7 @@ Package Selection Strategy:
     # neovim is now provided by the imported neovim.nix module above
     uv # Extremely fast Python package installer and resolver
     gh # GitHub CLI tool
+    frogmouth # TUI Markdown viewer
 
     ## Unstable packages - latest features and versions for development
     # TODO: Revert to unstable nodejs once packaging issue is resolved
