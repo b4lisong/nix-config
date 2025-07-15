@@ -91,14 +91,43 @@ Future Enhancement Areas:
 
       " === DEVELOPMENT WORKFLOW ===
 
-      " Quick save and source config
-      nnoremap <Leader>w :w<CR>
+      " Quick source config
       nnoremap <Leader>so :source $MYVIMRC<CR>
 
       " Buffer navigation
       nnoremap <Leader>bn :bnext<CR>
       nnoremap <Leader>bp :bprevious<CR>
       nnoremap <Leader>bd :bdelete<CR>
+
+      " Window split management
+      nnoremap <Leader>wv :vsplit<CR>
+      nnoremap <Leader>wh :split<CR>
+      nnoremap <Leader>we <C-w>=
+      nnoremap <Leader>wx :close<CR>
+      nnoremap <Leader>wm :only<CR>
+
+      " Window movement
+      nnoremap <Leader>wH <C-w>H
+      nnoremap <Leader>wJ <C-w>J
+      nnoremap <Leader>wK <C-w>K
+      nnoremap <Leader>wL <C-w>L
+      nnoremap <Leader>wr <C-w>r
+      nnoremap <Leader>wR <C-w>R
+
+      " Window resizing
+      nnoremap <Leader>w= <C-w>=
+      nnoremap <Leader>w+ <C-w>+
+      nnoremap <Leader>w- <C-w>-
+      nnoremap <Leader>w> <C-w>>
+      nnoremap <Leader>w< <C-w><
+      nnoremap <Leader>w\| <C-w>\|
+      nnoremap <Leader>w_ <C-w>_
+
+      " Window navigation
+      nnoremap <Leader>ww <C-w>w
+      nnoremap <Leader>wp <C-w>p
+      nnoremap <Leader>wt <C-w>t
+      nnoremap <Leader>wb <C-w>b
 
       " === TELESCOPE FILE NAVIGATION ===
 
