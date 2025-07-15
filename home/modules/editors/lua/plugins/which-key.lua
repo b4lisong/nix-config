@@ -33,7 +33,8 @@ return {
     
     -- Add keybinding groups and descriptions
     wk.add({
-      { "<leader>f", desc = "Format buffer" },
+      { "<leader>c", group = "Code" },
+      { "<leader>cf", desc = "Format buffer" },
       { "<leader>w", group = "Window Management" },
       -- Window splitting
       { "<leader>wv", desc = "Split vertically" },
