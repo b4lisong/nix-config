@@ -29,22 +29,8 @@ return {
       },
       sections = {
         lualine_a = {'mode'},
-        lualine_b = {'branch', 'diff', 'diagnostics'},
-        lualine_c = {
-          {
-            'filename',
-            file_status = true,
-            newfile_status = false,
-            path = 1,
-            shorting_target = 40,
-            symbols = {
-              modified = '[+]',
-              readonly = '[RO]',
-              unnamed = '[No Name]',
-              newfile = '[New]',
-            },
-          },
-        },
+        lualine_b = {'branch', 'diff'},
+        lualine_c = {},
         lualine_x = {
           'encoding',
           {
@@ -55,7 +41,6 @@ return {
               mac = 'CR',
             },
           },
-          'filetype',
         },
         lualine_y = {'progress'},
         lualine_z = {'location'},
@@ -82,43 +67,24 @@ return {
         lualine_c = {
           {
             'filename',
-            file_status = true,        -- Show modification status
-            newfile_status = true,     -- Show [New] for new files
-            path = 1,                  -- Show relative path
-            shorting_target = 40,      -- Shorten long paths
+            file_status = true,
+            path = 1,
             symbols = {
-              modified = '●',          -- Dot for modified files
-              readonly = '',          -- Lock icon for readonly
-              unnamed = '[No Name]',   -- Unnamed buffers
-              newfile = '[New]',       -- New files
-            },
-          },
-          {
-            'diagnostics',
-            sources = { 'nvim_lsp', 'nvim_diagnostic' },
-            sections = { 'error', 'warn', 'info', 'hint' },
-            diagnostics_color = {
-              error = 'DiagnosticError',
-              warn  = 'DiagnosticWarn',
-              info  = 'DiagnosticInfo',
-              hint  = 'DiagnosticHint',
-            },
-            symbols = {
-              error = ' ',
-              warn = ' ',
-              info = ' ',
-              hint = ' ',
+              modified = '●',
+              readonly = '',
+              unnamed = '[No Name]',
+              newfile = '[New]',
             },
           }
         },
         lualine_x = {
           {
-            'filetype',
-            colored = true,
-            icon_only = false,
+            'diagnostics',
+            sources = {'nvim_lsp'},
+            symbols = {error = ' ', warn = ' ', info = ' ', hint = ' '}
           }
         },
-        lualine_y = {},
+        lualine_y = {'filetype'},
         lualine_z = {}
       },
       inactive_winbar = {
