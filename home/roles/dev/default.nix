@@ -34,7 +34,7 @@ Package Selection Strategy:
   ...
 }: {
   imports = [
-    ../../modules/editors/neovim.nix  # Modern neovim with IDE enhancements
+    ../../modules/editors/neovim.nix # Modern neovim with IDE enhancements
   ];
 
   home.packages = with pkgs; [

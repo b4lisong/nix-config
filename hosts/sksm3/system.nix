@@ -72,7 +72,7 @@ in {
       "orbstack" # Docker replacement and CLI VMs
 
       # Browsers
-      "google-chrome" # Chrome browser (not available in nixpkgs) 
+      "google-chrome" # Chrome browser (not available in nixpkgs)
     ];
 
     # Command-line tools via Homebrew

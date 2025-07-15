@@ -42,9 +42,6 @@ Override Examples:
     ../../home/roles/dev # Development tools and environments
     ../../home/roles/work # Work-specific tools and configurations
 
-    # Note: personal role excluded for work machine
-    # ../../home/roles/personal # Entertainment, communication, creative tools
-    
     # Additional roles can be imported as needed:
     # ../../home/roles/security # Security and penetration testing tools
   ];

@@ -183,7 +183,7 @@ This architecture provides:
     # Create a Darwin system config using the `a2251` host variables
     darwinConfigurations.${vars.hosts.a2251.hostname} =
       nix-darwin.lib.darwinSystem (mkDarwinHost vars.hosts.a2251.hostname);
-    
+
     # Create a Darwin system config using the `sksm3` host variables
     darwinConfigurations.${vars.hosts.sksm3.hostname} =
       nix-darwin.lib.darwinSystem (mkDarwinHost vars.hosts.sksm3.hostname);
