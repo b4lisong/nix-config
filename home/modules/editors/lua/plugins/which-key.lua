@@ -31,8 +31,9 @@ return {
     local wk = require('which-key')
     wk.setup(opts)
     
-    -- Add window management groups and descriptions
+    -- Add keybinding groups and descriptions
     wk.add({
+      { "<leader>f", desc = "Format buffer" },
       { "<leader>w", group = "Window Management" },
       -- Window splitting
       { "<leader>wv", desc = "Split vertically" },
