@@ -27,6 +27,7 @@ This Neovim configuration provides a complete IDE experience while maintaining t
 - **Git Workflow**: Lazygit integration with automatic colorscheme theming
 - **File Management**: Neo-tree for modern file exploration
 - **Syntax Highlighting**: Treesitter for accurate, context-aware highlighting
+- **Keymap Discovery**: WhichKey for interactive keybinding discovery and documentation
 
 ### Design Philosophy
 
@@ -141,6 +142,17 @@ Get started with these essential keymaps:
 **Key Features**:
 - Lazy loading based on commands, events, and keymaps
 - Automatic plugin installation and updates
+
+#### WhichKey - Keymap Discovery
+- **Repository**: [folke/which-key.nvim](https://github.com/folke/which-key.nvim)
+- **Purpose**: Interactive keybinding discovery and documentation
+
+**Key Features**:
+- Press `<leader>` (space) to see all available keybindings
+- Organized groups for related functionality (e.g., Window Management)
+- Buffer-local keymap discovery with `<leader>?`
+
+**Maintenance Note**: When adding new keybindings to `neovim.nix`, corresponding descriptions must be added to `lua/plugins/which-key.lua` to maintain accurate documentation.
 - Lock file for reproducible plugin versions
 - Performance profiling and optimization
 - Beautiful UI for plugin management

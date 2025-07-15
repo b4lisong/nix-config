@@ -99,6 +99,11 @@ Future Enhancement Areas:
       nnoremap <Leader>bp :bprevious<CR>
       nnoremap <Leader>bd :bdelete<CR>
 
+      " === WINDOW MANAGEMENT ===
+      " IMPORTANT: When modifying these keybindings, also update:
+      " - lua/plugins/which-key.lua (descriptions and group organization)
+      " This ensures WhichKey documentation stays in sync with actual keybindings
+
       " Window split management
       nnoremap <Leader>wv :vsplit<CR>
       nnoremap <Leader>wh :split<CR>

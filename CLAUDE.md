@@ -45,6 +45,7 @@ Break complex tasks into focused investigations. Use systematic workflows for co
 - **NO** TODOs in final production code
 - **NO** hardcoded secrets or API keys
 - **NO** broad exception catching without specific handling
+- **NO** modifying Neovim keybindings without updating WhichKey descriptions
 
 ### COMMIT MESSAGE VALIDATION (MANDATORY):
 
@@ -164,6 +165,23 @@ My insights on better approaches are valued - please ask for them!
 - **Performance & Optimization**: Novice → Intermediate → Advanced → Expert
 - **Security Best Practices**: Novice → Intermediate → Advanced → Expert
 - **Test-Driven Development**: Novice → Intermediate → Advanced → Expert
+
+## Neovim Configuration Standards
+
+### WhichKey Maintenance Protocol
+
+When modifying Neovim keybindings in `neovim.nix`:
+
+1. **ALWAYS update `lua/plugins/which-key.lua`** with corresponding descriptions
+2. **Maintain group organization** - keep related keybindings grouped
+3. **Use clear, descriptive names** for each keybinding
+4. **Test WhichKey display** after changes to ensure accuracy
+
+### Example WhichKey Entry:
+```lua
+{ "<leader>wv", desc = "Split vertically" },
+{ "<leader>w", group = "Window Management" },
+```
 
 ## Working Together
 
