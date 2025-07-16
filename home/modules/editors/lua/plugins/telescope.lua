@@ -24,6 +24,8 @@ return {
             ['<C-u>'] = false,
             ['<C-d>'] = false,
             ['<esc>'] = actions.close,
+            ['<C-j>'] = actions.move_selection_next,
+            ['<C-k>'] = actions.move_selection_previous,
           },
         },
         file_ignore_patterns = {
