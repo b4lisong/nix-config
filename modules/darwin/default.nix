@@ -8,9 +8,16 @@ Extends base system configuration in `modules/base.nix`
     ./homebrew.nix # Import default Homebrew configuration
   ];
 
-  # Enable Touch ID authentication for sudo
-  # This allows using fingerprint authentication when running sudo commands
-  security.pam.services.sudo_local.touchIdAuth = true;
+  # Define security options
+  security = {
+    pam.services.sudo_local = {
+      # Whether to enable managing /etc/pam.d/sudo_local with nix-darwin
+      enable = true;
+      # Enable Touch ID authentication for sudo
+      # This allows using fingerprint authentication when running sudo commands
+      touchIdAuth = true;
+    };
+  };
 
   # Allow unfree packages for all Darwin systems
   nixpkgs.config.allowUnfree = true;
