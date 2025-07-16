@@ -13,9 +13,22 @@ Extends base system configuration in `modules/base.nix`
     pam.services.sudo_local = {
       # Whether to enable managing /etc/pam.d/sudo_local with nix-darwin
       enable = true;
+      # Whether to enable reattaching a program to the user's bootstrap session
+      # This fixes Touch ID for sudo not working inside tmux and screen.
+      # This allows programs like tmux and screen that run in the background
+      # to survive across user sessions to work with PAM services that are tied
+      # to the bootstrap session.
+      reattach = true;
       # Enable Touch ID authentication for sudo
       # This allows using fingerprint authentication when running sudo commands
       touchIdAuth = true;
+      # Use Apple Watch for sudo authentication, for devices without Touch ID
+      # or laptops with lids closed, consider using this.
+      # When enabled, you can use your Apple Watch to authenticate sudo commands.
+      # If this doesn't work, you can go into
+      # System Settings > Touch ID & Password and toggle the switch for
+      # your Apple Watch.
+      watchIdAuth = true;
     };
   };
 
