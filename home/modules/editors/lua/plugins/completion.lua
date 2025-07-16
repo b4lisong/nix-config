@@ -19,7 +19,18 @@ return {
           elseif cmp.is_visible() then
             return cmp.select_next()
           else
-            return cmp.show()
+            -- Only show completion if there's text before cursor
+            local line = vim.api.nvim_get_current_line()
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            local before_cursor = line:sub(1, col)
+            
+            -- Check if there's non-whitespace text before cursor
+            if before_cursor:match('%S') then
+              return cmp.show()
+            else
+              -- Let it fall through to normal tab behavior
+              return false
+            end
           end
         end,
         'snippet_forward',
