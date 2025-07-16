@@ -33,8 +33,55 @@ return {
     
     -- Add keybinding groups and descriptions
     wk.add({
+      -- Code operations
       { "<leader>c", group = "Code" },
       { "<leader>cf", desc = "Format buffer" },
+      
+      -- Buffer operations
+      { "<leader>b", group = "Buffers" },
+      { "<leader>bn", desc = "Next buffer" },
+      { "<leader>bp", desc = "Previous buffer" },
+      { "<leader>bd", desc = "Delete buffer" },
+      
+      -- Find/File operations
+      { "<leader>f", group = "Find" },
+      { "<leader>ff", desc = "Find files" },
+      { "<leader>fb", desc = "Find buffers" },
+      { "<leader>fg", desc = "Live grep" },
+      { "<leader>fh", desc = "Help tags" },
+      { "<leader>fc", desc = "Commands" },
+      { "<leader>fk", desc = "Keymaps" },
+      
+      -- Git operations
+      { "<leader>g", group = "Git" },
+      { "<leader>gf", desc = "Git files" },
+      { "<leader>gc", desc = "Git commits" },
+      { "<leader>gb", desc = "Git branches" },
+      
+      -- LSP operations
+      { "<leader>l", group = "LSP" },
+      { "<leader>ls", desc = "Document symbols" },
+      { "<leader>lw", desc = "Workspace symbols" },
+      { "<leader>ld", desc = "Diagnostics" },
+      { "<leader>li", desc = "Implementations" },
+      { "<leader>lt", desc = "Type definitions" },
+      
+      -- Diagnostics
+      { "<leader>d", group = "Diagnostics" },
+      { "<leader>dl", desc = "Diagnostic loclist" },
+      { "<leader>df", desc = "Diagnostic float" },
+      
+      -- Folding
+      { "<leader>z", group = "Folding" },
+      { "<leader>zo", desc = "Open fold" },
+      { "<leader>zc", desc = "Close fold" },
+      { "<leader>za", desc = "Open all folds" },
+      { "<leader>zm", desc = "Close all folds" },
+      
+      -- Miscellaneous
+      { "<leader>so", desc = "Source config" },
+      
+      -- Window Management
       { "<leader>w", group = "Window Management" },
       -- Window splitting
       { "<leader>wv", desc = "Split vertically" },
