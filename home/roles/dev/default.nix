@@ -49,7 +49,9 @@ Package Selection Strategy:
     # Issue: https://github.com/NixOS/nixpkgs/issues/423244
     # Temporarily using stable nodejs to avoid build failures
     nodejs # Stable Node.js (was: pkgs-unstable.nodePackages_latest.nodejs)
-    pkgs-unstable.claude-code # Latest Claude Code CLI tool
+
+    # frequent updates; better off with npm i -g @anthropic-ai/claude-code
+    #pkgs-unstable.claude-code # Latest Claude Code CLI tool
 
     # Additional development tools can be added here:
     # Stable packages (prefer for core workflow tools):
