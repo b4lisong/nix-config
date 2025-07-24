@@ -151,6 +151,6 @@ Extends base system configuration in `modules/base.nix`
   # Add extra directories to PATH
   environment.systemPath = [
     "$HOME/.local/bin"
-    "$HOME/.local/npm-global/bin"
+    "$HOME/.npm-global/bin"
   ];
 }
