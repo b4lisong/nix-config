@@ -68,11 +68,14 @@ in {
       (mkOrder 1000 ''
         # Your main zsh configuration
         setopt interactivecomments # allow comments in interactive mode
-        setopt magicequalsubst     # enable filename expansion for arguments of the form ‘anything=expression’
+        setopt magicequalsubst     # enable filename expansion for arguments of the form 'anything=expression'
         setopt nonomatch           # hide error message if there is no match for the pattern
         setopt notify              # report the status of background jobs immediately
         setopt numericglobsort     # sort filenames numerically when it makes sense
         setopt promptsubst         # enable command substitution in prompt
+
+        # Conditional claude code (via npm -g) alias
+        [[ -f "$HOME/.npm-global/bin/claude" ]] && alias claude="$HOME/.npm-global/bin/claude"
       '')
 
       # Post-completion (1200)
