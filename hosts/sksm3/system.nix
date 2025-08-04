@@ -76,6 +76,9 @@ in {
 
       # Messaging & communications
       "discord" # Voice and text chat
+
+      # VPN
+      "tailscale"
     ];
 
     # Command-line tools via Homebrew
@@ -88,7 +91,7 @@ in {
     masApps = {
       "NextDNS" = 1464122853; # DNS service
       "1Password for Safari" = 1569813296;
-      "Tailscale" = 1475387142;
+      # "Tailscale" = 1475387142; # encountered login issues; using homebrew version
     };
   };
 
