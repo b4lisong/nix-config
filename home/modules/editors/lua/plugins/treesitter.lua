@@ -14,7 +14,7 @@ return {
       'html',
       'javascript',
       'json',
-      'latex', -- LaTeX syntax highlighting and parsing
+      -- 'latex', -- Disabled due to query parsing errors - using built-in LaTeX syntax
       'lua',
       'luadoc',
       'luap',
@@ -33,7 +33,9 @@ return {
     auto_install = true,
     highlight = {
       enable = true,
-      additional_vim_regex_highlighting = false,
+      -- Disable treesitter highlighting for LaTeX due to query parsing issues
+      disable = { "latex" },
+      additional_vim_regex_highlighting = { "latex" }, -- Use built-in LaTeX syntax
     },
     indent = {
       enable = true,
