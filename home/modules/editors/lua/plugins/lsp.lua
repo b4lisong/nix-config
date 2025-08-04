@@ -140,6 +140,41 @@ return {
 				on_attach = on_attach,
 			})
 		end
+
+		-- LaTeX language server (texlab) - dynamically configured
+		-- Only setup when texlab is available in PATH (e.g., via direnv/flake)
+		if vim.fn.executable("texlab") == 1 then
+			lspconfig.texlab.setup({
+				capabilities = capabilities,
+				on_attach = on_attach,
+				settings = {
+					texlab = {
+						rootDirectory = nil,
+						build = {
+							executable = "latexmk",
+							args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+							onSave = false,
+							forwardSearchAfter = false,
+						},
+						auxDirectory = ".",
+						forwardSearch = {
+							executable = nil,
+							args = {},
+						},
+						chktex = {
+							onOpenAndSave = false,
+							onEdit = false,
+						},
+						diagnosticsDelay = 300,
+						latexFormatter = "latexindent",
+						latexindent = {
+							["local"] = nil,
+							modifyLineBreaks = false,
+						},
+					},
+				},
+			})
+		end
 	end,
 }
 

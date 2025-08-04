@@ -66,6 +66,19 @@ return {
       { "<leader>li", desc = "Implementations" },
       { "<leader>lt", desc = "Type definitions" },
       
+      -- LSP Actions (standard keybindings from on_attach)
+      { "gd", desc = "Go to definition" },
+      { "gD", desc = "Go to declaration" },
+      { "gi", desc = "Go to implementation" },
+      { "gt", desc = "Go to type definition" },
+      { "gr", desc = "Show references" },
+      { "K", desc = "Hover documentation" },
+      { "<C-k>", desc = "Signature help" },
+      { "<leader>ca", desc = "Code actions" },
+      { "<leader>rn", desc = "Rename symbol" },
+      { "[d", desc = "Previous diagnostic" },
+      { "]d", desc = "Next diagnostic" },
+      
       -- Diagnostics
       { "<leader>d", group = "Diagnostics" },
       { "<leader>dl", desc = "Diagnostic loclist" },
