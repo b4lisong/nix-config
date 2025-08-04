@@ -14,6 +14,7 @@ return {
       'html',
       'javascript',
       'json',
+      'latex', -- LaTeX syntax highlighting and parsing
       'lua',
       'luadoc',
       'luap',

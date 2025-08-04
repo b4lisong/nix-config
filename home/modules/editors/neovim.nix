@@ -266,6 +266,9 @@ Future Enhancement Areas:
       go # Go toolchain (includes gofmt, go build, go mod, etc.)
       gotools # Go tools including goimports from golang.org/x/tools
       golangci-lint # Comprehensive Go linter aggregator
+      
+      # Treesitter CLI for grammar compilation (needed for LaTeX and other grammars)
+      tree-sitter
     ];
 
     # All plugins now managed by lazy.nvim for flexibility and performance
