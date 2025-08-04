@@ -263,8 +263,8 @@ Future Enhancement Areas:
       # ripgrep  # Already in base profile - used by telescope
       # fd       # Already in base profile - used by telescope
       # alejandra # Already in base profile - used by nixd for formatting
-      gofmt # Go standard formatter
-      goimports # Go formatter with import management
+      go # Go toolchain (includes gofmt, go build, go mod, etc.)
+      gotools # Go tools including goimports from golang.org/x/tools
       golangci-lint # Comprehensive Go linter aggregator
     ];
 
