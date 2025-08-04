@@ -257,11 +257,15 @@ Future Enhancement Areas:
       lua-language-server # Lua LSP (for neovim config)
       python3Packages.python-lsp-server # Python LSP with good plugin ecosystem
       vscode-langservers-extracted # JSON, HTML, CSS, ESLint language servers
+      gopls # Go language server (official LSP)
 
       # Development tools (system dependencies)
       # ripgrep  # Already in base profile - used by telescope
       # fd       # Already in base profile - used by telescope
       # alejandra # Already in base profile - used by nixd for formatting
+      gofmt # Go standard formatter
+      goimports # Go formatter with import management
+      golangci-lint # Comprehensive Go linter aggregator
     ];
 
     # All plugins now managed by lazy.nvim for flexibility and performance

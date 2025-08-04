@@ -117,6 +117,21 @@ return {
 			on_attach = on_attach,
 		})
 
+		-- Go language server
+		lspconfig.gopls.setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+			settings = {
+				gopls = {
+					analyses = {
+						unusedparams = true,
+					},
+					staticcheck = true,
+					gofumpt = true,
+				},
+			},
+		})
+
 		-- HTML, CSS, JSON, ESLint servers (from vscode-langservers-extracted)
 		local servers = { "html", "cssls", "jsonls", "eslint" }
 		for _, server in ipairs(servers) do

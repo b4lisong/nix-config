@@ -26,6 +26,7 @@ return {
       html = { { 'prettierd', 'prettier' } },
       css = { { 'prettierd', 'prettier' } },
       markdown = { { 'prettierd', 'prettier' } },
+      go = { 'goimports', 'gofmt' },
     },
     -- Format on save configuration
     format_on_save = {
