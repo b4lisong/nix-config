@@ -25,6 +25,8 @@ in {
       cdr = "z -"; # go to previous directory
       cdf = "z -f"; # force directory change
       cdh = "z ~"; # go to home directory
+      # lazygit alias
+      lg = "lazygit";
     };
     # initContent gives us fine-grained control over
     #   extra settings and their relative ordering.
