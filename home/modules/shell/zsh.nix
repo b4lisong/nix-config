@@ -27,6 +27,8 @@ in {
       cdh = "z ~"; # go to home directory
       # lazygit alias
       lg = "lazygit";
+      # just alias
+      j = "just";
     };
     # initContent gives us fine-grained control over
     #   extra settings and their relative ordering.
