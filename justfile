@@ -32,7 +32,7 @@ show-system:
 
 # Show system generations
 generations:
-    darwin-rebuild --list-generations
+    sudo darwin-rebuild --list-generations
 
 # Collect garbage (clean up old generations)
 gc:
