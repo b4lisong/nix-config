@@ -78,12 +78,12 @@ in {
       "discord" # Voice and text chat
 
       # VPN
-      "tailscale"
+      "tailscale-app"
     ];
 
     # Command-line tools via Homebrew
     brews = [
-      # Professional networking tools
+      # VPN
       "openvpn" # Corporate VPN access (for clients)
     ];
 
