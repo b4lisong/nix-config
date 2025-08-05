@@ -136,7 +136,6 @@ return {
 
     -- Fuzzy matching configuration for better search
     fuzzy = {
-      use_typo_resistance = true,
       use_frecency = true,
       use_proximity = true,
       max_items = 200,
