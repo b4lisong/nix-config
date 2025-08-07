@@ -88,6 +88,19 @@ return {
     },
   },
   config = function(_, opts)
+    -- Override parser configuration for repositories that changed from master to main
+    local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+    
+    -- Fix gomod parser to use main branch instead of default master
+    parser_config.gomod = {
+      install_info = {
+        url = "https://github.com/camdencheek/tree-sitter-go-mod",
+        files = { "src/parser.c" },
+        branch = "main", -- Explicitly specify main branch
+      },
+      maintainers = { "@camdencheek" },
+    }
+    
     require('nvim-treesitter.configs').setup(opts)
   end,
 }
