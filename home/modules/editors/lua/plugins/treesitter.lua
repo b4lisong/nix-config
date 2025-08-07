@@ -2,6 +2,7 @@
 -- Provides better code understanding and manipulation capabilities
 return {
   'nvim-treesitter/nvim-treesitter',
+  branch = 'main', -- Explicitly use main branch for 2024+ compatibility
   build = ':TSUpdate',
   event = { 'BufReadPost', 'BufNewFile' },
   dependencies = {
@@ -11,6 +12,8 @@ return {
     ensure_installed = {
       'bash',
       'c',
+      'go',
+      'gomod', -- Go module files (go.mod, go.sum)
       'html',
       'javascript',
       'json',
