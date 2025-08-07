@@ -42,6 +42,7 @@ Defines the common system-level configuration shared by both NixOS and Darwin
       ipcalc # IP address calculator for IPv4/v6 networks
 
       # Misc - General purpose utilities
+      eternal-terminal # Persistent SSH
       file # Determine file type
       findutils # Find files and directories
       which # Locate a command in PATH
