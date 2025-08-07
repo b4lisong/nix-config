@@ -8,6 +8,13 @@ Defines the common system-level configuration shared by both NixOS and Darwin
   pkgs,
   ...
 }: {
+  # Common enabled services
+  services = {
+    eternal-terminal = {
+      enable = true;
+      port = 2022; # default, but explicit
+    };
+  };
   environment = {
     # Define a minimum set of programs for all systems
     systemPackages = with pkgs; [
