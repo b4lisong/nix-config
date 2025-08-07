@@ -52,6 +52,9 @@ Package Selection Strategy:
 
     # frequent updates; better off with npm i -g @anthropic-ai/claude-code
     #pkgs-unstable.claude-code # Latest Claude Code CLI tool
+    pkgs-unstable.go
+    pkgs-unstable.gotools
+    pkgs-unstable.golangci-lint
 
     # Additional development tools can be added here:
     # Stable packages (prefer for core workflow tools):
