@@ -53,6 +53,7 @@ return {
       select = {
         enable = true,
         lookahead = true,
+        disable = { "latex" }, -- Disable textobjects for LaTeX due to query parsing issues
         keymaps = {
           ['af'] = '@function.outer',
           ['if'] = '@function.inner',
@@ -63,6 +64,7 @@ return {
       move = {
         enable = true,
         set_jumps = true,
+        disable = { "latex" }, -- Disable textobjects for LaTeX due to query parsing issues
         goto_next_start = {
           [']f'] = '@function.outer',
           [']c'] = '@class.outer',
