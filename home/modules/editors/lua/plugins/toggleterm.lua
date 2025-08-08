@@ -78,10 +78,10 @@ return {
 
     -- Additional keymaps for different terminal orientations (using T prefix to avoid conflicts)
     local keymap = vim.keymap.set
-    keymap('n', '<leader>Tf', '<cmd>ToggleTerm direction=float<cr>', { desc = 'Toggle floating terminal' })
-    keymap('n', '<leader>Th', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
-    keymap('n', '<leader>t', '<cmd>ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
-    keymap('n', '<leader>Tv', '<cmd>ToggleTerm direction=vertical<cr>', { desc = 'Toggle vertical terminal' })
+    keymap('n', '<leader>Tf', '<cmd>1ToggleTerm direction=float<cr>', { desc = 'Toggle floating terminal' })
+    keymap('n', '<leader>Th', '<cmd>2ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
+    keymap('n', '<leader>t', '<cmd>2ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
+    keymap('n', '<leader>Tv', '<cmd>3ToggleTerm direction=vertical<cr>', { desc = 'Toggle vertical terminal' })
     keymap('n', '<leader>Tt', '<cmd>ToggleTerm direction=tab<cr>', { desc = 'Toggle terminal in new tab' })
 
     -- Terminal instance management
