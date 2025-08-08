@@ -126,6 +126,7 @@ Get started with these essential keymaps:
 | `<leader>fb` | Find buffers | Telescope |
 | `<leader>e` | Toggle file explorer | Neo-tree |
 | `<leader>t` | Toggle terminal | ToggleTerm |
+| `<leader>ai` | Claude AI terminal | Custom |
 | `<leader>gg` | Open lazygit | Snacks |
 | `gd` | Go to definition | LSP |
 | `gr` | Find references | LSP |
@@ -371,9 +372,17 @@ Get started with these essential keymaps:
 - **Size**: 15 lines for horizontal, 40% width for vertical
 - **Shell Integration**: Uses system shell
 
+**Claude AI Terminal**:
+- **Purpose**: Custom terminal designed for Claude Code integration
+- **Toggle**: `<leader>ai` - Independent of ToggleTerm plugin
+- **Layout**: Vertical split with 40-column width
+- **Persistence**: Terminal session persists when toggled off
+- **Implementation**: Native Neovim terminal functionality
+
 **Terminal Orientations**:
 - **Horizontal** (`<leader>t`, `<leader>Th`) - Split below current window
 - **Vertical** (`<leader>Tv`) - Split to the right
+- **Claude AI** (`<leader>ai`) - Custom vertical terminal for Claude Code (40-column persistent)
 - **Floating** (`<leader>Tf`) - Floating window with curved borders
 - **Tab** (`<leader>Tt`) - Full tab terminal
 
@@ -426,6 +435,11 @@ The leader key is `\` (backslash). All leader mappings are organized by category
 | `<leader>so` | Source config | Built-in |
 | `<leader>e` | Toggle file explorer | Neo-tree |
 
+#### AI Integration
+| Keymap | Action | Plugin |
+|--------|--------|--------|
+| `<leader>ai` | Claude AI terminal | Custom |
+
 #### Buffer Management
 | Keymap | Action | Plugin |
 |--------|--------|--------|
@@ -473,6 +487,7 @@ The leader key is `\` (backslash). All leader mappings are organized by category
 | Keymap | Action | Description |
 |--------|--------|-------------|
 | `<leader>t` | Toggle terminal | Horizontal terminal (primary) |
+| `<leader>ai` | Claude AI terminal | Custom vertical terminal for Claude Code |
 | `<leader>Tf` | Floating terminal | Terminal in floating window |
 | `<leader>Th` | Horizontal terminal | Terminal in horizontal split |
 | `<leader>Tv` | Vertical terminal | Terminal in vertical split |
