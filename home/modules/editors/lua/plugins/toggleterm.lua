@@ -25,7 +25,7 @@ return {
       insert_mappings = true,
       terminal_mappings = true,
       persist_size = true,
-      persist_mode = true,
+      persist_mode = false, -- Don't persist direction to allow independent terminal types
       direction = 'horizontal', -- Default to horizontal terminal
       close_on_exit = true,
       shell = vim.o.shell,
