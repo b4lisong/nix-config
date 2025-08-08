@@ -93,6 +93,7 @@ return {
       
       -- Miscellaneous
       { "<leader>so", desc = "Source config" },
+      { "<leader>ai", desc = "Toggle Claude AI terminal" },
       
       -- Window Management
       { "<leader>w", group = "Window Management" },

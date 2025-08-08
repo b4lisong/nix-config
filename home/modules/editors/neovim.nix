@@ -134,6 +134,11 @@ Future Enhancement Areas:
       nnoremap <Leader>wt <C-w>t
       nnoremap <Leader>wb <C-w>b
 
+      " === CUSTOM TERMINAL KEYBINDINGS ===
+
+      " Claude AI terminal toggle
+      nnoremap <Leader>ai <cmd>lua claude_terminal_toggle()<CR>
+
       " === TELESCOPE FILE NAVIGATION ===
 
       " Enhanced file navigation with telescope fuzzy finding
@@ -199,6 +204,38 @@ Future Enhancement Areas:
       " Better split behavior for plugin windows
       set splitbelow
       set splitright
+
+      " === CUSTOM TERMINAL FUNCTIONS ===
+
+      " Claude AI terminal toggle function
+      lua << EOF
+      -- Global variable to track claude terminal buffer
+      _G.claude_terminal_buf = nil
+
+      function _G.claude_terminal_toggle()
+        -- Check if claude terminal buffer exists and is valid
+        if _G.claude_terminal_buf and vim.api.nvim_buf_is_valid(_G.claude_terminal_buf) then
+          -- Check if the buffer is currently visible in any window
+          local win_id = vim.fn.bufwinnr(_G.claude_terminal_buf)
+          if win_id ~= -1 then
+            -- Terminal is visible, close the window
+            vim.cmd(win_id .. 'wincmd w')
+            vim.cmd('close')
+          else
+            -- Terminal exists but not visible, open it in vertical split
+            vim.cmd('vsplit')
+            vim.cmd('buffer ' .. _G.claude_terminal_buf)
+            vim.cmd('vertical resize 40')
+          end
+        else
+          -- No existing claude terminal, create new one
+          vim.cmd('vsplit term://claude')
+          vim.cmd('vertical resize 40')
+          -- Store the buffer number for future toggles
+          _G.claude_terminal_buf = vim.fn.bufnr('%')
+        end
+      end
+      EOF
 
       " === LAZY.NVIM INITIALIZATION ===
 
