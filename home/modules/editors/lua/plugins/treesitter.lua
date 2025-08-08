@@ -17,7 +17,8 @@ return {
       'html',
       'javascript',
       'json',
-      -- 'latex', -- Disabled due to query parsing errors - using built-in LaTeX syntax
+      -- 'latex', -- PERMANENTLY DISABLED: LaTeX parser causes "Impossible pattern: curly_group_text_list" errors
+                 -- Use built-in vim LaTeX syntax highlighting instead
       'lua',
       'luadoc',
       'luap',
