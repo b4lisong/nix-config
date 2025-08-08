@@ -76,15 +76,63 @@ return {
     -- Apply terminal keymaps when terminal opens
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 
+    -- Create dedicated terminal instances for each direction
+    local Terminal = require('toggleterm.terminal').Terminal
+    
+    -- Floating terminal (ID 1)
+    local float_term = Terminal:new({
+      count = 1,
+      direction = "float",
+      hidden = true,
+    })
+    
+    -- Horizontal terminal (ID 2) 
+    local horizontal_term = Terminal:new({
+      count = 2,
+      direction = "horizontal",
+      hidden = true,
+    })
+    
+    -- Vertical terminal (ID 3)
+    local vertical_term = Terminal:new({
+      count = 3,
+      direction = "vertical",
+      hidden = true,
+    })
+    
+    -- Tab terminal (ID 4)
+    local tab_term = Terminal:new({
+      count = 4,
+      direction = "tab",
+      hidden = true,
+    })
+    
+    -- Toggle functions that ensure proper direction
+    function _G.toggle_float_term()
+      float_term:toggle()
+    end
+    
+    function _G.toggle_horizontal_term()
+      horizontal_term:toggle()
+    end
+    
+    function _G.toggle_vertical_term()
+      vertical_term:toggle()
+    end
+    
+    function _G.toggle_tab_term()
+      tab_term:toggle()
+    end
+    
     -- Additional keymaps for different terminal orientations (using T prefix to avoid conflicts)
     local keymap = vim.keymap.set
-    keymap('n', '<leader>Tf', '<cmd>1ToggleTerm direction=float<cr>', { desc = 'Toggle floating terminal' })
-    keymap('n', '<leader>Th', '<cmd>2ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
-    keymap('n', '<leader>t', '<cmd>2ToggleTerm direction=horizontal<cr>', { desc = 'Toggle horizontal terminal' })
-    keymap('n', '<leader>Tv', '<cmd>3ToggleTerm direction=vertical<cr>', { desc = 'Toggle vertical terminal' })
-    keymap('n', '<leader>Tt', '<cmd>ToggleTerm direction=tab<cr>', { desc = 'Toggle terminal in new tab' })
+    keymap('n', '<leader>Tf', '<cmd>lua toggle_float_term()<cr>', { desc = 'Toggle floating terminal' })
+    keymap('n', '<leader>Th', '<cmd>lua toggle_horizontal_term()<cr>', { desc = 'Toggle horizontal terminal' })
+    keymap('n', '<leader>t', '<cmd>lua toggle_horizontal_term()<cr>', { desc = 'Toggle horizontal terminal' })
+    keymap('n', '<leader>Tv', '<cmd>lua toggle_vertical_term()<cr>', { desc = 'Toggle vertical terminal' })
+    keymap('n', '<leader>Tt', '<cmd>lua toggle_tab_term()<cr>', { desc = 'Toggle terminal in new tab' })
 
-    -- Terminal instance management
+    -- Terminal instance management (for generic numbered terminals)
     keymap('n', '<leader>T1', '<cmd>1ToggleTerm<cr>', { desc = 'Toggle terminal 1' })
     keymap('n', '<leader>T2', '<cmd>2ToggleTerm<cr>', { desc = 'Toggle terminal 2' })
     keymap('n', '<leader>T3', '<cmd>3ToggleTerm<cr>', { desc = 'Toggle terminal 3' })
