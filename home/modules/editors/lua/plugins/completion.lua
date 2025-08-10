@@ -47,6 +47,8 @@ return {
       },
       ['<C-n>'] = { 'select_next', 'fallback' },
       ['<C-p>'] = { 'select_prev', 'fallback' },
+      ['<C-j>'] = { 'select_next', 'fallback' },
+      ['<C-k>'] = { 'select_prev', 'fallback' },
       ['<CR>'] = { 'fallback' },
       ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },
