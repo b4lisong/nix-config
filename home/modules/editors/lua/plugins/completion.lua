@@ -17,7 +17,7 @@ return {
           if cmp.snippet_active() then
             return cmp.accept()
           elseif cmp.is_visible() then
-            return cmp.select_next()
+            return cmp.accept()
           else
             -- Only show completion if there's text before cursor
             local line = vim.api.nvim_get_current_line()
@@ -45,7 +45,9 @@ return {
         'snippet_backward',
         'fallback'
       },
-      ['<CR>'] = { 'accept', 'fallback' },
+      ['<C-n>'] = { 'select_next', 'fallback' },
+      ['<C-p>'] = { 'select_prev', 'fallback' },
+      ['<CR>'] = { 'fallback' },
       ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },
       ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
