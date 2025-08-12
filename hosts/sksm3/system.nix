@@ -79,6 +79,9 @@ in {
 
       # VPN
       "tailscale-app"
+
+      # Notes & PKM
+      "logseq" # Outliner-style PKM
     ];
 
     # Command-line tools via Homebrew
