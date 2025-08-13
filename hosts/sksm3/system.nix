@@ -82,6 +82,7 @@ in {
 
       # Notes & PKM
       "logseq" # Outliner-style PKM
+      "obsidian" # Markdown PKM
     ];
 
     # Command-line tools via Homebrew
