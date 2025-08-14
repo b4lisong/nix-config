@@ -45,11 +45,22 @@
   networking = {
     # Disable wireless networking for wired-only Pi (override Pi base module default)
     wireless.enable = lib.mkForce false;
-    
-    # Firewall configuration for Tailscale
+
+    # Firewall configuration
     firewall = {
+      # Trust Tailscale interface for VPN traffic
       trustedInterfaces = ["tailscale0"];
+
+      # UDP ports
       allowedUDPPorts = [config.services.tailscale.port];
+
+      # TCP ports for web services
+      allowedTCPPorts = [
+        80 # HTTP
+        443 # HTTPS
+        8080 # Alternative HTTP (development/apps)
+        3000 # Altnernative HTTP #2
+      ];
     };
   };
 
@@ -96,4 +107,3 @@
   # on your system were taken. Don't change this after initial installation.
   system.stateVersion = "25.05";
 }
-
