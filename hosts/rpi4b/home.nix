@@ -170,12 +170,8 @@
         symbol = "🐏 ";
       };
       
-      # Show hostname for SSH sessions
-      hostname = {
-        ssh_only = false;
-        format = "on [$hostname](bold red) ";
-        disabled = false;
-      };
+      # Enable hostname display (inherits format from base config)
+      hostname.disabled = false;
     };
   };
 
