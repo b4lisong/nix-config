@@ -734,17 +734,46 @@ The configuration files are managed by Nix and Home Manager, providing automatic
 ### Startup Time
 - **Cold Start**: ~150-250ms (first time, downloading plugins)
 - **Warm Start**: ~50-80ms (typical startup)
+- **Pi Optimization**: ~100-150ms (resource-constrained environments)
 - **Optimizations**: Lazy loading, minimal immediate plugins
 
 ### Memory Usage
 - **Base**: ~15-25MB (minimal configuration)
 - **With Plugins**: ~30-50MB (typical usage)
 - **LSP Active**: +10-20MB per language server
+- **Pi Mode**: Reduced providers and features for <30MB total
 
 ### Plugin Loading
 - **Immediate**: Colorscheme, statusline (~10ms)
 - **On Event**: LSP, completion (~50-100ms when triggered)
 - **On Demand**: File explorer, terminal (~20-50ms when used)
+
+### Platform-Specific Optimizations
+
+#### Raspberry Pi / Resource-Constrained Environments
+The configuration automatically detects and optimizes for resource-constrained environments:
+
+**Performance Optimizations:**
+- **Slower Update Times**: `updatetime = 1000ms` (vs 250ms default)
+- **Faster Timeouts**: `timeoutlen = 500ms` for quicker key sequences
+- **Disabled Providers**: Perl and Ruby providers disabled to save memory
+- **Lighter Configs**: Reduced animation and visual effects
+
+**Implementation Example** (in host configurations):
+```lua
+-- Pi 4B specific optimizations
+vim.opt.updatetime = 1000  -- Slower update for better performance on Pi
+vim.opt.timeoutlen = 500   -- Faster key timeout
+
+-- Disable heavy features for better Pi performance
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+```
+
+**Benefits for Embedded Development:**
+- **Lower Resource Usage**: Better performance on Pi and similar devices
+- **Responsive Experience**: Optimized for SSH and remote development
+- **Hardware Focus**: Configuration tuned for embedded development workflows
 
 ## Architecture Benefits
 

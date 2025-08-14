@@ -2,7 +2,7 @@
 
 # b4lisong's nix-config
 
-This repository provides a flake based configuration for managing macOS and future NixOS machines with [nix-darwin](https://github.com/nix-darwin/nix-darwin) and [home‑manager](https://github.com/nix-community/home-manager).
+This repository provides a flake based configuration for managing macOS and NixOS machines with [nix-darwin](https://github.com/nix-darwin/nix-darwin) and [home‑manager](https://github.com/nix-community/home-manager). Includes specialized support for Raspberry Pi and embedded development.
 
 Heavily inspired by:
 - [ryan4yin's nix-config](https://github.com/ryan4yin/nix-config)
@@ -12,12 +12,13 @@ This repository is under constant development!
 
 ## Overview
 
-`flake.nix` declares the inputs for `nixpkgs` (stable), `nixpkgs-unstable`, `nix-darwin`, and `home-manager` and exposes two main outputs:
+`flake.nix` declares the inputs for `nixpkgs` (stable), `nixpkgs-unstable`, `nix-darwin`, and `home-manager` and exposes three main outputs:
 
-* **Darwin configurations** – created by `mkDarwinHost` and assembled from a layered set of modules.
+* **Darwin configurations** – created by `mkDarwinHost` and assembled from a layered set of modules for macOS systems.
+* **NixOS configurations** – created by `mkNixOSHost` and assembled from a layered set of modules for Linux systems.
 * **Development shells** – a set of per-architecture `mkShell` environments containing tools such as `alejandra`, `pre-commit`, `statix`, and `deadnix`.
 
-The configuration supports both stable and bleeding-edge packages through dual nixpkgs inputs, with Home Manager integrated as a Darwin module rather than standalone.
+The configuration supports both stable and bleeding-edge packages through dual nixpkgs inputs, with Home Manager integrated as a system module (Darwin or NixOS) rather than standalone.
 
 ## Layout
 
@@ -33,7 +34,7 @@ lib/          – helper library functions
 
 * `modules/base.nix` defines common packages, fonts and Nix settings for all systems.
 * `modules/darwin` extends the base configuration with macOS specific options and a default Homebrew setup.
-* `modules/nixos` is currently a stub for future NixOS support.
+* `modules/nixos` provides comprehensive NixOS system configuration with security hardening, optimization, and platform-specific services.
 
 ### Home Manager
 
@@ -46,6 +47,7 @@ Within `home/` there are reusable modules for the shell and editor as well as la
 
 Roles under `home/roles` group packages by purpose:
 * `roles/dev` – development tools (neovim, nodejs, claude-code)
+* `roles/embedded` – hardware development tools (serial communication, I2C utilities, embedded monitoring)
 * `roles/personal`, `roles/work`, `roles/security`, `roles/docker` – organized by use case
 
 ### Hosts
@@ -57,8 +59,8 @@ Each host directory contains two files:
 
 Currently three hosts are defined:
 * `a2251` – Personal MacBook Pro (Intel, x86_64-darwin) - actively used
-* `sksm3` – Work MacBook (Apple Silicon, aarch64-darwin) - defined but inactive
-* `rpi4b` – Raspberry Pi 4B (aarch64-linux) - planned NixOS host
+* `sksm3` – Work MacBook (Apple Silicon, aarch64-darwin) - actively used  
+* `rpi4b` – Raspberry Pi 4B (aarch64-linux) - NixOS host with embedded development environment
 
 ## Variables
 
@@ -67,10 +69,44 @@ Global settings are centralised in `variables/default.nix` and include the prima
 ## Using the flake
 
 ### System Management
-A typical rebuild on macOS:
+
+#### Multi-Platform Just Commands (Recommended)
+This configuration includes Just commands that automatically detect your platform and use the appropriate rebuild tool:
 
 ```bash
+just rebuild          # Auto-detects platform (darwin-rebuild or nixos-rebuild)
+just build            # Build without switching  
+just check            # Validate configuration
+just rollback         # Revert to previous generation
+just show-platform    # Show detected platform and hostname
+```
+
+#### Direct Commands
+
+**macOS (Darwin):**
+```bash
 sudo darwin-rebuild switch --flake .#a2251
+sudo darwin-rebuild switch --flake .#sksm3
+```
+
+**NixOS (Linux):**
+```bash
+sudo nixos-rebuild switch --flake .#rpi4b
+```
+
+#### Raspberry Pi Setup
+For initial deployment to a Raspberry Pi 4B:
+
+```bash
+# Build SD card image (cross-compile from macOS)
+nix build .#nixosConfigurations.rpi4b.config.system.build.sdImage
+
+# Flash image to SD card and boot Pi
+# SSH to Pi (ensure SSH key is configured in hosts/rpi4b/system.nix)
+ssh pi@rpi4b.local
+
+# On Pi: Deploy configuration
+sudo nixos-rebuild switch --flake github:b4lisong/nix-config#rpi4b
 ```
 
 ### Development Workflow
