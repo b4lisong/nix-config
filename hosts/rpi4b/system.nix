@@ -95,11 +95,14 @@
       "spi"        # SPI access for peripherals
     ];
     
-    # SSH key authentication
+    # SSH key authentication - ADD YOUR SSH PUBLIC KEY HERE
     openssh.authorizedKeys.keys = [
-      # Add your SSH public key here
+      # Add your SSH public key here for secure access
       # Example: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5... user@host"
     ];
+    
+    # Temporary: allow setting passwords manually after first boot
+    hashedPassword = null;
   };
 
   # Enable sudo without password for initial setup

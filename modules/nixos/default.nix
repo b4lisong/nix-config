@@ -185,8 +185,8 @@ It focuses on essential NixOS system services, security, and optimization.
 
   # User configuration defaults
   users = {
-    # Disable mutable users for declarative user management
-    mutableUsers = lib.mkDefault false;
+    # Enable mutable users for easier initial setup and password management
+    mutableUsers = lib.mkDefault true;
     
     # Default shell
     defaultUserShell = pkgs.zsh;
