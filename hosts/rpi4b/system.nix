@@ -41,10 +41,16 @@
     };
   };
 
-  # Firewall configuration for Tailscale
-  networking.firewall = {
-    trustedInterfaces = ["tailscale0"];
-    allowedUDPPorts = [config.services.tailscale.port];
+  # Network configuration
+  networking = {
+    # Disable wireless networking for wired-only Pi (override Pi base module default)
+    wireless.enable = lib.mkForce false;
+    
+    # Firewall configuration for Tailscale
+    firewall = {
+      trustedInterfaces = ["tailscale0"];
+      allowedUDPPorts = [config.services.tailscale.port];
+    };
   };
 
   # Make tailscale CLI available to users
