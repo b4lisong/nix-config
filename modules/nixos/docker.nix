@@ -128,7 +128,7 @@ support, with all settings using lib.mkDefault for easy customization.
     "net.ipv4.ip_forward" = lib.mkDefault 1;
     
     # Virtual memory settings for containers
-    "vm.max_map_count" = lib.mkDefault 262144; # Required for some containers (e.g., Elasticsearch)
+    # Note: NixOS provides its own vm.max_map_count default (1048576), which is sufficient
   };
 
   # Security configuration
