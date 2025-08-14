@@ -138,14 +138,18 @@
   # Enable I2C and SPI for hardware projects (via kernel modules)
   boot.kernelModules = ["i2c-dev" "spi-dev"];
 
-  # System services
-  services = {
+  # Nix configuration for Pi optimizations
+  nix = {
     # Automatic garbage collection to save SD card space
-    nix.gc = {
+    gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 30d";
     };
+  };
+
+  # System services
+  services = {
     
     # Journal configuration for SD card longevity
     journald.extraConfig = ''
