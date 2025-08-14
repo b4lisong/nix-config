@@ -44,18 +44,13 @@
 
   # Hardware-specific configuration for Raspberry Pi 4B
   hardware = {
-    raspberry-pi."4" = {
-      # Enable touchscreen support if needed
-      touch-ft5406.enable = false; # Set to true if using official Pi touchscreen
-      
-      # Audio configuration
-      audio.enable = true;
-    };
-    
     # Enable OpenGL support
     graphics = {
       enable = true;
     };
+    
+    # Enable common hardware support
+    enableRedistributableFirmware = true;
   };
 
   # Firmware configuration
