@@ -33,7 +33,7 @@ Key focus areas:
     minicom          # Serial terminal emulator
     picocom          # Minimal serial communication program
     i2c-tools        # I2C utilities for sensor interfacing
-    spi-tools        # SPI utilities (if available)
+    # Note: SPI tools typically come with kernel driver access via /dev/spi*
     
     # System monitoring optimized for embedded systems
     iotop            # I/O monitoring (important for SD cards)
