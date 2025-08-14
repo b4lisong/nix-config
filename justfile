@@ -4,7 +4,8 @@
 # with automatic system detection based on hostname.
 
 # Get current hostname and map to flake configuration
-default_system := `hostname | sed 's/\.local$//'`
+# Extract base hostname by removing all domain/subdomain suffixes
+default_system := `hostname | cut -d. -f1`
 
 # Default recipe - show available commands
 default:
@@ -20,7 +21,7 @@ build:
 
 # Check flake and build without switching
 check:
-    darwin-rebuild check --flake .#{{default_system}}
+    sudo darwin-rebuild check --flake .#{{default_system}}
 
 # Rollback to previous generation
 rollback:
