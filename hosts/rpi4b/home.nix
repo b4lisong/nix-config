@@ -162,21 +162,6 @@
   # Starship prompt with Pi-specific modules
   programs.starship = {
     settings = {
-      format = lib.concatStrings [
-        "$username"
-        "$hostname"
-        "$directory"
-        "$git_branch"
-        "$git_state"
-        "$git_status"
-        "$nodejs"
-        "$python"
-        "$memory_usage"
-        "$time"
-        "$line_break"
-        "$character"
-      ];
-      
       # Show memory usage (important for Pi)
       memory_usage = {
         disabled = false;
