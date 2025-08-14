@@ -50,7 +50,10 @@ customized through options and overrides as needed.
     ];
     
     # Enable I2C and SPI for hardware projects (via kernel modules)
-    kernelModules = ["i2c-dev" "spi-dev"];
+    kernelModules = ["i2c-dev" "spi-dev"] ++ lib.optionals config.virtualisation.docker.enable [
+      "cgroup_enable=memory"  # Required for memory limiting on Pi
+      "cgroup_memory=1"       # Enable memory cgroup
+    ];
 
     # Performance optimizations for SD card longevity
     kernel.sysctl = {
@@ -59,6 +62,17 @@ customized through options and overrides as needed.
       # Optimize for flash storage
       "vm.dirty_ratio" = lib.mkDefault 5;
       "vm.dirty_background_ratio" = lib.mkDefault 2;
+    } // lib.optionalAttrs config.virtualisation.docker.enable {
+      # Additional Docker optimizations for Pi memory constraints
+      "vm.dirty_bytes" = lib.mkDefault 33554432;      # 32MB
+      "vm.dirty_background_bytes" = lib.mkDefault 16777216;  # 16MB
+      
+      # Network buffer optimizations for Pi
+      "net.core.rmem_max" = lib.mkDefault 134217728;   # 128MB
+      "net.core.wmem_max" = lib.mkDefault 134217728;   # 128MB
+      
+      # Container networking optimizations
+      "net.netfilter.nf_conntrack_max" = lib.mkDefault 65536;
     };
   };
 
@@ -184,4 +198,72 @@ customized through options and overrides as needed.
     man.enable = lib.mkDefault true;
     info.enable = lib.mkDefault false;
   };
+
+  # Docker-specific optimizations for ARM/Pi systems
+  virtualisation.docker = lib.mkIf config.virtualisation.docker.enable {
+    # ARM-specific storage optimizations
+    daemon.settings = {
+      # Use overlay2 with ARM-optimized settings
+      storage-driver = lib.mkForce "overlay2";
+      storage-opts = lib.mkDefault [
+        "overlay2.override_kernel_check=true"
+      ];
+      
+      # ARM memory optimizations
+      default-shm-size = lib.mkDefault "64m";
+      
+      # Pi-specific resource limits
+      default-ulimits = lib.mkForce {
+        nofile = {
+          name = "nofile";
+          hard = 32768;  # Lower than generic x86_64 default
+          soft = 32768;
+        };
+        nproc = {
+          name = "nproc";
+          hard = 4096;   # Appropriate for Pi CPU cores
+          soft = 4096;
+        };
+      };
+
+      # Network optimizations for Pi networking
+      mtu = lib.mkDefault 1500;
+      
+      # ARM-specific cgroup driver
+      exec-opts = lib.mkDefault ["native.cgroupdriver=systemd"];
+    };
+
+    # More aggressive cleanup for storage-constrained Pi
+    autoPrune = {
+      flags = lib.mkForce [
+        "--filter=until=72h"      # More aggressive: 3 days instead of 1 week
+        "--filter=label!=keep"
+        "--all"                   # Also prune unused images
+      ];
+    };
+  };
+
+  # Additional Docker user groups for Pi-specific access
+  users.groups.docker = lib.mkIf config.virtualisation.docker.enable {};
+
+
+
+  # Pi-specific systemd service optimizations for Docker
+  systemd.services.docker = lib.mkIf config.virtualisation.docker.enable {
+    serviceConfig = {
+      # More conservative memory limits for Pi
+      MemoryMax = lib.mkForce "512M";
+      
+      # Pi-specific CPU limits
+      CPUQuota = lib.mkDefault "200%";  # Allow using 2 cores max on Pi
+      
+      # Longer restart delays for slower Pi storage
+      RestartSec = lib.mkForce "30s";
+      
+      # IO optimizations for SD card
+      IOSchedulingClass = lib.mkDefault 2;  # Best effort
+      IOSchedulingPriority = lib.mkDefault 4;
+    };
+  };
+
 }

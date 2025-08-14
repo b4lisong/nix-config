@@ -5,9 +5,10 @@
   vars,
   ...
 }: {
-  # Import base Raspberry Pi hardware configuration
+  # Import base Raspberry Pi hardware configuration and Docker support
   imports = [
     ../../modules/nixos/raspberry-pi.nix
+    ../../modules/nixos/docker.nix
   ];
 
   # Host identification
@@ -28,6 +29,9 @@
     PermitRootLogin = lib.mkForce "yes";
   };
 
+  # Docker configuration
+  virtualisation.docker.enable = true;
+
   # User configuration specific to this Pi
   users.users.${vars.user.username} = {
     isNormalUser = true;
@@ -40,6 +44,7 @@
       "gpio"           # GPIO access for Pi-specific projects
       "i2c"            # I2C access for sensors
       "spi"            # SPI access for peripherals
+      "docker"         # Docker access
     ];
 
     # SSH key authentication - configured for this specific Pi
