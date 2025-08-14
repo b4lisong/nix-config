@@ -33,11 +33,11 @@
     # Enable hardware-specific features
     # Use mainline kernel for better hardware support (audio, Bluetooth)
     kernelPackages = pkgs.linuxPackages_latest;
-    
+
     # Raspberry Pi 4 hardware support
     initrd.availableKernelModules = [
-      "xhci_pci" 
-      "usbhid" 
+      "xhci_pci"
+      "usbhid"
       "usb_storage"
     ];
   };
@@ -48,7 +48,7 @@
     graphics = {
       enable = true;
     };
-    
+
     # Enable common hardware support
     enableRedistributableFirmware = true;
   };
@@ -86,21 +86,22 @@
     isNormalUser = true;
     description = vars.user.fullName;
     extraGroups = [
-      "wheel"      # sudo access
-      "networkmanager" 
+      "wheel" # sudo access
+      "networkmanager"
       "audio"
       "video"
-      "gpio"       # GPIO access for Pi-specific projects
-      "i2c"        # I2C access for sensors
-      "spi"        # SPI access for peripherals
+      "gpio" # GPIO access for Pi-specific projects
+      "i2c" # I2C access for sensors
+      "spi" # SPI access for peripherals
     ];
-    
+
     # SSH key authentication - ADD YOUR SSH PUBLIC KEY HERE
     openssh.authorizedKeys.keys = [
       # Add your SSH public key here for secure access
       # Example: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5... user@host"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICNBEKkYPumCLWgGGgvJ6Gr9FPtF8i1U5TBB2IrJnFV9"
     ];
-    
+
     # Temporary: allow setting passwords manually after first boot
     hashedPassword = null;
   };
@@ -114,16 +115,16 @@
     # Pi-specific tools
     libraspberrypi # Raspberry Pi userland tools
     raspberrypi-eeprom # EEPROM updates
-    
+
     # Hardware monitoring
     lm_sensors
     htop
-    
+
     # Network tools for headless operation
     wget
     curl
     dig
-    
+
     # Text editors for emergency config
     vim
     nano
@@ -153,13 +154,12 @@
 
   # System services
   services = {
-    
     # Journal configuration for SD card longevity
     journald.extraConfig = ''
       SystemMaxUse=100M
       RuntimeMaxUse=50M
     '';
-    
+
     # Network time synchronization
     timesyncd.enable = true;
   };
@@ -179,3 +179,4 @@
   # on your system were taken. Don't change this after initial installation.
   system.stateVersion = "25.05";
 }
+
