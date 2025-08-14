@@ -119,9 +119,10 @@ This architecture provides:
             ./hosts/${hostName}/home.nix # Host-specific user config (profiles + roles)
           ];
 
-          # Provide unstable packages to Home Manager modules
+          # Provide variables and unstable packages to Home Manager modules
           # This enables using bleeding-edge packages in user configuration
           home-manager.extraSpecialArgs = {
+            inherit vars;
             pkgs-unstable = import nixpkgs-unstable {
               system = vars.hosts.${hostName}.system;
               config.allowUnfree = true;
@@ -162,9 +163,10 @@ This architecture provides:
             ./hosts/${hostName}/home.nix # Host-specific user config (profiles + roles)
           ];
 
-          # Provide unstable packages to Home Manager modules
+          # Provide variables and unstable packages to Home Manager modules
           # This enables using bleeding-edge packages in user configuration
           home-manager.extraSpecialArgs = {
+            inherit vars;
             pkgs-unstable = import nixpkgs-unstable {
               system = vars.hosts.${hostName}.system;
               config.allowUnfree = true;
