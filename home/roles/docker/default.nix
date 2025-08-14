@@ -30,42 +30,39 @@ Examples of what this role might include when implemented:
 - Service mesh and cloud-native tools
 - Container security and monitoring
 */
-_: {
-  # Placeholder for Docker and container-specific packages and configurations
-  # When implemented, this might include:
-
-  # home.packages = with pkgs; [
-  #   # Core container tools
-  #   docker # Container runtime and management
-  #   docker-compose # Multi-container application orchestration
-  #   podman # Alternative container runtime
-  #   buildah # Container image building tool
-  #
-  #   # Kubernetes and orchestration
-  #   kubectl # Kubernetes command-line tool
-  #   kubernetes-helm # Kubernetes package manager
-  #   k9s # Kubernetes cluster management TUI
-  #   kubectx # Kubernetes context switching
-  #
-  #   # Container image tools
-  #   skopeo # Container image inspection and management
-  #   dive # Container image layer analysis
-  #
-  #   # Development and debugging
-  #   kind # Kubernetes in Docker for local development
-  #   minikube # Local Kubernetes development
-  #   ctop # Container monitoring TUI
-  #
-  #   # Cloud-native tools
-  #   istioctl # Service mesh management
-  #   linkerd # Lightweight service mesh
-  #
-  #   # Container security
-  #   trivy # Container vulnerability scanner
-  #
-  #   # Registry and distribution
-  #   regctl # Container registry client
-  # ];
+{pkgs, ...}: {
+  home.packages = with pkgs; [
+    # Core container tools
+    docker # Container runtime and management
+    docker-compose # Multi-container application orchestration
+    #   podman # Alternative container runtime
+    #   buildah # Container image building tool
+    #
+    #   # Kubernetes and orchestration
+    #   kubectl # Kubernetes command-line tool
+    #   kubernetes-helm # Kubernetes package manager
+    #   k9s # Kubernetes cluster management TUI
+    #   kubectx # Kubernetes context switching
+    #
+    #   # Container image tools
+    #   skopeo # Container image inspection and management
+    #   dive # Container image layer analysis
+    #
+    #   # Development and debugging
+    #   kind # Kubernetes in Docker for local development
+    #   minikube # Local Kubernetes development
+    #   ctop # Container monitoring TUI
+    #
+    #   # Cloud-native tools
+    #   istioctl # Service mesh management
+    #   linkerd # Lightweight service mesh
+    #
+    #   # Container security
+    #   trivy # Container vulnerability scanner
+    #
+    #   # Registry and distribution
+    #   regctl # Container registry client
+  ];
 
   # programs = {
   #   # Docker and container-specific program configurations
