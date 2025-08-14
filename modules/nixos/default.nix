@@ -16,19 +16,14 @@ It focuses on essential NixOS system services, security, and optimization.
   # Add `~/.local/bin` to PATH for user-installed binaries
   environment.localBinInPath = true;
 
-  # Nix configuration optimizations
+  # Nix configuration optimizations (extends base.nix settings)
   nix = {
-    # Enable flakes and new nix command
     settings = {
-      experimental-features = ["nix-command" "flakes"];
-      
       # Binary cache configuration for faster builds
-      substituters = [
-        "https://cache.nixos.org/"
+      substituters = lib.mkAfter [
         "https://nix-community.cachix.org"
       ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      trusted-public-keys = lib.mkAfter [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimXuKWsyFQjy8Z8QK7k+j9YQjKtXHOM="
       ];
       

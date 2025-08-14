@@ -75,10 +75,10 @@
     settings = {
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
+      # Allow root login for initial setup
+      # Disable after first login and proper user setup
+      PermitRootLogin = "yes";
     };
-    # Allow root login for initial setup
-    # Disable after first login and proper user setup
-    permitRootLogin = "yes";
   };
 
   # User configuration
