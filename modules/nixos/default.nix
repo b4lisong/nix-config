@@ -78,9 +78,8 @@ It focuses on essential NixOS system services, security, and optimization.
       fallbackDns = ["1.1.1.1" "8.8.8.8"];
     };
     
-    # Automatic system updates (disabled by default for stability)
-    # Enable on servers that need automatic security updates
-    automatic-updates.enable = false;
+    # Note: Automatic system updates not available in NixOS 25.05
+    # Manual updates recommended: nixos-rebuild switch --upgrade
     
     # Firmware updates for supported hardware
     fwupd.enable = true;
