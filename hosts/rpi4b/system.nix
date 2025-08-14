@@ -135,9 +135,8 @@
     "vm.dirty_background_ratio" = 2;
   };
 
-  # Enable I2C and SPI for hardware projects
-  hardware.i2c.enable = true;
-  hardware.spi.enable = true;
+  # Enable I2C and SPI for hardware projects (via kernel modules)
+  boot.kernelModules = ["i2c-dev" "spi-dev"];
 
   # System services
   services = {
