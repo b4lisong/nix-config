@@ -139,9 +139,52 @@ This architecture provides:
         };
       };
     };
+    
+    # Helper function that creates a NixOS system config for a given hostname
+    # Similar to mkDarwinHost but for Linux systems (Raspberry Pi, etc.)
+    mkNixOSHost = hostName: {
+      modules = [
+        # System configuration hierarchy (applied in order):
+        # 1. Base system configuration (shared across all platforms)
+        ./modules/base.nix # Core packages, fonts, Nix settings for all systems
+
+        # 2. Platform-specific system configuration
+        ./modules/nixos # NixOS-specific settings and services
+
+        # 3. Host-specific system configuration
+        ./hosts/${hostName}/system.nix # Machine-specific overrides and additions
+
+        # 4. Home Manager integration as a NixOS module
+        home-manager.nixosModules.home-manager # Enables user-level configuration
+        {
+          # Home Manager user configuration
+          home-manager.users.${vars.user.username}.imports = [
+            ./hosts/${hostName}/home.nix # Host-specific user config (profiles + roles)
+          ];
+
+          # Provide unstable packages to Home Manager modules
+          # This enables using bleeding-edge packages in user configuration
+          home-manager.extraSpecialArgs = {
+            pkgs-unstable = import nixpkgs-unstable {
+              system = vars.hosts.${hostName}.system;
+              config.allowUnfree = true;
+            };
+          };
+        }
+      ];
+      # `specialArgs` passes additional arguments to all modules
+      specialArgs = {
+        inherit self inputs vars;
+        # Make unstable pkgs available to all modules via pkgs-unstable
+        pkgs-unstable = import nixpkgs-unstable {
+          system = vars.hosts.${hostName}.system;
+          config.allowUnfree = true;
+        };
+      };
+    };
+    
     # Declare supported architectures
-    # TODO: aarch64-linux
-    systems = ["x86_64-darwin" "aarch64-darwin"];
+    systems = ["x86_64-darwin" "aarch64-darwin" "aarch64-linux"];
     # `forAllSystems` creates a helper to generate attrs for each supported system
     forAllSystems = nixpkgs.lib.genAttrs systems;
     # `nixpkgsFor` gets the nixpkgs package set for a specific system arch
@@ -187,6 +230,11 @@ This architecture provides:
     # Create a Darwin system config using the `sksm3` host variables
     darwinConfigurations.${vars.hosts.sksm3.hostname} =
       nix-darwin.lib.darwinSystem (mkDarwinHost vars.hosts.sksm3.hostname);
+
+    # Create a NixOS system config using the `rpi4b` host variables
+    nixosConfigurations.${vars.hosts.rpi4b.hostname} =
+      nixpkgs.lib.nixosSystem (mkNixOSHost vars.hosts.rpi4b.hostname);
+
     # Create Nix development environments for all supported systems
     devShells = forAllSystems (system: {default = mkDevShell system;});
   };
