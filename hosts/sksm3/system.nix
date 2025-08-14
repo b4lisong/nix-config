@@ -83,6 +83,9 @@ in {
       # Notes & PKM
       "logseq" # Outliner-style PKM
       "obsidian" # Markdown PKM
+
+      # Utilities
+      "balenaetcher"
     ];
 
     # Command-line tools via Homebrew
