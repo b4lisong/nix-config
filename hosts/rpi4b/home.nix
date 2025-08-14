@@ -21,7 +21,7 @@
   # Home Manager configuration
   home = {
     username = vars.user.username;
-    homeDirectory = "/home/${vars.user.username}";
+    homeDirectory = lib.mkForce "/home/${vars.user.username}";
     
     # Pi-specific packages for hardware projects and monitoring
     packages = with pkgs; [
