@@ -22,29 +22,49 @@
     };
   };
 
-  # Host-specific SSH configuration
-  services.openssh.settings = {
-    # Allow root login for initial setup (override base Pi module default)
-    # Disable after first login and proper user setup
-    PermitRootLogin = lib.mkForce "yes";
-  };
-
   # Docker configuration
   virtualisation.docker.enable = true;
+
+  # Host-specific service configuration
+  services = {
+    # SSH configuration for initial setup
+    openssh.settings = {
+      # Allow root login for initial setup (override base Pi module default)
+      # Disable after first login and proper user setup
+      PermitRootLogin = lib.mkForce "yes";
+    };
+
+    # Tailscale VPN configuration
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "server"; # enables IP forwarding
+    };
+  };
+
+  # Firewall configuration for Tailscale
+  networking.firewall = {
+    trustedInterfaces = ["tailscale0"];
+    allowedUDPPorts = [config.services.tailscale.port];
+  };
+
+  # Make tailscale CLI available to users
+  environment.systemPackages = with pkgs; [
+    tailscale
+  ];
 
   # User configuration specific to this Pi
   users.users.${vars.user.username} = {
     isNormalUser = true;
     description = vars.user.fullName;
     extraGroups = [
-      "wheel"          # sudo access
+      "wheel" # sudo access
       "networkmanager"
       "audio"
       "video"
-      "gpio"           # GPIO access for Pi-specific projects
-      "i2c"            # I2C access for sensors
-      "spi"            # SPI access for peripherals
-      "docker"         # Docker access
+      "gpio" # GPIO access for Pi-specific projects
+      "i2c" # I2C access for sensors
+      "spi" # SPI access for peripherals
+      "docker" # Docker access
     ];
 
     # SSH key authentication - configured for this specific Pi
@@ -70,3 +90,4 @@
   # on your system were taken. Don't change this after initial installation.
   system.stateVersion = "25.05";
 }
+
