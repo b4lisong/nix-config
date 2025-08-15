@@ -54,6 +54,10 @@ support, with all settings using lib.mkDefault for easy customization.
       bridge = lib.mkDefault "docker0";
       iptables = lib.mkDefault true;
       
+      # DNS configuration for containers
+      # Use real DNS servers instead of systemd-resolved stub resolver
+      dns = lib.mkDefault ["1.1.1.1" "8.8.8.8"];
+      
       # Security configuration
       no-new-privileges = lib.mkDefault true;
       
