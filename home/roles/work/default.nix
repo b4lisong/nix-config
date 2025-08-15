@@ -31,28 +31,30 @@ Examples of what this role might include when implemented:
 - Compliance and monitoring software
 - Enterprise security tools
 */
-_: {
+{pkgs, ...}: {
   # Placeholder for work-specific packages and configurations
   # When implemented, this might include:
 
-  # home.packages = with pkgs; [
-  #   # Communication and collaboration
-  #   slack # Team communication
-  #   teams # Microsoft Teams for enterprise
-  #
-  #   # Productivity and office tools
-  #   libreoffice # Office suite for documents/spreadsheets
-  #   thunderbird # Corporate email client
-  #
-  #   # VPN and networking
-  #   openvpn # Corporate VPN access
-  #
-  #   # Development tools (work-specific)
-  #   postman # API development and testing
-  #
-  #   # Compliance and security
-  #   # Company-specific security agents
-  # ];
+  home.packages = with pkgs; [
+    #   # Communication and collaboration
+    #   slack # Team communication
+    #   teams # Microsoft Teams for enterprise
+    #
+    #   # Productivity and office tools
+    #   libreoffice # Office suite for documents/spreadsheets
+    #   thunderbird # Corporate email client
+    #
+    #   # VPN and networking
+    #   openvpn # Corporate VPN access
+    #
+    #   # Development tools (work-specific)
+    #   postman # API development and testing
+    #
+    #   # Compliance and security
+    #   # Company-specific security agents
+    # Browsers
+    firefox-devedition
+  ];
 
   # programs = {
   #   # Work-specific program configurations
