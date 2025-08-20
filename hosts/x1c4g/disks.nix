@@ -25,7 +25,7 @@
               size = "100%";
               label = "luks";
               name = "cryptroot";
-              extraOpenArgs = [
+              extraFormatArgs = [
                 "--allow-discards"
                 "--perf-no_read_workqueue"
                 "--perf-no_write_workqueue"
