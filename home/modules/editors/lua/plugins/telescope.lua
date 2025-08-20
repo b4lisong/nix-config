@@ -26,6 +26,18 @@ return {
             ['<esc>'] = actions.close,
             ['<C-j>'] = actions.move_selection_next,
             ['<C-k>'] = actions.move_selection_previous,
+            -- Buffer-focused workflow: disable tabs, enhance splits
+            ['<C-t>'] = false, -- Disable tab opening
+            ['<C-x>'] = actions.select_horizontal, -- Horizontal split
+            ['<C-v>'] = actions.select_vertical, -- Vertical split
+            ['<CR>'] = actions.select_default, -- Open in current buffer
+          },
+          n = {
+            -- Normal mode mappings for buffer workflow
+            ['<C-x>'] = actions.select_horizontal,
+            ['<C-v>'] = actions.select_vertical,
+            ['<C-t>'] = false, -- Disable tab opening
+            ['q'] = actions.close,
           },
         },
         file_ignore_patterns = {

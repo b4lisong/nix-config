@@ -2,10 +2,11 @@ return {
   "akinsho/bufferline.nvim",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   version = "*",
-  opts = {
-    options = {
-      mode = "buffers",
-      style_preset = require("bufferline").style_preset.default,
+  opts = function()
+    return {
+      options = {
+        mode = "buffers",
+        style_preset = require("bufferline").style_preset.default,
       themable = true,
       numbers = "none",
       close_command = "bdelete! %d",
@@ -62,9 +63,10 @@ return {
         reveal = { "close" },
       },
       sort_by = "insert_after_current",
-    },
-    highlights = require("catppuccin.groups.integrations.bufferline").get(),
-  },
+      },
+      highlights = require("catppuccin.groups.integrations.bufferline").get(),
+    }
+  end,
   config = function(_, opts)
     require("bufferline").setup(opts)
 
