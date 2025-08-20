@@ -28,7 +28,6 @@
                 type = "luks";
                 name = "cryptroot";
                 extraFormatArgs = [
-                  "--allow-discards"
                   "--perf-no_read_workqueue"
                   "--perf-no_write_workqueue"
                 ];
