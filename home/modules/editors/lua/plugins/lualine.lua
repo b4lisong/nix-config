@@ -53,14 +53,7 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
-      tabline = {
-        lualine_a = {'buffers'},
-        lualine_b = {'tabs'},
-        lualine_c = {},
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = {},
-      },
+      tabline = {},
       winbar = {
         lualine_a = {},
         lualine_b = {},

@@ -39,9 +39,22 @@ return {
       
       -- Buffer operations
       { "<leader>b", group = "Buffers" },
-      { "<leader>bn", desc = "Next buffer" },
-      { "<leader>bp", desc = "Previous buffer" },
-      { "<leader>bd", desc = "Delete buffer" },
+      { "<leader>bb", desc = "Navigate to buffer tab" },
+      { "<leader>bp", desc = "Toggle pin buffer" },
+      { "<leader>bd", desc = "Delete buffer tab" },
+      { "<leader>bc", desc = "Close all buffers except current" },
+      { "<leader>bC", desc = "Close all buffers" },
+      { "<leader>bse", desc = "Sort by extension" },
+      { "<leader>bsi", desc = "Sort by buffer number" },
+      { "<leader>bsm", desc = "Sort by last modification" },
+      { "<leader>bsp", desc = "Sort by full path" },
+      { "<leader>bsr", desc = "Sort by relative path" },
+      { "<leader>b\\", desc = "Open buffer in horizontal split" },
+      { "<leader>b|", desc = "Open buffer in vertical split" },
+      { "]b", desc = "Next buffer" },
+      { "[b", desc = "Previous buffer" },
+      { ">b", desc = "Move buffer right" },
+      { "<b", desc = "Move buffer left" },
       
       -- Find/File operations
       { "<leader>f", group = "Find" },
@@ -71,6 +84,17 @@ return {
       { "gD", desc = "Go to declaration" },
       { "gi", desc = "Go to implementation" },
       { "gt", desc = "Go to type definition" },
+      
+      -- Buffer navigation (numeric)
+      { "<leader>1", desc = "Go to buffer 1" },
+      { "<leader>2", desc = "Go to buffer 2" },
+      { "<leader>3", desc = "Go to buffer 3" },
+      { "<leader>4", desc = "Go to buffer 4" },
+      { "<leader>5", desc = "Go to buffer 5" },
+      { "<leader>6", desc = "Go to buffer 6" },
+      { "<leader>7", desc = "Go to buffer 7" },
+      { "<leader>8", desc = "Go to buffer 8" },
+      { "<leader>9", desc = "Go to buffer 9" },
       { "gr", desc = "Show references" },
       { "K", desc = "Hover documentation" },
       { "<C-k>", desc = "Signature help" },

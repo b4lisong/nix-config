@@ -94,10 +94,7 @@ Future Enhancement Areas:
       " Quick source config
       nnoremap <Leader>so :source $MYVIMRC<CR>
 
-      " Buffer navigation
-      nnoremap <Leader>bn :bnext<CR>
-      nnoremap <Leader>bp :bprevious<CR>
-      nnoremap <Leader>bd :bdelete<CR>
+      " Buffer navigation handled by bufferline plugin
 
       " === WINDOW MANAGEMENT ===
       " IMPORTANT: When modifying these keybindings, also update:
@@ -340,5 +337,6 @@ Future Enhancement Areas:
     ".config/nvim/lua/plugins/snacks.lua".source = ./lua/plugins/snacks.lua;
     ".config/nvim/lua/plugins/which-key.lua".source = ./lua/plugins/which-key.lua;
     ".config/nvim/lua/plugins/conform.lua".source = ./lua/plugins/conform.lua;
+    ".config/nvim/lua/plugins/bufferline.lua".source = ./lua/plugins/bufferline.lua;
   };
 }
