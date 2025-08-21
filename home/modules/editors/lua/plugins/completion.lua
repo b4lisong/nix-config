@@ -103,6 +103,23 @@ return {
       accept = {
         auto_brackets = {
           enabled = true,
+          default_brackets = { '(', ')' },
+          override_brackets_for_filetypes = {},
+          
+          -- Configure when brackets should be inserted based on completion item kind
+          kind_resolution = {
+            enabled = true,
+            -- Block auto-brackets for problematic filetypes
+            blocked_filetypes = { 'typescriptreact', 'javascriptreact', 'vue' },
+          },
+          
+          -- Use semantic tokens for more intelligent bracket insertion
+          semantic_token_resolution = {
+            enabled = true,
+            -- Block for Java and add Nix where it might be problematic
+            blocked_filetypes = { 'java', 'nix' },
+            timeout_ms = 400, -- Don't wait too long for semantic tokens
+          },
         },
       },
       menu = {
