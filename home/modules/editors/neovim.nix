@@ -338,5 +338,6 @@ Future Enhancement Areas:
     ".config/nvim/lua/plugins/which-key.lua".source = ./lua/plugins/which-key.lua;
     ".config/nvim/lua/plugins/conform.lua".source = ./lua/plugins/conform.lua;
     ".config/nvim/lua/plugins/bufferline.lua".source = ./lua/plugins/bufferline.lua;
+    ".config/nvim/lua/plugins/wakatime.lua".source = ./lua/plugins/wakatime.lua;
   };
 }
