@@ -83,7 +83,7 @@
 
     interactiveShellInit = ''
       # start fbterm with 256 colors
-      if [ "$TERM" = "linux" ]; then
+      if [ "$TERM" = "linux" ] && [ -z "$FBTERM" ]; then
           echo -en "\e]P0222222" #black
           echo -en "\e]P8222222" #darkgrey
           echo -en "\e]P1803232" #darkred
