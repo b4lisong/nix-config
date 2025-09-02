@@ -102,9 +102,20 @@
   };
 
   # Security configuration for initial setup
-  # Disable sudo password for initial setup convenience
-  # Consider restricting this after initial configuration
-  security.sudo.wheelNeedsPassword = lib.mkForce false;
+  security = {
+    # Disable sudo password for initial setup convenience
+    # Consider restricting this after initial configuration
+    sudo.wheelNeedsPassword = lib.mkForce false;
+    wrappers = {
+      # Give fbterm permissions so keyboard shortcuts work
+      fbterm = {
+        owner = "root";
+        group = "root";
+        capabilities = "cap_sys_tty_config+ep";
+        source = "${pkgs.fbterm}/bin/fbterm";
+      };
+    };
+  };
 
   # Host-specific localization
   time.timeZone = lib.mkForce "America/Los_Angeles";
