@@ -6,12 +6,12 @@
   vars,
   ...
 }: {
-  # Import user configuration layers for Pi development setup
+  # Import user configuration layers
   imports = [
     # Core profile with essential CLI tools
     ../../home/profiles/base
 
-    # TUI profile - perfect for headless Raspberry Pi
+    # TUI profile
     ../../home/profiles/tui
 
     # Development role for programming projects
@@ -26,7 +26,7 @@
     username = vars.user.username;
     homeDirectory = lib.mkForce "/home/${vars.user.username}";
 
-    # Host-specific packages for this particular Pi
+    # Host-specific packages
     packages = with pkgs;
       [
 
@@ -62,7 +62,7 @@
     };
   };
 
-  # Pi-specific shell configuration
+  # Host-specific shell configuration
   programs.zsh = {
     # Host-specific aliases and functions
     shellAliases = {
