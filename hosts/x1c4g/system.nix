@@ -39,18 +39,21 @@
     openssh.settings = {
       PermitRootLogin = lib.mkForce "no";
     };
-
+    /*
     # Tailscale VPN configuration
     tailscale = {
       enable = true;
       useRoutingFeatures = "server"; # enables IP forwarding
     };
+    */
   };
 
   # Network configuration
   networking = {
+    networkmanager.enable = true;
     # Firewall configuration
     firewall = {
+      /*
       # Trust Tailscale interface for VPN traffic
       trustedInterfaces = ["tailscale0"];
 
@@ -64,12 +67,13 @@
         8080 # Alternative HTTP (development/apps)
         3000 # Altnernative HTTP #2
       ];
+      */
+      enable = false;
     };
   };
 
-  # Make tailscale CLI available to users
   environment.systemPackages = with pkgs; [
-    tailscale
+    #tailscale
   ];
 
   # User configuration specific to this host
