@@ -67,6 +67,24 @@
     # Host-specific aliases and functions
     shellAliases = {
     };
+    
+    # TERM configuration for proper terminal handling
+    initContent = ''
+      case "$TERM" in
+          xterm*)
+              if [ -e "${pkgs.ncurses}/share/terminfo/x/xterm-256color" ]; then
+                  export TERM=xterm-256color
+              elif [ -e "${pkgs.ncurses}/share/terminfo/x/xterm-color" ]; then
+                  export TERM=xterm-color;
+              else
+                  export TERM=xterm
+              fi
+              ;;
+          linux)
+              [ -n "$FBTERM" ] && export TERM=fbterm
+              ;;
+      esac
+    '';
   };
 
   # This value determines the Home Manager release that your
