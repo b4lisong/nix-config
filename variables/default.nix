@@ -57,6 +57,12 @@
       system = "aarch64-linux";
       description = "Raspberry Pi 4B";
     };
+
+    x1c4g = {
+      hostname = "x1c4g";
+      system = "x86_64-linux";
+      description = "X1 Carbon 4G";
+    };
   };
 
   # Common directory paths

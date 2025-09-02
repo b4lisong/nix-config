@@ -237,6 +237,10 @@ This architecture provides:
     nixosConfigurations.${vars.hosts.rpi4b.hostname} =
       nixpkgs.lib.nixosSystem (mkNixOSHost vars.hosts.rpi4b.hostname);
 
+    # Create a NixOS system config using the `x1c4g` host variables
+    nixosConfigurations.${vars.hosts.x1c4g.hostname} =
+      nixpkgs.lib.nixosSystem (mkNixOSHost vars.hosts.x1c4g.hostname);
+
     # Create Nix development environments for all supported systems
     devShells = forAllSystems (system: {default = mkDevShell system;});
   };
