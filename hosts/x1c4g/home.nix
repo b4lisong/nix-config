@@ -84,6 +84,18 @@
               [ -n "$FBTERM" ] && export TERM=fbterm
               ;;
       esac
+      
+      # Auto-start tmux: attach to existing session or create new one
+      if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+        # Check if any tmux sessions exist
+        if tmux list-sessions &>/dev/null; then
+          # Attach to the first available session
+          exec tmux attach-session
+        else
+          # Create a new session
+          exec tmux new-session
+        fi
+      fi
     '';
   };
 
