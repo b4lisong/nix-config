@@ -140,7 +140,7 @@ This architecture provides:
         };
       };
     };
-    
+
     # Helper function that creates a NixOS system config for a given hostname
     # Similar to mkDarwinHost but for Linux systems (Raspberry Pi, etc.)
     mkNixOSHost = hostName: {
@@ -184,9 +184,9 @@ This architecture provides:
         };
       };
     };
-    
+
     # Declare supported architectures
-    systems = ["x86_64-darwin" "aarch64-darwin" "aarch64-linux"];
+    systems = ["x86_64-darwin" "aarch64-darwin" "x86_64-linux" "aarch64-linux"];
     # `forAllSystems` creates a helper to generate attrs for each supported system
     forAllSystems = nixpkgs.lib.genAttrs systems;
     # `nixpkgsFor` gets the nixpkgs package set for a specific system arch
