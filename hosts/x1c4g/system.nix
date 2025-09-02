@@ -36,8 +36,11 @@
   # Host-specific service configuration
   services = {
     # SSH configuration for initial setup
-    openssh.settings = {
-      PermitRootLogin = lib.mkForce "no";
+    openssh = {
+      enable = true;
+      settings = {
+        PermitRootLogin = lib.mkForce "no";
+      };
     };
     /*
     # Tailscale VPN configuration
