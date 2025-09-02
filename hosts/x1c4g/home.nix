@@ -37,10 +37,29 @@
       ];
   };
 
+  # SSH configuration for Git authentication
+  programs.ssh = {
+    enable = true;
+    extraConfig = ''
+      Host github.com
+        HostName github.com
+        User git
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+    '';
+  };
+
   # Git configuration using centralized variables
   programs.git = {
     userName = vars.git.userName;
     userEmail = vars.git.userEmail;
+    extraConfig = {
+      # Force SSH for GitHub URLs
+      url."git@github.com:".insteadOf = "https://github.com/";
+      # SSH signing configuration (optional)
+      gpg.format = "ssh";
+      user.signingkey = "~/.ssh/id_ed25519.pub";
+    };
   };
 
   # Pi-specific shell configuration
