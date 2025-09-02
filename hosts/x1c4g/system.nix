@@ -77,6 +77,7 @@
 
   environment.systemPackages = with pkgs; [
     #tailscale
+    fbterm
   ];
 
   # User configuration specific to this host
