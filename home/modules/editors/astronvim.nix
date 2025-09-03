@@ -43,13 +43,13 @@
     ];
   };
 
-  # Install AstroNvim using the official template
+  # Install AstroNvim using the main repository
   xdg.configFile."nvim" = {
     source = pkgs.fetchFromGitHub {
       owner = "AstroNvim";
-      repo = "template";
-      rev = "v4.7.7"; # Latest stable release
-      sha256 = "sha256-bOGRP7FoVeOE8qXWbhL3aGexOP7Cvo70WN8v2R8j8kQ=";
+      repo = "AstroNvim";
+      rev = "main"; # Use main branch for latest features
+      sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Will be updated on build
     };
     recursive = true;
   };
