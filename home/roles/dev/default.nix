@@ -41,18 +41,10 @@ Package Selection Strategy:
     ## Stable packages - reliable, well-tested versions
     neovim # Basic neovim package - configuration managed manually in ~/.config/nvim
     
-    # LSP servers and development tools for AstroNvim
-    nixd # Nix language server
-    nodePackages.typescript-language-server # TypeScript/JavaScript LSP
-    lua-language-server # Lua LSP
-    python3Packages.python-lsp-server # Python LSP
-    vscode-langservers-extracted # JSON, HTML, CSS, ESLint language servers
-    gopls # Go language server
-    
-    # Development tools for AstroNvim plugins
-    ripgrep # Used by telescope for live grep
-    fd # Used by telescope for file finding
-    tree-sitter # Required for treesitter grammars
+    # General development tools (used by various applications including AstroNvim)
+    ripgrep # Fast grep alternative - used by telescope and other tools
+    fd # Fast find alternative - used by telescope and other tools  
+    tree-sitter # Parser generator tool - used by various editors
     
     uv # Extremely fast Python package installer and resolver
     gh # GitHub CLI tool
