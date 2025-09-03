@@ -31,7 +31,11 @@
   };
 
   # Docker configuration
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    # Disable rootless Docker to avoid service conflicts
+    rootless.enable = lib.mkForce false;
+  };
 
   # Host-specific service configuration
   services = {
