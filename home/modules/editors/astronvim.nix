@@ -49,7 +49,7 @@
       owner = "AstroNvim";
       repo = "AstroNvim";
       rev = "main"; # Use main branch for latest features
-      sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Will be updated on build
+      sha256 = "sha256-2ZjiPf3S/7be0kPMwqzZo3Qs2SLPVGZ5M+scReQOVsw=";
     };
     recursive = true;
   };
