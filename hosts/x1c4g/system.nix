@@ -42,7 +42,7 @@
         PermitRootLogin = lib.mkForce "no";
       };
     };
-    
+
     # Console replacement with better terminal support
     kmscon = {
       enable = true;
@@ -52,8 +52,9 @@
       useXkbConfig = true;
       # Set 256-color terminal support
       extraOptions = "--term xterm-256color";
+      extraConfig = "font-size=20";
     };
-    
+
     /*
     # Tailscale VPN configuration
     tailscale = {
@@ -93,7 +94,6 @@
     systemPackages = with pkgs; [
       #tailscale
     ];
-
   };
 
   # User configuration specific to this host
