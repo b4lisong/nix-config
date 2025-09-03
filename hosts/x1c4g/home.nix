@@ -81,7 +81,7 @@
               fi
               ;;
           linux)
-              [ -n "$FBTERM" ] && export TERM=fbterm
+              export TERM=linux
               ;;
       esac
       
