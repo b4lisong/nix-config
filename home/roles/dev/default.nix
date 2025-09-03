@@ -34,12 +34,12 @@ Package Selection Strategy:
   ...
 }: {
   imports = [
-    # Neovim configuration removed - will be manually managed via ~/.config/nvim
+    ../../modules/editors/astronvim.nix # AstroNvim auto-setup for new systems
   ];
 
   home.packages = with pkgs; [
     ## Stable packages - reliable, well-tested versions
-    neovim # Basic neovim package - configuration managed manually in ~/.config/nvim
+    # neovim now provided by astronvim.nix module above
     
     # General development tools (used by various applications including AstroNvim)
     ripgrep # Fast grep alternative - used by telescope and other tools
