@@ -15,6 +15,11 @@ It focuses on essential NixOS system services, security, and optimization.
 }: {
   # Add `~/.local/bin` to PATH for user-installed binaries
   environment.localBinInPath = true;
+  
+  # Add extra directories to PATH for user-installed binaries
+  environment.systemPath = [
+    "$HOME/.npm-global/bin"
+  ];
 
   # Nix configuration optimizations (extends base.nix settings)
   nix = {

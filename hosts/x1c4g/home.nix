@@ -35,6 +35,11 @@
         # Latest (unstable) packages
         # pkgs-unstable.nodejs_latest # Latest Node.js for modern JS projects
       ];
+      
+    # Configure npm to use custom global directory
+    file.".npmrc".text = ''
+      prefix=$HOME/.npm-global
+    '';
   };
 
   # SSH configuration for Git authentication
