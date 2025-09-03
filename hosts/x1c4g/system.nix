@@ -53,6 +53,7 @@
       # Set 256-color terminal support
       extraOptions = "--term xterm-256color";
       extraConfig = ''
+        font-name=SauceCodePro Nerd Font Mono
         font-size=20
         
         # Catppuccin Mocha color scheme
