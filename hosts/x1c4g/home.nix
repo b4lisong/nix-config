@@ -38,12 +38,12 @@
       
     # Configure npm to use custom global directory
     file.".npmrc".text = ''
-      prefix=$HOME/.npm-global
+      prefix=${config.home.homeDirectory}/.npm-global
     '';
     
     # Add npm global bin to PATH
     sessionPath = [
-      "$HOME/.npm-global/bin"
+      "${config.home.homeDirectory}/.npm-global/bin"
     ];
   };
 
