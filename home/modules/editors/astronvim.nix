@@ -11,7 +11,7 @@
     set -e
     
     # Ensure all required commands are in PATH for systemd environment
-    export PATH="${lib.makeBinPath [pkgs.coreutils pkgs.git pkgs.findutils]}:$PATH"
+    export PATH="${lib.makeBinPath [pkgs.coreutils pkgs.git pkgs.findutils pkgs.openssh]}:$PATH"
     
     NVIM_CONFIG_DIR="$HOME/.config/nvim"
     SETUP_MARKER="$HOME/.config/astronvim-setup-done"
