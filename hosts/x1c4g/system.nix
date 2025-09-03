@@ -57,26 +57,24 @@
         
         # Catppuccin Mocha color scheme
         palette=custom
-        color0=1e1e2e
-        color1=f38ba8
-        color2=a6e3a1
-        color3=f9e2af
-        color4=89b4fa
-        color5=f5c2e7
-        color6=94e2d5
-        color7=bac2de
-        color8=585b70
-        color9=f38ba8
-        color10=a6e3a1
-        color11=f9e2af
-        color12=89b4fa
-        color13=f5c2e7
-        color14=94e2d5
-        color15=a6adc8
-        
-        # Background and foreground
-        back-color=1e1e2e
-        fore-color=cdd6f4
+        palette-foreground=205, 214, 244
+        palette-background=30, 30, 46
+        palette-black=30, 30, 46
+        palette-red=243, 139, 168
+        palette-green=166, 227, 161
+        palette-yellow=249, 226, 175
+        palette-blue=137, 180, 250
+        palette-magenta=245, 194, 231
+        palette-cyan=148, 226, 213
+        palette-light-grey=186, 194, 222
+        palette-dark-grey=88, 91, 112
+        palette-light-red=243, 139, 168
+        palette-light-green=166, 227, 161
+        palette-light-yellow=249, 226, 175
+        palette-light-blue=137, 180, 250
+        palette-light-magenta=245, 194, 231
+        palette-light-cyan=148, 226, 213
+        palette-white=166, 173, 200
       '';
     };
 
