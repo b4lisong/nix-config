@@ -10,6 +10,9 @@
   astronvimSetupScript = pkgs.writeShellScriptBin "astronvim-setup" ''
     set -e
     
+    # Ensure all required commands are in PATH for systemd environment
+    export PATH="${lib.makeBinPath [pkgs.coreutils pkgs.git pkgs.findutils]}:$PATH"
+    
     NVIM_CONFIG_DIR="$HOME/.config/nvim"
     SETUP_MARKER="$HOME/.config/astronvim-setup-done"
     
@@ -22,25 +25,25 @@
     echo "=== AstroNvim Setup Starting ==="
     
     # Ensure .config directory exists
-    mkdir -p "$HOME/.config"
+    ${pkgs.coreutils}/bin/mkdir -p "$HOME/.config"
     
     echo "Checking directory: $NVIM_CONFIG_DIR"
     
     # Only clone if the directory doesn't exist or is empty
-    if [[ ! -d "$NVIM_CONFIG_DIR" ]] || [[ -z "$(ls -A "$NVIM_CONFIG_DIR" 2>/dev/null)" ]]; then
+    if [[ ! -d "$NVIM_CONFIG_DIR" ]] || [[ -z "$(${pkgs.coreutils}/bin/ls -A "$NVIM_CONFIG_DIR" 2>/dev/null)" ]]; then
       echo "Setting up AstroNvim from personal template..."
       
       # Remove any existing directory to ensure clean setup
-      rm -rf "$NVIM_CONFIG_DIR"
+      ${pkgs.coreutils}/bin/rm -rf "$NVIM_CONFIG_DIR"
       
       # Clone personal AstroNvim template
       if ${pkgs.git}/bin/git clone --depth 1 https://github.com/b4lisong/nvim.git "$NVIM_CONFIG_DIR"; then
         # Remove .git directory to make it a clean local copy
-        rm -rf "$NVIM_CONFIG_DIR/.git"
+        ${pkgs.coreutils}/bin/rm -rf "$NVIM_CONFIG_DIR/.git"
         echo "✓ AstroNvim template successfully cloned to ~/.config/nvim"
         
         # Create marker file to prevent future runs
-        touch "$SETUP_MARKER"
+        ${pkgs.coreutils}/bin/touch "$SETUP_MARKER"
         echo "✓ Setup marker created"
       else
         echo "✗ Failed to clone AstroNvim template"
@@ -48,7 +51,7 @@
       fi
     else
       echo "AstroNvim configuration already exists - creating marker to skip future runs"
-      touch "$SETUP_MARKER"
+      ${pkgs.coreutils}/bin/touch "$SETUP_MARKER"
     fi
     
     echo "=== AstroNvim Setup Complete ==="
