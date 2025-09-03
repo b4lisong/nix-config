@@ -54,6 +54,8 @@
   # Network configuration
   networking = {
     networkmanager.enable = true;
+    # Disable systemd-networkd to avoid conflict with NetworkManager
+    useNetworkd = lib.mkForce false;
     # Firewall configuration
     firewall = {
       /*
