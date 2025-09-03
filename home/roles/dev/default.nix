@@ -34,12 +34,26 @@ Package Selection Strategy:
   ...
 }: {
   imports = [
-    ../../modules/editors/astronvim.nix # AstroNvim configuration with Nix integration
+    # Neovim configuration removed - will be manually managed via ~/.config/nvim
   ];
 
   home.packages = with pkgs; [
     ## Stable packages - reliable, well-tested versions
-    # neovim is now provided by the imported astronvim.nix module above
+    neovim # Basic neovim package - configuration managed manually in ~/.config/nvim
+    
+    # LSP servers and development tools for AstroNvim
+    nixd # Nix language server
+    nodePackages.typescript-language-server # TypeScript/JavaScript LSP
+    lua-language-server # Lua LSP
+    python3Packages.python-lsp-server # Python LSP
+    vscode-langservers-extracted # JSON, HTML, CSS, ESLint language servers
+    gopls # Go language server
+    
+    # Development tools for AstroNvim plugins
+    ripgrep # Used by telescope for live grep
+    fd # Used by telescope for file finding
+    tree-sitter # Required for treesitter grammars
+    
     uv # Extremely fast Python package installer and resolver
     gh # GitHub CLI tool
     frogmouth # TUI Markdown viewer
