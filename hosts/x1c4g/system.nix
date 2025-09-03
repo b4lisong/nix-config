@@ -42,6 +42,18 @@
         PermitRootLogin = lib.mkForce "no";
       };
     };
+    
+    # Console replacement with better terminal support
+    kmscon = {
+      enable = true;
+      # Use hardware acceleration for better performance
+      hwRender = true;
+      # Use xserver keyboard settings for consistent keymap
+      useXkbConfig = true;
+      # Set 256-color terminal support
+      extraOptions = "--term xterm-256color";
+    };
+    
     /*
     # Tailscale VPN configuration
     tailscale = {
