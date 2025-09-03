@@ -40,6 +40,11 @@
     file.".npmrc".text = ''
       prefix=$HOME/.npm-global
     '';
+    
+    # Add npm global bin to PATH
+    sessionPath = [
+      "$HOME/.npm-global/bin"
+    ];
   };
 
   # SSH configuration for Git authentication
