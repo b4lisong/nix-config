@@ -7,7 +7,6 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/nixos/docker.nix
   ];
 
   # Host identification
@@ -28,13 +27,6 @@
     config = {
       allowUnfree = true;
     };
-  };
-
-  # Docker configuration
-  virtualisation.docker = {
-    enable = true;
-    # Disable rootless Docker to avoid service conflicts
-    rootless.enable = lib.mkForce false;
   };
 
   # Host-specific service configuration
@@ -59,7 +51,7 @@
       extraConfig = ''
         font-name=SauceCodePro Nerd Font Mono
         font-size=20
-        
+
         # Catppuccin Mocha color scheme
         palette=custom
         palette-foreground=205, 214, 244
