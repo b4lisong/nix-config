@@ -61,6 +61,8 @@ Package Selection Strategy:
     pkgs-unstable.go
     pkgs-unstable.gotools
     pkgs-unstable.golangci-lint
+    pkgs-unstable.rustc # Rust compiler
+    pkgs-unstable.cargo # Rust package manager
 
     # Additional development tools can be added here:
     # Stable packages (prefer for core workflow tools):
