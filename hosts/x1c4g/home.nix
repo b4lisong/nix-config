@@ -31,6 +31,7 @@
       [
         ungoogled-chromium
         protonvpn-gui
+        nicotine-plus
       ]
       ++ [
         # Latest (unstable) packages
