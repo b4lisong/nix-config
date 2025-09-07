@@ -44,6 +44,7 @@
     xserver = {
       enable = true;
       xkb.options = "caps:swapescape";
+      dpi = 144; # Increase DPI for HiDPI display
       desktopManager = {
         xterm.enable = false;
         xfce = {
