@@ -39,6 +39,8 @@
       };
     };
 
+    gnome.gnome-keyring.enable = true;
+
     xserver = {
       enable = true;
       xkb.options = "caps:swapescape";
@@ -139,6 +141,14 @@
     ];
   };
 
+  programs = {
+    dconf.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+  };
+
   # User configuration specific to this host
   users.users.${vars.user.username} = {
     isNormalUser = true;
@@ -165,6 +175,7 @@
     # Disable sudo password for initial setup convenience
     # Consider restricting this after initial configuration
     sudo.wheelNeedsPassword = lib.mkForce false;
+    pam.services.gdm.enableGnomeKeyring = true;
   };
 
   # Host-specific localization

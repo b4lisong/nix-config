@@ -48,6 +48,9 @@
     ];
   };
 
+  programs.gpg.enable = true;
+  services.gpg-agent.enable = true;
+
   # SSH configuration for Git authentication
   programs.ssh = {
     enable = true;
