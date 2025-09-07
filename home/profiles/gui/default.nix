@@ -26,6 +26,11 @@ Linux and macOS, avoiding platform-specific implementations.
     ../../modules/terminal/kitty.nix # Cross-platform kitty terminal baseline
   ];
 
+  xsession.windowManager.i3 = {
+    enable = true;
+    package = pkgs.i3-gaps;
+  };
+
   home.packages = with pkgs; [
     # Cross-platform GUI applications
     # These packages should work consistently on both Linux and macOS

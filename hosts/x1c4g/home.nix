@@ -11,8 +11,8 @@
     # Core profile with essential CLI tools
     ../../home/profiles/base
 
-    # TUI profile
-    ../../home/profiles/tui
+    # GUI profile
+    ../../home/profiles/gui
 
     # Development role for programming projects
     ../../home/roles/dev
