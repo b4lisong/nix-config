@@ -41,6 +41,7 @@
 
     xserver = {
       enable = true;
+      xkbOptions = "caps:swapescape";
       desktopManager = {
         xterm.enable = false;
         xfce = {
