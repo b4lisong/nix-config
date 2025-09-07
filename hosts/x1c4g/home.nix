@@ -30,6 +30,7 @@
     packages = with pkgs;
       [
         ungoogled-chromium
+        protonvpn-gui
       ]
       ++ [
         # Latest (unstable) packages
