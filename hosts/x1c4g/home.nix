@@ -29,7 +29,7 @@
     # Host-specific packages
     packages = with pkgs;
       [
-
+        ungoogled-chromium
       ]
       ++ [
         # Latest (unstable) packages
