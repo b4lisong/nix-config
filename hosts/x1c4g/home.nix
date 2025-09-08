@@ -30,7 +30,8 @@
     packages = with pkgs;
       [
         _1password-gui
-        ungoogled-chromium
+        chromium
+        firefox-devedition
         protonvpn-gui
         nicotine-plus
       ]
