@@ -29,6 +29,7 @@
     # Host-specific packages
     packages = with pkgs;
       [
+        _1password-gui
         ungoogled-chromium
         protonvpn-gui
         nicotine-plus
