@@ -26,9 +26,11 @@ Linux and macOS, avoiding platform-specific implementations.
     ../../modules/terminal/kitty.nix # Cross-platform kitty terminal baseline
   ];
 
+  # i3 window manager configuration for Linux desktop environments
+  # Uses i3-gaps for enhanced visual features and window gaps
   xsession.windowManager.i3 = {
     enable = true;
-    package = pkgs.i3-gaps;
+    package = pkgs.i3-gaps; # Enhanced i3 variant with gaps between windows
   };
 
   home.packages = with pkgs; [

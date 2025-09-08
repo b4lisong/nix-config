@@ -39,30 +39,37 @@
       };
     };
 
+    # Enable GNOME keyring for secure credential storage
     gnome.gnome-keyring.enable = true;
 
+    # X11 display server configuration for graphical desktop
     xserver = {
       enable = true;
-      xkb.options = "caps:swapescape";
+      xkb.options = "caps:swapescape"; # Swap Caps Lock and Escape keys for vim ergonomics
       dpi = 144; # Increase DPI for HiDPI display
+      # Desktop manager configuration
       desktopManager = {
-        xterm.enable = false;
+        xterm.enable = false; # Disable default xterm terminal
+        # XFCE configuration as session manager without desktop/window management
         xfce = {
           enable = true;
-          noDesktop = true;
-          enableXfwm = false;
+          noDesktop = true; # Don't use XFCE desktop, only session management
+          enableXfwm = false; # Disable XFCE window manager, using i3 instead
         };
       };
+      # i3 tiling window manager configuration
       windowManager.i3 = {
         enable = true;
         extraPackages = with pkgs; [
-          dmenu
-          i3status
-          i3blocks
+          dmenu      # Application launcher for i3
+          i3status   # Status bar generator for i3bar
+          i3blocks   # Advanced status bar with clickable blocks
         ];
       };
     };
 
+    # Set XFCE as the default display manager session
+    # This provides session management while i3 handles window management
     displayManager.defaultSession = "xfce";
 
     # Console replacement with better terminal support
@@ -143,10 +150,11 @@
   };
 
   programs = {
-    dconf.enable = true;
+    dconf.enable = true; # Enable dconf for GNOME/GTK application settings
+    # GnuPG agent for encryption and SSH key management
     gnupg.agent = {
       enable = true;
-      enableSSHSupport = true;
+      enableSSHSupport = true; # Use GPG agent for SSH authentication
     };
   };
 
@@ -176,6 +184,7 @@
     # Disable sudo password for initial setup convenience
     # Consider restricting this after initial configuration
     sudo.wheelNeedsPassword = lib.mkForce false;
+    # Enable GNOME keyring integration with PAM for automatic unlock on login
     pam.services.gdm.enableGnomeKeyring = true;
   };
 
