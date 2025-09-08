@@ -54,6 +54,59 @@
   programs.gpg.enable = true;
   services.gpg-agent.enable = true;
 
+  # Polybar configuration stub
+  services.polybar = {
+    enable = true;
+    script = "polybar main &";
+    config = {
+      "bar/main" = {
+        width = "100%";
+        height = 30;
+        radius = 0;
+        modules-left = "i3";
+        modules-center = "date";
+        modules-right = "battery memory cpu";
+        font-0 = "SauceCodePro Nerd Font Mono:size=10;2";
+        background = "#1e1e2e";
+        foreground = "#cdd6f4";
+      };
+      
+      "module/i3" = {
+        type = "internal/i3";
+        format = "<label-state> <label-mode>";
+        index-sort = true;
+        wrapping-scroll = false;
+      };
+      
+      "module/date" = {
+        type = "internal/date";
+        date = "%Y-%m-%d%";
+        time = "%H:%M";
+        label = "%date% %time%";
+      };
+      
+      "module/battery" = {
+        type = "internal/battery";
+        battery = "BAT0";
+        adapter = "AC";
+        format-charging = "<label-charging>";
+        format-discharging = "<label-discharging>";
+      };
+      
+      "module/memory" = {
+        type = "internal/memory";
+        format = "RAM <label>";
+        label = "%percentage_used%%";
+      };
+      
+      "module/cpu" = {
+        type = "internal/cpu";
+        format = "CPU <label>";
+        label = "%percentage%%";
+      };
+    };
+  };
+
   # SSH configuration for Git authentication
   programs.ssh = {
     enable = true;
