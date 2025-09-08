@@ -42,6 +42,12 @@
     # Enable GNOME keyring for secure credential storage
     gnome.gnome-keyring.enable = true;
 
+    # libinput for natural scrolling
+    libinput = {
+      enable = true;
+      touchpad.naturalScrolling = true;
+    };
+
     # X11 display server configuration for graphical desktop
     xserver = {
       enable = true;
