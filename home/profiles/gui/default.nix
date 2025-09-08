@@ -36,7 +36,7 @@ Linux and macOS, avoiding platform-specific implementations.
       gaps = {
         inner = 10;
         outer = 10;
-        top = 35;
+        top = 15;
       };
       # Mod1 = Alt; default, explicit
       # Mod4 = Win
