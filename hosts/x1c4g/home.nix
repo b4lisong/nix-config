@@ -57,17 +57,12 @@
   # Polybar configuration with proper i3 dependency
   services.polybar = {
     enable = true;
-    package = pkgs.polybar.override {
-      i3Support = true;
-      alsaSupport = true;
-      pulseSupport = true;
-    };
     # Custom script that waits for i3 before starting polybar
     script = ''
       # Wait for i3 socket to be available
       while ! ${pkgs.i3}/bin/i3 --get-socketpath >/dev/null 2>&1; do
         echo "Waiting for i3 to start..."
-        sleep 0.5
+        ${pkgs.coreutils}/bin/sleep 0.5
       done
       
       # Give i3 a moment to fully initialize
