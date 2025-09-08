@@ -77,6 +77,9 @@
     };
   };
 
+  # Host-specific kitty configuration
+  programs.kitty.font.size = lib.mkForce 14;
+
   # Host-specific shell configuration
   programs.zsh = {
     # Host-specific aliases and functions
