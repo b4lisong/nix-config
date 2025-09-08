@@ -68,9 +68,6 @@
         enable = true;
         extraPackages = with pkgs; [
           dmenu      # Application launcher for i3
-          i3status   # Status bar generator for i3bar
-          i3blocks   # Advanced status bar with clickable blocks
-          polybar    # Modern status bar for i3
         ];
       };
     };

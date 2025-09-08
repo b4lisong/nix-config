@@ -33,6 +33,7 @@ Linux and macOS, avoiding platform-specific implementations.
     package = pkgs.i3-gaps; # Enhanced i3 variant with gaps between windows
     config = {
       terminal = "kitty";
+      bars = []; # Disable i3bar completely
       gaps = {
         inner = 10;
         outer = 10;
