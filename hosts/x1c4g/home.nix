@@ -54,11 +54,7 @@
   programs.gpg.enable = true;
   services.gpg-agent.enable = true;
 
-  # Polybar configuration stub
-  systemd.user.services.polybar = {
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
-  
+  # Polybar configuration with proper i3 dependency
   services.polybar = {
     enable = true;
     package = pkgs.polybar.override {
@@ -66,7 +62,20 @@
       alsaSupport = true;
       pulseSupport = true;
     };
-    script = "polybar main &";
+    # Custom script that waits for i3 before starting polybar
+    script = ''
+      # Wait for i3 socket to be available
+      while ! ${pkgs.i3}/bin/i3 --get-socketpath >/dev/null 2>&1; do
+        echo "Waiting for i3 to start..."
+        sleep 0.5
+      done
+      
+      # Give i3 a moment to fully initialize
+      sleep 1
+      
+      # Launch polybar
+      polybar main &
+    '';
     config = {
       "bar/main" = {
         width = "100%";
