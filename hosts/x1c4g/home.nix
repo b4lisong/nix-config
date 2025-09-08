@@ -100,8 +100,11 @@
               ;;
       esac
       
-      # Auto-start tmux: attach to existing session or create new one
-      if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+      # Auto-start tmux only for SSH connections or Linux console (not graphical terminals)
+      if command -v tmux &> /dev/null && [ -n "$PS1" ] && \
+         [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && \
+         ([ -n "$SSH_CONNECTION" ] || [ -n "$SSH_TTY" ] || [ "$TERM" = "linux" ]) && \
+         [ -z "$KITTY_WINDOW_ID" ]; then
         # Check if any tmux sessions exist
         if tmux list-sessions &>/dev/null; then
           # Attach to the first available session
