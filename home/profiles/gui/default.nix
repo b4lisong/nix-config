@@ -39,7 +39,18 @@ Linux and macOS, avoiding platform-specific implementations.
         mod = config.xsession.windowManager.i3.config.modifier;
       in
         lib.mkOptionDefault {
+          # Open kitty terminal with mod+Return
           "${mod}+Return" = "exec ${pkgs.kitty}/bin/kitty";
+          # Change focus, vim-style direction (hjkl)
+          "${mod}+h" = "focus left";
+          "${mod}+j" = "focus down";
+          "${mod}+k" = "focus up";
+          "${mod}+l" = "focus right";
+          # Move focused window, vim-style direction (hjkl)
+          "${mod}+Shift+h" = "move left";
+          "${mod}+Shift+j" = "move down";
+          "${mod}+Shift+k" = "move up";
+          "${mod}+Shift+l" = "move right";
         };
     };
   };
