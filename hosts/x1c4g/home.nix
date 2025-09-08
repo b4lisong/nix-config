@@ -57,6 +57,9 @@
   # Polybar configuration with proper i3 dependency
   services.polybar = {
     enable = true;
+    package = pkgs.polybar.override {
+      i3Support = true;
+    };
     # Custom script that waits for i3 before starting polybar
     script = ''
       # Wait for i3 socket to be available
