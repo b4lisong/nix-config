@@ -32,6 +32,12 @@ Linux and macOS, avoiding platform-specific implementations.
     enable = true;
     package = pkgs.i3-gaps; # Enhanced i3 variant with gaps between windows
     config = {
+      terminal = "kitty";
+      gaps = {
+        inner = 10;
+        outer = 10;
+        top = 35;
+      };
       # Mod1 = Alt; default, explicit
       # Mod4 = Win
       modifier = "Mod1";
