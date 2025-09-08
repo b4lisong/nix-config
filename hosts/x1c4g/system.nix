@@ -52,7 +52,7 @@
     xserver = {
       enable = true;
       xkb.options = "caps:swapescape"; # Swap Caps Lock and Escape keys for vim ergonomics
-      dpi = 144; # Increase DPI for HiDPI display
+      dpi = 192; # Increase DPI for HiDPI display
       # Desktop manager configuration
       desktopManager = {
         xterm.enable = false; # Disable default xterm terminal
