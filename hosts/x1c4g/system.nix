@@ -76,7 +76,7 @@
 
     # Set XFCE as the default display manager session
     # This provides session management while i3 handles window management
-    displayManager.defaultSession = "xfce";
+    displayManager.defaultSession = "xfce+i3";
 
     # Console replacement with better terminal support
     kmscon = {
