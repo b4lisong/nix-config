@@ -55,6 +55,10 @@
   services.gpg-agent.enable = true;
 
   # Polybar configuration stub
+  systemd.user.services.polybar = {
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+  
   services.polybar = {
     enable = true;
     package = pkgs.polybar.override {
