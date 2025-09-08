@@ -189,7 +189,7 @@
   security = {
     # Disable sudo password for initial setup convenience
     # Consider restricting this after initial configuration
-    sudo.wheelNeedsPassword = lib.mkForce false;
+    sudo.wheelNeedsPassword = lib.mkForce true;
     # Enable GNOME keyring integration with PAM for automatic unlock on login
     pam.services.gdm.enableGnomeKeyring = true;
   };
