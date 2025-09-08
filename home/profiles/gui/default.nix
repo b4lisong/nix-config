@@ -20,7 +20,7 @@ Usage:
 This profile focuses on applications that work consistently across
 Linux and macOS, avoiding platform-specific implementations.
 */
-{pkgs, ...}: {
+{pkgs, config, lib, ...}: {
   imports = [
     ../tui # Import TUI profile for CLI foundation
     ../../modules/terminal/kitty.nix # Cross-platform kitty terminal baseline
@@ -31,6 +31,17 @@ Linux and macOS, avoiding platform-specific implementations.
   xsession.windowManager.i3 = {
     enable = true;
     package = pkgs.i3-gaps; # Enhanced i3 variant with gaps between windows
+    config = {
+      # Mod1 = Alt; default, explicit
+      # Mod4 = Win
+      modifier = "Mod1";
+      keybindings = let
+        mod = config.xsession.windowManager.i3.config.modifier;
+      in
+        lib.mkOptionDefault {
+          "${mod}+Return" = "exec ${pkgs.kitty}/bin/kitty";
+        };
+    };
   };
 
   home.packages = with pkgs; [
