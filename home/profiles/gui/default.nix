@@ -58,6 +58,44 @@ Linux and macOS, avoiding platform-specific implementations.
           "${mod}+Shift+k" = "move up";
           "${mod}+Shift+l" = "move right";
         };
+      colors = {
+        background = "#1e1e2e";
+        focused = {
+          background = "#1e1e2e";
+          border = "#b4befe";
+          childBorder = "#b4befe";
+          indicator = "#f5e0dc";
+          text = "#cdd6f4";
+        };
+        focusedInactive = {
+          background = "#1e1e2e";
+          border = "#6c7086";
+          childBorder = "#6c7086";
+          indicator = "#f5e0dc";
+          text = "#cdd6f4";
+        };
+        unfocused = {
+          background = "#1e1e2e";
+          border = "#6c7086";
+          childBorder = "#6c7086";
+          indicator = "#f5e0dc";
+          text = "#cdd6f4";
+        };
+        urgent = {
+          background = "#1e1e2e";
+          border = "#fab387";
+          childBorder = "#fab387";
+          indicator = "#6c7086";
+          text = "#fab387";
+        };
+        placeholder = {
+          background = "#1e1e2e";
+          border = "#6c7086";
+          childBorder = "#6c7086";
+          indicator = "#6c7086";
+          text = "#cdd6f4";
+        };
+      };
     };
   };
 
