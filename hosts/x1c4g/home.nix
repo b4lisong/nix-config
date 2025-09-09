@@ -69,7 +69,7 @@
       done
       
       # Give i3 a moment to fully initialize
-      sleep 1
+      ${pkgs.coreutils}/bin/sleep 1
       
       # Launch polybar
       polybar main &
@@ -120,6 +120,19 @@
         format = "CPU <label>";
         label = "%percentage%%";
       };
+    };
+  };
+
+  # Override polybar systemd service to use graphical-session.target instead of tray.target
+  systemd.user.services.polybar = {
+    Unit = lib.mkForce {
+      Description = "Polybar status bar";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+      X-Restart-Triggers = [ "/nix/store/ac5xs1may8cya1z67x2lp6g8js7wf573-polybar.conf" ];
+    };
+    Install = lib.mkForce {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 
