@@ -39,43 +39,6 @@
       };
     };
 
-    # Enable GNOME keyring for secure credential storage
-    gnome.gnome-keyring.enable = true;
-
-    # libinput for natural scrolling
-    libinput = {
-      enable = true;
-      touchpad.naturalScrolling = true;
-    };
-
-    # X11 display server configuration for graphical desktop
-    xserver = {
-      enable = true;
-      xkb.options = "caps:swapescape"; # Swap Caps Lock and Escape keys for vim ergonomics
-      dpi = 192; # Increase DPI for HiDPI display
-      # Desktop manager configuration
-      desktopManager = {
-        xterm.enable = false; # Disable default xterm terminal
-        # XFCE configuration as session manager without desktop/window management
-        xfce = {
-          enable = true;
-          noDesktop = true; # Don't use XFCE desktop, only session management
-          enableXfwm = false; # Disable XFCE window manager, using i3 instead
-        };
-      };
-      # i3 tiling window manager configuration
-      windowManager.i3 = {
-        enable = true;
-        extraPackages = with pkgs; [
-          dmenu      # Application launcher for i3
-        ];
-      };
-    };
-
-    # Set XFCE as the default display manager session
-    # This provides session management while i3 handles window management
-    displayManager.defaultSession = "xfce+i3";
-
     # Console replacement with better terminal support
     kmscon = {
       enable = true;
@@ -189,7 +152,7 @@
     # Consider restricting this after initial configuration
     sudo.wheelNeedsPassword = lib.mkForce true;
     # Enable GNOME keyring integration with PAM for automatic unlock on login
-    pam.services.gdm.enableGnomeKeyring = true;
+    # pam.services.gdm.enableGnomeKeyring = true;
   };
 
   # Host-specific localization
