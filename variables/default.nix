@@ -63,6 +63,12 @@
       system = "x86_64-linux";
       description = "X1 Carbon 4G";
     };
+
+    nixvm = {
+      hostname = "nixvm";
+      system = "aarch64-linux";
+      description = "NixOS VM (Personal)";
+    };
   };
 
   # Common directory paths

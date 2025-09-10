@@ -241,6 +241,10 @@ This architecture provides:
     nixosConfigurations.${vars.hosts.x1c4g.hostname} =
       nixpkgs.lib.nixosSystem (mkNixOSHost vars.hosts.x1c4g.hostname);
 
+    # Create a NixOS system config using the `nixvm` host variables
+    nixosConfigurations.${vars.hosts.nixvm.hostname} =
+      nixpkgs.lib.nixosSystem (mkNixOSHost vars.hosts.nixvm.hostname);
+
     # Create Nix development environments for all supported systems
     devShells = forAllSystems (system: {default = mkDevShell system;});
   };
