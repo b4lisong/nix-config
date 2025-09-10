@@ -59,6 +59,10 @@ Linux and macOS, avoiding platform-specific implementations.
           "${mod}+Shift+k" = "move up";
           "${mod}+Shift+l" = "move right";
         };
+      window = {
+        border = 3;
+        titlebar = false;
+      };
       colors = {
         background = "#1e1e2e";
         focused = {
