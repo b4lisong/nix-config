@@ -37,7 +37,7 @@ Extension Points:
 - macOS system integration modules
 - Performance optimizations for Apple hardware
 */
-{pkgs, ...}: {
+{pkgs, vars, ...}: {
   imports = [
     # Import cross-platform GUI baseline (includes tui and base profiles)
     ../gui
@@ -57,8 +57,32 @@ Extension Points:
   # Darwin-specific program configurations
   # These override or extend the cross-platform configurations from ../gui
   programs = {
-    # Example Darwin-specific program overrides
-    # kitty font size is already handled by kitty-darwin.nix
+    # SSH configuration for Git authentication
+    ssh = {
+      enable = true;
+      extraConfig = ''
+        Host github.com
+          HostName github.com
+          User git
+          IdentityFile ~/.ssh/id_ed25519
+          IdentitiesOnly yes
+      '';
+    };
+
+    # Git configuration using centralized variables
+    git = {
+      enable = true;
+      userName = vars.git.userName;
+      userEmail = vars.git.userEmail;
+      extraConfig = {
+        # Force SSH for GitHub URLs
+        url."git@github.com:".insteadOf = "https://github.com/";
+        # SSH signing configuration (optional)
+        gpg.format = "ssh";
+        user.signingkey = "~/.ssh/id_ed25519.pub";
+      };
+    };
+
     # Additional macOS-specific configurations can be added here
   };
 
