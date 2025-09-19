@@ -33,6 +33,14 @@ Break complex tasks into focused investigations. Use systematic workflows for co
 - Before declaring "done"
 - **Before implementing external interfaces**: Verify all APIs/options exist in YOUR version
 
+### Reference Materials
+
+**Example Configuration**: A complete example Nix configuration from ryan4yin is available in `examples/ryan4yin/` for reference and learning. Use this local copy instead of reading from the remote repository when studying configuration patterns, module organization, or implementation approaches.
+
+### Nix Flake Testing Requirements
+
+**CRITICAL**: Before testing any Nix flake configuration changes, ALL modified files must be added to Git. Nix flakes only see files that are tracked by Git. Use `git add .` to stage all changes before running `nix flake check`, `just check`, or any rebuild commands.
+
 ## UNIVERSAL FORBIDDEN PATTERNS
 
 **MANDATORY STATEMENT**: Before any commit/PR, say: "I have verified this follows all forbidden patterns in CLAUDE.md"
