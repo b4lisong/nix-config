@@ -74,6 +74,10 @@ This architecture provides:
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs"; # nix-darwin nixpkgs version = nixpkgs version
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs"; # home-manager nixpkgs version = nixpkgs version
+
+    # Haumea for automatic module discovery
+    haumea.url = "github:nix-community/haumea/v0.2.2";
+    haumea.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # Main function that generates what this flake provides
@@ -86,6 +90,7 @@ This architecture provides:
     nixpkgs-unstable,
     nix-darwin,
     home-manager,
+    haumea,
   }: let
     # Local variable setup, defines local vars used throughout flake
     # `lib` imports custom utilities which extend nixpkgs lib
