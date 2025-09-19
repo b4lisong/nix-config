@@ -60,7 +60,7 @@ in {
     # Inherit defaults from modules/darwin and extend with host-specific packages
     casks = [
       # Development and productivity tools
-      "cursor" # AI-powered code editor for development work
+      "vscode" # VS Code IDE
       "claude" # Claude Desktop MCP
 
       # Remote access and virtualization
