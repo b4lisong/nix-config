@@ -384,36 +384,33 @@ inputs = {
 
 #### Step 1.2: Enhanced Library Functions
 
-**Critical Note**: The `relativeToRoot` function is essential for the entire system to work. It converts relative paths to absolute paths from the flake root.
+**Critical Note**: We match ryan4yin's library structure exactly for consistency with the proven architecture. The `relativeToRoot` function is essential for the entire system to work.
 
-**File: `lib/default.nix`** (new)
+**File: `lib/default.nix`** (new - matches ryan4yin's structure)
 ```nix
-{ lib }:
-let
-  # Import all helper functions
-  attrs = import ./attrs.nix { inherit lib; };
-  # CRITICAL: This function makes paths relative to the flake root
-  # It's used everywhere to reference modules and configs
-  relativeToRoot = path: ../. + "/${path}";
-in
+{ lib, ... }:
 {
-  inherit relativeToRoot attrs;
-
-  # Import our system builders
+  # System builders for creating configurations
   macosSystem = import ./macosSystem.nix;
   nixosSystem = import ./nixosSystem.nix;
 
-  # Keep our existing scanPaths function
+  # Attribute manipulation utilities
+  attrs = import ./attrs.nix { inherit lib; };
+
+  # Use path relative to the root of the project (ryan4yin's implementation)
+  relativeToRoot = lib.path.append ../.;
+
+  # Path scanning utility (matches our existing implementation)
   scanPaths = path:
-    builtins.map
-    (f: (path + "/${f}"))
-    (builtins.attrNames (
-      lib.attrsets.filterAttrs
-      (path: _type:
-        (_type == "directory")
-        || (path != "default.nix" && lib.strings.hasSuffix ".nix" path))
-      (builtins.readDir path)
-    ));
+    builtins.map (f: (path + "/${f}")) (
+      builtins.attrNames (
+        lib.attrsets.filterAttrs (
+          path: _type:
+          (_type == "directory")
+          || ((path != "default.nix") && (lib.strings.hasSuffix ".nix" path))
+        ) (builtins.readDir path)
+      )
+    );
 }
 ```
 
@@ -429,46 +426,60 @@ in
   listToAttrs = lib.genAttrs;
 }
 
-**File: `lib/macosSystem.nix`** (new)
+**File: `lib/macosSystem.nix`** (new - idiomatic Nix style)
 ```nix
 {
   lib,
   inputs,
   darwin-modules,
-  home-modules ? [ ],
+  home-modules ? [],
   myvars,  # Our variables, not ryan4yin's
   system,
   genSpecialArgs,
   specialArgs ? (genSpecialArgs system),
   ...
-}:
-let
+}: let
   inherit (inputs) nixpkgs home-manager nix-darwin;
 in
-nix-darwin.lib.darwinSystem {
-  inherit system specialArgs;
-  modules = darwin-modules ++ [
-    ({ lib, ... }: {
-      nixpkgs.pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-    })
-  ] ++ (lib.optionals ((lib.lists.length home-modules) > 0) [
-    home-manager.darwinModules.home-manager
-    {
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.backupFileExtension = "home-manager.backup";
-      home-manager.extraSpecialArgs = specialArgs;
-      # IMPORTANT: Use our variable structure, not ryan4yin's
-      home-manager.users."${myvars.user.username}".imports = home-modules;
-    }
-  ]);
-}
+  nix-darwin.lib.darwinSystem {
+    inherit system specialArgs;
+    modules =
+      darwin-modules
+      ++ [
+        (_: {
+          nixpkgs.pkgs = import nixpkgs {
+            inherit system;
+            # Enable unfree packages
+            config.allowUnfree = true;
+          };
+        })
+      ]
+      # Check if we have any home modules;
+      # if true: include the modules
+      # if false: include nothing
+      # Home Manager only activated if we actually have
+      # home configuration
+      ++ (lib.optionals ((lib.lists.length home-modules) > 0) [
+        home-manager.darwinModules.home-manager
+        {
+          home-manager = {
+            # Use system nixpkgs
+            useGlobalPkgs = true;
+            # Install to user profile
+            useUserPackages = true;
+            # Backup conflicts
+            backupFileExtension = "home-manager.backup";
+            # Pass our variables to HM
+            extraSpecialArgs = specialArgs;
+            # User config
+            users."${myvars.user.username}".imports = home-modules;
+          };
+        }
+      ]);
+  }
 ```
 
-**File: `lib/nixosSystem.nix`** (new)
+**File: `lib/nixosSystem.nix`** (new - idiomatic Nix style)
 ```nix
 {
   inputs,
@@ -476,28 +487,49 @@ nix-darwin.lib.darwinSystem {
   system,
   genSpecialArgs,
   nixos-modules,
-  home-modules ? [ ],
+  home-modules ? [],
   specialArgs ? (genSpecialArgs system),
   myvars,
   ...
-}:
-let
+}: let
   inherit (inputs) nixpkgs home-manager;
 in
-nixpkgs.lib.nixosSystem {
-  inherit system specialArgs;
-  modules = nixos-modules ++ (lib.optionals ((lib.lists.length home-modules) > 0) [
-    home-manager.nixosModules.home-manager
-    {
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.backupFileExtension = "home-manager.backup";
-      home-manager.extraSpecialArgs = specialArgs;
-      # IMPORTANT: Use our variable structure, not ryan4yin's
-      home-manager.users."${myvars.user.username}".imports = home-modules;
-    }
-  ]);
-}
+  nixpkgs.lib.nixosSystem {
+    inherit system specialArgs;
+    modules =
+      nixos-modules
+      ++ [
+        (_: {
+          nixpkgs.pkgs = import nixpkgs {
+            inherit system;
+            # Enable unfree packages
+            config.allowUnfree = true;
+          };
+        })
+      ]
+      # Check if we have any home modules;
+      # if true: include the modules
+      # if false: include nothing
+      # Home Manager only activated if we actually have
+      # home configuration
+      ++ (lib.optionals ((lib.lists.length home-modules) > 0) [
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            # Use system nixpkgs
+            useGlobalPkgs = true;
+            # Install to user profile
+            useUserPackages = true;
+            # Backup conflicts
+            backupFileExtension = "home-manager.backup";
+            # Pass our variables to HM
+            extraSpecialArgs = specialArgs;
+            # User config
+            users."${myvars.user.username}".imports = home-modules;
+          };
+        }
+      ]);
+  }
 ```
 
 #### Step 1.3: Create Outputs Directory Structure
