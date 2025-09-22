@@ -17,7 +17,11 @@ Configuration Areas:
 - Homebrew packages for this specific machine
 - macOS defaults and environment variables
 */
-{myvars, pkgs, ...}: {
+{
+  myvars,
+  pkgs,
+  ...
+}: {
   # No imports needed - handled by outputs system
   # No nixpkgs.hostPlatform needed - handled by outputs system
   # No system.primaryUser needed - handled by outputs system
@@ -45,12 +49,13 @@ Configuration Areas:
     # Work-appropriate applications and tools
     casks = [
       # Development and productivity tools
-      "cursor" # AI-powered code editor for development work
+      "visual-studio-code" # VS Code
       "claude" # Claude Desktop MCP
 
       # Professional productivity
       "slack" # Team communication
       "zoom" # Video conferencing
+      "sunsama" # Task management & planning
 
       # Remote access and virtualization
       "parsec" # Low-latency remote desktop for gaming/work
