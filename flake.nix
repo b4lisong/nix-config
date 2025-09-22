@@ -95,7 +95,7 @@ This architecture provides:
     # Local variable setup, defines local vars used throughout flake
     # `lib` imports custom utilities which extend nixpkgs lib
     # `modules.nix` contains helper functions for module import
-    lib = import ./lib/modules.nix {inherit (nixpkgs) lib;};
+    lib = import ./lib {inherit (nixpkgs) lib;};
     # `vars` imports shared vars/constants (usernames, host configs, etc.)
     vars = import ./variables;
     # Helper function that creates a Darwin system config for a given hostname

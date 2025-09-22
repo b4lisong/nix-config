@@ -1,11 +1,14 @@
-# This file extends the nixpkgs standard library and contains module helper functions.
-#
-# scanPaths scans a directory path and returns a list of paths to:
-#   - all subdirectories
-#   - all `.nix` files (except `default.nix`)
-# This makes it easier to add new modules without manually updating import lists.
-# Copied from https://raw.githubusercontent.com/ryan4yin/nix-config/refs/heads/main/lib/default.nix
 {lib, ...}: {
+  # System builders for creating configurations
+  macosSystem = import ./macosSystem.nix;
+  nixosSystem = import ./nixosSystem.nix;
+
+  # Attribute manipulation utilities
+  attrs = import ./attrs.nix;
+
+  # Use path relative to the root of the project
+  relativeToRoot = lib.path.append ../.;
+
   # scanPaths: Recursively finds all subdirectories and .nix files (except default.nix) in a given path.
   scanPaths = path:
     builtins.map
