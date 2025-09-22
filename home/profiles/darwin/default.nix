@@ -37,7 +37,7 @@ Extension Points:
 - macOS system integration modules
 - Performance optimizations for Apple hardware
 */
-{pkgs, vars, ...}: {
+{pkgs, myvars, ...}: {
   imports = [
     # Import cross-platform GUI baseline (includes tui and base profiles)
     ../gui
@@ -72,8 +72,8 @@ Extension Points:
     # Git configuration using centralized variables
     git = {
       enable = true;
-      userName = vars.git.userName;
-      userEmail = vars.git.userEmail;
+      userName = myvars.git.userName;
+      userEmail = myvars.git.userEmail;
       extraConfig = {
         # Force SSH for GitHub URLs
         url."git@github.com:".insteadOf = "https://github.com/";

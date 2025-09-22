@@ -75,6 +75,5 @@ Defines the common system-level configuration shared by both NixOS and Darwin
   # - flakes: Reproducible and composable Nix packages and configurations
   nix.settings.experimental-features = "nix-command flakes";
 
-  # Enable unfree packages @ the system level
-  nixpkgs.config.allowUnfree = true;
+  # Enable unfree packages - handled by system builders
 }

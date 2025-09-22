@@ -32,8 +32,7 @@ Extends base system configuration in `modules/base.nix`
     };
   };
 
-  # Allow unfree packages for all Darwin systems
-  nixpkgs.config.allowUnfree = true;
+  # Allow unfree packages - handled by system builders
 
   system = {
     # System state version for nix-darwin compatibility

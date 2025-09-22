@@ -12,9 +12,6 @@ in {
     ../../modules/shell/starship.nix
   ];
 
-  # Enable unfree packages for Home Manager
-  nixpkgs.config.allowUnfree = true;
-
   home = {
     stateVersion = "25.05";
     inherit (vars.user) username;

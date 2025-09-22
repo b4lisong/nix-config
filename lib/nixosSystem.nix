@@ -19,8 +19,7 @@ in
         (_: {
           nixpkgs.pkgs = import nixpkgs {
             inherit system;
-            # Enable unfree packages
-            config.allowUnfree = true;
+            # allowUnfree is handled by modules/base.nix
           };
         })
       ]

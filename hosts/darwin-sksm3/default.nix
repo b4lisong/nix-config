@@ -1,44 +1,29 @@
 /*
-`hosts/sksm3/system.nix`
-System-level configuration for the sksm3 host
+`hosts/darwin-sksm3/default.nix`
+Host-specific configuration for the sksm3 host
 
-This file defines the macOS system configuration for the sksm3 host,
-which is the work MacBook (Apple Silicon). It extends the base
-Darwin configuration with host-specific settings and applications
-appropriate for a professional work environment (probably).
+This file contains ONLY host-specific configuration for sksm3.
+Base system configuration (modules/base.nix, modules/darwin) is handled
+by the outputs system. Variables are passed as myvars parameter.
 
-Host Information (from variables/default.nix):
+Host Information:
 - Hostname: sksm3
 - Architecture: aarch64-darwin (Apple Silicon MacBook)
 - Description: Work MacBook
 - Purpose: Professional development and work machine
 
-Architecture Flow:
-1. Imports base.nix (shared packages, fonts, Nix settings)
-2. Imports modules/darwin (macOS-specific system configuration)
-3. Applies host-specific overrides and extensions
-4. Integrates with Home Manager through flake.nix
-
 Configuration Areas:
-- Host platform and user setup
-- macOS system defaults and preferences
-- Environment variables for terminal integration
+- Host-specific system preferences
+- Homebrew packages for this specific machine
+- macOS defaults and environment variables
 */
-_: let
-  vars = import ../../variables;
-in {
-  imports = [
-    ../../modules/base.nix # Shared system packages and Nix configuration
-    ../../modules/darwin # macOS-specific system configuration and defaults
-  ];
+{myvars, pkgs, ...}: {
+  # No imports needed - handled by outputs system
+  # No nixpkgs.hostPlatform needed - handled by outputs system
+  # No system.primaryUser needed - handled by outputs system
 
-  # Set the target platform for this host (Apple Silicon MacBook)
-  nixpkgs.hostPlatform = vars.hosts.sksm3.system;
-
-  # Manage system settings
+  # Host-specific system settings
   system = {
-    # Configure the primary user for this system
-    primaryUser = vars.user.username;
     # Manage keyboard settings
     keyboard = {
       enableKeyMapping = true;
@@ -47,9 +32,10 @@ in {
   };
 
   # User account configuration
-  users.users.${vars.user.username} = {
-    name = vars.user.username;
-    home = "/Users/${vars.user.username}";
+  users.users.${myvars.user.username} = {
+    name = myvars.user.username;
+    home = "/Users/${myvars.user.username}";
+    shell = pkgs.${myvars.user.shell};
   };
 
   # Host-specific Homebrew configuration
