@@ -2,25 +2,16 @@
   config,
   lib,
   pkgs,
-  vars,
+  myvars,
   ...
 }: {
-  # Import base Raspberry Pi hardware configuration and Docker support
-  imports = [
-    ../../modules/nixos/raspberry-pi.nix
-    ../../modules/nixos/docker.nix
-  ];
+  # NOTE: imports are now handled by the outputs system
+  # raspberry-pi.nix and docker.nix are imported automatically
 
   # Host identification
-  networking.hostName = vars.hosts.rpi4b.hostname;
+  networking.hostName = myvars.hosts.rpi4b.hostname;
 
-  # Platform architecture configuration
-  nixpkgs = {
-    hostPlatform = vars.hosts.rpi4b.system;
-    config = {
-      allowUnfree = true;
-    };
-  };
+  # NOTE: nixpkgs.hostPlatform and allowUnfree are set by the outputs system
 
   # Docker configuration
   virtualisation.docker.enable = true;
@@ -70,9 +61,9 @@
   ];
 
   # User configuration specific to this Pi
-  users.users.${vars.user.username} = {
+  users.users.${myvars.user.username} = {
     isNormalUser = true;
-    description = vars.user.fullName;
+    description = myvars.user.fullName;
     extraGroups = [
       "wheel" # sudo access
       "networkmanager"

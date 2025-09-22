@@ -11,7 +11,7 @@ It focuses on essential NixOS system services, security, and optimization.
   config,
   lib,
   pkgs,
-  vars,
+  myvars,
   ...
 }: {
   # Add `~/.local/bin` to PATH for user-installed binaries
@@ -67,7 +67,7 @@ It focuses on essential NixOS system services, security, and optimization.
           cue = true;
           origin = "pam://yubi";
           authfile = pkgs.writeText "u2f-mappings" (lib.concatStrings [
-            "${vars.user.username}"
+            "${myvars.user.username}"
             ":adltjMOL6x4SBGqUPM8PF7DLq/9fNoRMt5/kGiU8aMbYJ+IXZUDZRWecFqQZvdBQCyU7umBC655UHQiswiPzgw==,kU+6Jss9jORB+U7Fq/pUTP3kCVB9jxRE/8Dg2vsfMYQ778buZIR+e7ZdB5cVPtNzLTi9rbC9rBNhIV8qHZhqTw==,es256,+presence"
           ]);
         };

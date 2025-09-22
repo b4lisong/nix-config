@@ -25,21 +25,17 @@ Configuration Areas:
 - Environment variables for terminal integration
 - Host-specific system behavior customizations
 */
-_: let
-  vars = import ../../variables;
-in {
-  imports = [
-    ../../modules/base.nix # Shared system packages and Nix configuration
-    ../../modules/darwin # macOS-specific system configuration and defaults
-  ];
+{myvars, pkgs, ...}: {
+  # NOTE: imports are now handled by the outputs system
+  # base.nix and modules/darwin are imported automatically
+  # Variables are passed as myvars parameter
 
-  # Set the target platform for this host (Intel MacBook Pro)
-  nixpkgs.hostPlatform = vars.hosts.a2251.system;
+  # NOTE: nixpkgs.hostPlatform is set by the outputs system
 
   # Manage system settings
   system = {
     # Configure the primary user for this system
-    primaryUser = vars.user.username;
+    primaryUser = myvars.user.username;
     # Manage keyboard settings
     keyboard = {
       enableKeyMapping = true;
@@ -48,9 +44,9 @@ in {
   };
 
   # User account configuration
-  users.users.${vars.user.username} = {
-    name = vars.user.username;
-    home = "/Users/${vars.user.username}";
+  users.users.${myvars.user.username} = {
+    name = myvars.user.username;
+    home = "/Users/${myvars.user.username}";
   };
 
   # Host-specific Homebrew configuration

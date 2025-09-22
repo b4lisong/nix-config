@@ -3,7 +3,7 @@
   lib,
   pkgs,
   pkgs-unstable,
-  vars,
+  myvars,
   ...
 }: {
   # Import user configuration layers for Pi development setup
@@ -26,8 +26,8 @@
 
   # Home Manager configuration
   home = {
-    username = vars.user.username;
-    homeDirectory = lib.mkForce "/home/${vars.user.username}";
+    username = myvars.user.username;
+    homeDirectory = lib.mkForce "/home/${myvars.user.username}";
 
     # Host-specific packages for this particular Pi
     packages = with pkgs;
@@ -45,8 +45,8 @@
 
   # Git configuration using centralized variables
   programs.git = {
-    userName = vars.git.userName;
-    userEmail = vars.git.userEmail;
+    userName = myvars.git.userName;
+    userEmail = myvars.git.userEmail;
   };
 
   # Pi-specific shell configuration

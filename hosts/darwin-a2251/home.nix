@@ -31,7 +31,7 @@ Override Examples:
 - Terminal padding can be customized for personal preference
 - Application-specific settings can be fine-tuned per host
 */
-{lib, ...}: {
+{lib, pkgs, pkgs-unstable, ...}: {
   imports = [
     # Complete macOS desktop profile (includes base, tui, gui profiles)
     ../../home/profiles/darwin

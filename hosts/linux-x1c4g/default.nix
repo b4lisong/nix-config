@@ -2,15 +2,16 @@
   config,
   lib,
   pkgs,
-  vars,
+  myvars,
   ...
 }: {
   imports = [
     ./hardware-configuration.nix
   ];
+  # NOTE: other imports are now handled by the outputs system
 
   # Host identification
-  networking.hostName = vars.hosts.x1c4g.hostname;
+  networking.hostName = myvars.hosts.x1c4g.hostname;
 
   # Boot configuration
   boot.loader = {
@@ -21,13 +22,7 @@
     efi.canTouchEfiVariables = true;
   };
 
-  # Platform architecture configuration
-  nixpkgs = {
-    hostPlatform = vars.hosts.x1c4g.system;
-    config = {
-      allowUnfree = true;
-    };
-  };
+  # NOTE: nixpkgs.hostPlatform and allowUnfree are set by the outputs system
 
   # Host-specific service configuration
   services = {
@@ -126,9 +121,9 @@
   };
 
   # User configuration specific to this host
-  users.users.${vars.user.username} = {
+  users.users.${myvars.user.username} = {
     isNormalUser = true;
-    description = vars.user.fullName;
+    description = myvars.user.fullName;
     extraGroups = [
       "wheel" # sudo access
       "networkmanager"
