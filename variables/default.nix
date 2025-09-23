@@ -69,6 +69,12 @@
       system = "aarch64-linux";
       description = "NixOS VM (Personal)";
     };
+
+    nas = {
+      hostname = "nas";
+      system = "x86_64-linux";
+      description = "NAS Server (Proxmox VM)";
+    };
   };
 
   # Common directory paths
