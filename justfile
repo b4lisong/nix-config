@@ -87,3 +87,7 @@ fmt:
 lint:
     statix check .
     deadnix .
+
+# Format disks with disko
+format DISKS_FILE:
+    sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount {{DISKS_FILE}}
