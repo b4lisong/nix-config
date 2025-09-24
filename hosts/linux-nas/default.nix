@@ -13,22 +13,23 @@
   # Host identification
   networking.hostName = myvars.hosts.nas.hostname;
 
-  # Boot configuration for VM
-  boot.loader = {
-    grub = {
-      enable = true;
-      device = "/dev/sda"; # Typical for Proxmox VMs
-    };
-  };
-
-  # Virtualization-specific configuration
+  # Boot configuration for ZFS root with legacy GRUB
   boot = {
-    initrd.availableKernelModules = [ "virtio_pci" "virtio_scsi" "ahci" "sd_mod" ];
+    supportedFilesystems = [ "zfs" ];
+    zfs.forceImportRoot = false;
+    loader.grub = {
+      enable = true;
+      zfsSupport = true;
+      efiSupport = false;
+      device = "nodev"; # For ZFS root without EFI
+    };
+    # Bare-metal hardware configuration
+    initrd.availableKernelModules = [ "ahci" "xhci_pci" "sd_mod" "sata_sil" ];
     kernelModules = [ "kvm-intel" ]; # Change to "kvm-amd" if using AMD host
   };
 
-  # Enable virtualization services
-  services.qemuGuest.enable = true;
+  # ZFS-specific configuration
+  networking.hostId = "12345678"; # Required for ZFS - should be unique per host
 
   # NOTE: nixpkgs.hostPlatform and allowUnfree are set by the outputs system
 
