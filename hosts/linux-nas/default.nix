@@ -24,7 +24,7 @@
       device = "nodev"; # For ZFS root without EFI
     };
     # Bare-metal hardware configuration
-    initrd.availableKernelModules = [ "ahci" "xhci_pci" "sd_mod" "sata_sil" ];
+    initrd.availableKernelModules = [ "ehci_pci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
     kernelModules = [ "kvm-intel" ]; # Change to "kvm-amd" if using AMD host
   };
 

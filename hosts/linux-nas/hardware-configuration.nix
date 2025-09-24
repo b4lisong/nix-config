@@ -1,42 +1,70 @@
-# Hardware configuration for NAS VM on Proxmox
-# This is a template - generate actual hardware-configuration.nix with:
-# nixos-generate-config --root /mnt
-{
-  config,
-  lib,
-  pkgs,
-  modulesPath,
-  ...
-}: {
-  imports = [
-    (modulesPath + "/profiles/qemu-guest.nix")
-  ];
+{ config, lib, pkgs, modulesPath, ... }:
 
-  # VM-specific kernel modules
-  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
+{
+  imports =
+    [ (modulesPath + "/installer/scan/not-detected.nix")
+    ];
+
+  boot.initrd.availableKernelModules = [ "ehci_pci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ]; # Change to "kvm-amd" for AMD hosts
+  boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  # Filesystem configuration - customize based on your setup
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/REPLACE-WITH-ACTUAL-UUID";
-    fsType = "ext4";
-  };
+  fileSystems."/" =
+    { device = "rpool/root";
+      fsType = "zfs";
+    };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/REPLACE-WITH-ACTUAL-UUID";
-    fsType = "vfat";
-    options = [ "fmask=0022" "dmask=0022" ];
-  };
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/5974b996-82a5-42d7-ad95-bb61ad2385ce";
+      fsType = "ext4";
+    };
 
-  # Swap configuration - customize as needed
-  swapDevices = [
-    { device = "/dev/disk/by-uuid/REPLACE-WITH-ACTUAL-UUID"; }
-  ];
+  fileSystems."/home" =
+    { device = "rpool/home";
+      fsType = "zfs";
+    };
 
-  # Enables DHCP on each ethernet interface
+  fileSystems."/incus" =
+    { device = "rpool/incus";
+      fsType = "zfs";
+    };
+
+  fileSystems."/mnt/app_config" =
+    { device = "storage/app_config";
+      fsType = "zfs";
+    };
+
+  fileSystems."/mnt/backup" =
+    { device = "storage/backup";
+      fsType = "zfs";
+    };
+
+  fileSystems."/mnt/media" =
+    { device = "storage/media";
+      fsType = "zfs";
+    };
+
+  fileSystems."/nix" =
+    { device = "rpool/nix";
+      fsType = "zfs";
+    };
+
+  fileSystems."/var" =
+    { device = "rpool/var";
+      fsType = "zfs";
+    };
+
+  swapDevices = [ ];
+
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
+  # networking.interfaces.eno1.useDHCP = lib.mkDefault true;
+  # networking.interfaces.eno2.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
