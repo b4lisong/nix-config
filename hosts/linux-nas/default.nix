@@ -31,6 +31,19 @@
   # ZFS-specific configuration
   networking.hostId = "12345678"; # Required for ZFS - should be unique per host
 
+  # Memory management for KVM hypervisor with limited RAM
+  zramSwap = {
+    enable = true;
+    memoryPercent = 25; # Conservative 4GB zram for 16GB RAM system
+    algorithm = "zstd"; # Best compression ratio
+    priority = 5; # Lower priority to discourage active use
+  };
+
+  # Memory management tuning
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 10; # Prefer RAM over swap for KVM host
+  };
+
   # NOTE: nixpkgs.hostPlatform and allowUnfree are set by the outputs system
 
   # Host-specific service configuration
