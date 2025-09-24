@@ -21,7 +21,7 @@
       enable = true;
       zfsSupport = true;
       efiSupport = false;
-      device = "nodev"; # For ZFS root without EFI
+      device = "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_2041DA803271"; # System SSD for bootloader
     };
     # Bare-metal hardware configuration
     initrd.availableKernelModules = [ "ehci_pci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
