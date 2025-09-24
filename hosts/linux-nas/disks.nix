@@ -37,32 +37,64 @@
         type = "disk";
         device = "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW6034KJ";
         content = {
-          type = "zfs";
-          pool = "storage";
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "storage";
+              };
+            };
+          };
         };
       };
       sdb = {
         type = "disk";
         device = "/dev/disk/by-id/ata-Hitachi_HDS5C4040ALE630_PL1321LAG349UH";
         content = {
-          type = "zfs";
-          pool = "storage";
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "storage";
+              };
+            };
+          };
         };
       };
       sdc = {
         type = "disk";
         device = "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW60VLBG";
         content = {
-          type = "zfs";
-          pool = "storage";
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "storage";
+              };
+            };
+          };
         };
       };
       sdd = {
         type = "disk";
         device = "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW61YBDS";
         content = {
-          type = "zfs";
-          pool = "storage";
+          type = "gpt";
+          partitions = {
+            zfs = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "storage";
+              };
+            };
+          };
         };
       };
     };
