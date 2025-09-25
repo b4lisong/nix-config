@@ -180,6 +180,7 @@
         443 # HTTPS
         445 # SMB
         2049 # NFS
+        5201 # iperf3
         8080 # Web UI (alternative)
         9090 # Cockpit web console
       ];
