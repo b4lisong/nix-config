@@ -1,19 +1,17 @@
 {
   disko.devices = {
     disk = {
-      # System SSD - NixOS with legacy boot
-      sde = {
+      # Internal SD card - Boot partition only (HP MicroServer Gen8 workaround)
+      sdcard = {
         type = "disk";
-        device = "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_2041DA803271";
+        device = "/dev/disk/by-id/usb-HP_iLO_Internal_SD-CARD_000002660A01-0:0";
         content = {
-          type = "gpt";
+          type = "dos"; # MBR partition table for legacy GRUB
           partitions = {
-            bios = {
-              size = "1M";
-              type = "EF02"; # BIOS boot partition
-            };
             boot = {
-              size = "512M";
+              size = "100%";
+              type = "primary";
+              bootable = true;
               content = {
                 type = "filesystem";
                 format = "ext4";
@@ -22,6 +20,17 @@
                 mountOptions = ["defaults" "noatime"];
               };
             };
+          };
+        };
+      };
+
+      # System SSD - ZFS root pool (AHCI mode)
+      sde = {
+        type = "disk";
+        device = "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_2041DA803271";
+        content = {
+          type = "gpt";
+          partitions = {
             zfs = {
               size = "100%";
               content = {
