@@ -21,7 +21,7 @@
       enable = true;
       zfsSupport = true;
       efiSupport = false;
-      device = "/dev/disk/by-uuid/c95dab86-4f90-47dd-8e1f-c1a0b3dfe500"; # System SSD for bootloader
+      device = "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_2041DA803271-part2"; # System SSD for bootloader
     };
     # Bare-metal hardware configuration
     initrd.availableKernelModules = [ "ehci_pci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
