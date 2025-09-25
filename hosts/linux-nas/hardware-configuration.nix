@@ -20,7 +20,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_2041DA803271-part2";
+    device = "/dev/disk/by-id/usb-HP_iLO_Internal_SD-CARD_000002660A01-0:-part1";
     fsType = "ext4";
   };
 

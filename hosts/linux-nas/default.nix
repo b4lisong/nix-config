@@ -21,7 +21,7 @@
       enable = true;
       zfsSupport = true;
       efiSupport = false;
-      device = "/dev/sdf"; # Internal SD card for bootloader (HP MicroServer Gen8 workaround)
+      device = "/dev/disk/by-id/usb-HP_iLO_Internal_SD-CARD_000002660A01-0:"; # Internal SD card for bootloader (HP MicroServer Gen8 workaround)
     };
     # Bare-metal hardware configuration
     initrd.availableKernelModules = [ "ehci_pci" "ahci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
