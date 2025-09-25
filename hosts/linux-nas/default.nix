@@ -139,6 +139,50 @@
 
   };
 
+  # Incus virtualization configuration
+  virtualisation.incus = {
+    enable = true;
+    ui.enable = true;  # Enable Incus web UI
+    preseed = {
+      networks = [
+        {
+          name = "incusbr0";
+          type = "bridge";
+          config = {
+            "ipv4.address" = "10.0.100.1/24";
+            "ipv4.nat" = "true";
+          };
+        }
+      ];
+      storage_pools = [
+        {
+          name = "zfs-incus";
+          driver = "zfs";
+          config = {
+            source = "rpool/incus";
+          };
+        }
+      ];
+      profiles = [
+        {
+          name = "default";
+          devices = {
+            eth0 = {
+              name = "eth0";
+              network = "incusbr0";
+              type = "nic";
+            };
+            root = {
+              path = "/";
+              pool = "zfs-incus";
+              type = "disk";
+            };
+          };
+        }
+      ];
+    };
+  };
+
   # Storage performance optimization
   services.udev.extraRules = ''
     # Enable write cache for spinning drives (rotational=1)
@@ -206,26 +250,10 @@
     networkmanager.enable = true;
     # Disable systemd-networkd to avoid conflict with NetworkManager
     useNetworkd = lib.mkForce false;
-    # Firewall configuration for NAS services
-    firewall = {
-      enable = true;
-      # Common NAS ports - can be customized based on services needed
-      allowedTCPPorts = [
-        22 # SSH
-        80 # HTTP
-        443 # HTTPS
-        445 # SMB
-        2049 # NFS
-        5201 # iperf3
-        8080 # Web UI (alternative)
-        9090 # Cockpit web console
-      ];
-      allowedUDPPorts = [
-        137 # NetBIOS Name Service
-        138 # NetBIOS Datagram Service
-        2049 # NFS
-      ];
-    };
+    # Required for Incus networking
+    nftables.enable = true;
+    # Disable firewall for simplified setup (local network only)
+    firewall.enable = false;
   };
 
   environment = {
@@ -290,6 +318,7 @@
       "video"
       "storage" # Access to storage devices
       "nas-users" # Access to NAS storage datasets
+      "incus-admin" # Access to Incus management
     ];
 
     # SSH key authentication - configure with your public key
