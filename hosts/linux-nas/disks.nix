@@ -17,6 +17,7 @@
               content = {
                 type = "filesystem";
                 format = "ext4";
+                extraArgs = ["-F" "-O" "^64bit,^metadata_csum"]; # Force ext4 without problematic features
                 mountpoint = "/boot";
                 mountOptions = ["defaults" "noatime"];
               };
