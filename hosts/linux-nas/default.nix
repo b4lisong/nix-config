@@ -27,10 +27,18 @@
     initrd.availableKernelModules = [ "ehci_pci" "ahci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
     kernelModules = [ "kvm-intel" ]; # Change to "kvm-amd" if using AMD host
 
-    # ZFS ARC memory limits for KVM hypervisor with 16GB RAM
+    # ZFS ARC memory limits and performance tuning for KVM hypervisor with 16GB RAM
     extraModprobeConfig = ''
       options zfs zfs_arc_max=4294967296
       options zfs zfs_arc_min=1073741824
+
+      # ZFS performance optimization based on test results
+      options zfs zfs_vdev_max_active=3000
+      options zfs zfs_top_maxinflight=320
+      options zfs zfs_prefetch_disable=0
+      options zfs zfs_max_recordsize=16777216
+      options zfs zfs_txg_timeout=5
+      options zfs zfs_dirty_data_max_percent=25
     '';
   };
 
@@ -45,11 +53,21 @@
     priority = 5; # Lower priority to discourage active use
   };
 
-  # Memory management tuning
+  # Memory management and network performance tuning
   boot.kernel.sysctl = {
     "vm.swappiness" = 10; # Prefer RAM over swap for KVM host
     "vm.dirty_background_ratio" = 5; # Reduce dirty memory pressure with ZFS ARC
     "vm.dirty_ratio" = 10; # Lower dirty memory threshold for stability
+
+    # Network buffer optimization for high-bandwidth NAS workloads (7.5 GB/s streaming)
+    "net.core.rmem_default" = 262144;
+    "net.core.rmem_max" = 16777216;
+    "net.core.wmem_default" = 262144;
+    "net.core.wmem_max" = 16777216;
+    "net.core.netdev_max_backlog" = 5000;
+    "net.ipv4.tcp_rmem" = "4096 65536 16777216";
+    "net.ipv4.tcp_wmem" = "4096 65536 16777216";
+    "net.ipv4.tcp_congestion_control" = lib.mkDefault "cubic";
   };
 
   # NOTE: nixpkgs.hostPlatform and allowUnfree are set by the outputs system
@@ -121,12 +139,22 @@
 
   };
 
-  # Enable write caching for improved disk performance
+  # Storage performance optimization
   services.udev.extraRules = ''
     # Enable write cache for spinning drives (rotational=1)
     ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", RUN+="${pkgs.hdparm}/bin/hdparm -W1 /dev/$kernel"
     # Enable write cache for SSDs (rotational=0)
     ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", RUN+="${pkgs.hdparm}/bin/hdparm -W1 /dev/$kernel"
+
+    # I/O Scheduler optimization for ZFS drives (set to 'none' for better ZFS performance)
+    ACTION=="add|change", ENV{ID_SERIAL}=="WDC_WDS500G1R0A-68A4W0_2041DA803271", ATTR{queue/scheduler}="none"
+    ACTION=="add|change", ENV{ID_SERIAL}=="ST4000VN006-3CW104_ZW6034KJ", ATTR{queue/scheduler}="none"
+    ACTION=="add|change", ENV{ID_SERIAL}=="Hitachi_HDS5C4040ALE630_PL1321LAG349UH", ATTR{queue/scheduler}="none"
+    ACTION=="add|change", ENV{ID_SERIAL}=="ST4000VN006-3CW104_ZW60VLBG", ATTR{queue/scheduler}="none"
+    ACTION=="add|change", ENV{ID_SERIAL}=="ST4000VN006-3CW104_ZW61YBDS", ATTR{queue/scheduler}="none"
+
+    # Keep mq-deadline scheduler for SD cards (better for flash storage)
+    ACTION=="add|change", ENV{ID_SERIAL}=="HP_iLO_Internal_SD-CARD_000002660A01", ATTR{queue/scheduler}="mq-deadline"
   '';
 
   # Set permissions on NAS storage datasets after mount
