@@ -65,6 +65,60 @@
       };
     };
 
+    # Samba file sharing service
+    samba = {
+      enable = true;
+      openFirewall = false; # Firewall already configured above
+      settings = {
+        global = {
+          "workgroup" = "WORKGROUP";
+          "server string" = "NAS Server";
+          "netbios name" = "nas";
+          "security" = "user";
+          "hosts allow" = "192.168. 10. 127.";
+          "hosts deny" = "0.0.0.0/0";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+          # Performance and compatibility
+          "server min protocol" = "SMB2";
+          "deadtime" = "30";
+          "use sendfile" = "yes";
+          "max connections" = "10";
+        };
+        # NAS storage dataset shares
+        "media" = {
+          "path" = "/mnt/media";
+          "browseable" = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "create mask" = "0664";
+          "directory mask" = "0775";
+          "valid users" = "@nas-users";
+          "force group" = "nas-users";
+        };
+        "backup" = {
+          "path" = "/mnt/backup";
+          "browseable" = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "create mask" = "0664";
+          "directory mask" = "0775";
+          "valid users" = "@nas-users";
+          "force group" = "nas-users";
+        };
+        "app_config" = {
+          "path" = "/mnt/app_config";
+          "browseable" = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "create mask" = "0664";
+          "directory mask" = "0775";
+          "valid users" = "@nas-users";
+          "force group" = "nas-users";
+        };
+      };
+    };
+
   };
 
   # Set permissions on NAS storage datasets after mount
@@ -80,6 +134,34 @@
       # Set ownership and permissions for storage datasets
       ${pkgs.coreutils}/bin/chown root:nas-users /mnt/app_config /mnt/media /mnt/backup
       ${pkgs.coreutils}/bin/chmod 2775 /mnt/app_config /mnt/media /mnt/backup
+    '';
+  };
+
+  # Set up Samba users after samba service starts
+  systemd.services.samba-user-setup = {
+    description = "Set up Samba users";
+    after = [ "samba-smbd.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      # Add service user to Samba user database if not already present
+      if ! ${pkgs.samba}/bin/pdbedit -L | ${pkgs.gnugrep}/bin/grep -q "^nas-user:"; then
+        echo "Setting up Samba service user: nas-user"
+        # Note: This creates the user but requires manual password setup
+        # Run: sudo smbpasswd -a nas-user
+        ${pkgs.samba}/bin/pdbedit -a -u nas-user -t || true
+      fi
+
+      # Also add main user to Samba user database if not already present
+      if ! ${pkgs.samba}/bin/pdbedit -L | ${pkgs.gnugrep}/bin/grep -q "^${myvars.user.username}:"; then
+        echo "Setting up Samba user: ${myvars.user.username}"
+        # Note: This creates the user but requires manual password setup
+        # Run: sudo smbpasswd -a ${myvars.user.username}
+        ${pkgs.samba}/bin/pdbedit -a -u ${myvars.user.username} -t || true
+      fi
     '';
   };
 
@@ -137,6 +219,17 @@
   # Group configuration for NAS storage access
   users.groups.nas-users = {
     gid = 1000; # Fixed GID for consistent SMB/NFS sharing
+  };
+
+  # Service user for Samba access
+  users.users.nas-user = {
+    isSystemUser = true;
+    description = "NAS Samba service user";
+    group = "nas-users";
+    extraGroups = [
+      "storage" # Access to storage devices
+    ];
+    createHome = false;
   };
 
   # User configuration specific to this host
