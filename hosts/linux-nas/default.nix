@@ -26,6 +26,12 @@
     # Bare-metal hardware configuration
     initrd.availableKernelModules = [ "ehci_pci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
     kernelModules = [ "kvm-intel" ]; # Change to "kvm-amd" if using AMD host
+
+    # ZFS ARC memory limits for KVM hypervisor with 16GB RAM
+    extraModprobeConfig = ''
+      options zfs zfs_arc_max=4294967296
+      options zfs zfs_arc_min=1073741824
+    '';
   };
 
   # ZFS-specific configuration
@@ -42,6 +48,8 @@
   # Memory management tuning
   boot.kernel.sysctl = {
     "vm.swappiness" = 10; # Prefer RAM over swap for KVM host
+    "vm.dirty_background_ratio" = 5; # Reduce dirty memory pressure with ZFS ARC
+    "vm.dirty_ratio" = 10; # Lower dirty memory threshold for stability
   };
 
   # NOTE: nixpkgs.hostPlatform and allowUnfree are set by the outputs system
