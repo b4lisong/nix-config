@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Queue Depth and Drive Analysis Script
 # For HP MicroServer Gen8 NAS performance testing
