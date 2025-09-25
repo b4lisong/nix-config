@@ -76,19 +76,19 @@
       myip = "curl -s https://ipinfo.io/ip";
     };
 
-    # Auto-start tmux for SSH connections
+    # Auto-start tmux for SSH connections (safe version)
     initContent = ''
       # Auto-start tmux only for SSH connections
       if command -v tmux &> /dev/null && [ -n "$PS1" ] && \
          [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && \
-         [ -n "$SSH_CONNECTION" ] || [ -n "$SSH_TTY" ]; then
+         ([ -n "$SSH_CONNECTION" ] || [ -n "$SSH_TTY" ]); then
         # Check if any tmux sessions exist
         if tmux list-sessions &>/dev/null; then
-          # Attach to the first available session
-          exec tmux attach-session
+          # Attach to the first available session (without exec)
+          tmux attach-session
         else
-          # Create a new session
-          exec tmux new-session
+          # Create a new session (without exec)
+          tmux new-session
         fi
       fi
     '';
