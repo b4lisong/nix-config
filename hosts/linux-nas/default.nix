@@ -29,7 +29,7 @@
   };
 
   # ZFS-specific configuration
-  networking.hostId = "12345678"; # Required for ZFS - should be unique per host
+  networking.hostId = "8425e349"; # Required for ZFS - matches system hostId
 
   # Memory management for KVM hypervisor with limited RAM
   zramSwap = {
