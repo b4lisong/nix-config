@@ -21,10 +21,10 @@
       enable = true;
       zfsSupport = true;
       efiSupport = false;
-      device = "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_2041DA803271"; # System SSD for bootloader
+      device = "/dev/sdf"; # Internal SD card for bootloader (HP MicroServer Gen8 workaround)
     };
     # Bare-metal hardware configuration
-    initrd.availableKernelModules = [ "ehci_pci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
+    initrd.availableKernelModules = [ "ehci_pci" "ahci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
     kernelModules = [ "kvm-intel" ]; # Change to "kvm-amd" if using AMD host
 
     # ZFS ARC memory limits for KVM hypervisor with 16GB RAM
@@ -120,6 +120,14 @@
     };
 
   };
+
+  # Enable write caching for improved disk performance
+  services.udev.extraRules = ''
+    # Enable write cache for spinning drives (rotational=1)
+    ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", RUN+="${pkgs.hdparm}/bin/hdparm -W1 /dev/$kernel"
+    # Enable write cache for SSDs (rotational=0)
+    ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", RUN+="${pkgs.hdparm}/bin/hdparm -W1 /dev/$kernel"
+  '';
 
   # Set permissions on NAS storage datasets after mount
   systemd.services.nas-storage-permissions = {
