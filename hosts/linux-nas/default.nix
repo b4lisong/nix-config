@@ -198,6 +198,18 @@
       ncdu # Disk usage analyzer
       rsync # File synchronization
       rclone # Cloud storage sync
+      # Disk performance
+      zfs
+      fio
+      sysstat
+      hdparm
+      smartmontools
+      nvme-cli
+      arcstat
+      arc_summary
+      btop
+      util-linux
+      gptfdisk
       # System administration
       htop
       tmux
