@@ -205,8 +205,6 @@
       hdparm
       smartmontools
       nvme-cli
-      arcstat
-      arc_summary
       btop
       util-linux
       gptfdisk
