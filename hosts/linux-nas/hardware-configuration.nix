@@ -37,16 +37,19 @@
   fileSystems."/mnt/app_config" = {
     device = "storage/app_config";
     fsType = "zfs";
+    options = [ "defaults" "nofail" ];
   };
 
   fileSystems."/mnt/backup" = {
     device = "storage/backup";
     fsType = "zfs";
+    options = [ "defaults" "nofail" ];
   };
 
   fileSystems."/mnt/media" = {
     device = "storage/media";
     fsType = "zfs";
+    options = [ "defaults" "nofail" ];
   };
 
   fileSystems."/nix" = {

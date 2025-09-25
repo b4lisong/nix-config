@@ -67,6 +67,22 @@
 
   };
 
+  # Set permissions on NAS storage datasets after mount
+  systemd.services.nas-storage-permissions = {
+    description = "Set permissions on NAS storage datasets";
+    after = [ "zfs-mount.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      # Set ownership and permissions for storage datasets
+      ${pkgs.coreutils}/bin/chown root:nas-users /mnt/app_config /mnt/media /mnt/backup
+      ${pkgs.coreutils}/bin/chmod 2775 /mnt/app_config /mnt/media /mnt/backup
+    '';
+  };
+
   # Network configuration
   networking = {
     networkmanager.enable = true;
@@ -118,6 +134,11 @@
     };
   };
 
+  # Group configuration for NAS storage access
+  users.groups.nas-users = {
+    gid = 1000; # Fixed GID for consistent SMB/NFS sharing
+  };
+
   # User configuration specific to this host
   users.users.${myvars.user.username} = {
     isNormalUser = true;
@@ -128,6 +149,7 @@
       "audio"
       "video"
       "storage" # Access to storage devices
+      "nas-users" # Access to NAS storage datasets
     ];
 
     # SSH key authentication - configure with your public key
