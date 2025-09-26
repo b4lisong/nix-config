@@ -139,47 +139,60 @@
 
   };
 
-  # Incus virtualization configuration
-  virtualisation.incus = {
-    enable = true;
-    ui.enable = true;  # Enable Incus web UI
-    preseed = {
-      networks = [
-        {
-          name = "incusbr0";
-          type = "bridge";
-          config = {
-            "ipv4.address" = "10.0.100.1/24";
-            "ipv4.nat" = "true";
-          };
-        }
-      ];
-      storage_pools = [
-        {
-          name = "zfs-incus";
-          driver = "zfs";
-          config = {
-            source = "rpool/incus";
-          };
-        }
-      ];
-      profiles = [
-        {
-          name = "default";
-          devices = {
-            eth0 = {
-              name = "eth0";
-              network = "incusbr0";
-              type = "nic";
+  # Virtualization configuration
+  virtualisation = {
+    # Incus virtualization
+    incus = {
+      enable = true;
+      ui.enable = true;  # Enable Incus web UI
+      preseed = {
+        networks = [
+          {
+            name = "incusbr0";
+            type = "bridge";
+            config = {
+              "ipv4.address" = "10.0.100.1/24";
+              "ipv4.nat" = "true";
             };
-            root = {
-              path = "/";
-              pool = "zfs-incus";
-              type = "disk";
+          }
+        ];
+        storage_pools = [
+          {
+            name = "zfs-incus";
+            driver = "zfs";
+            config = {
+              source = "rpool/incus";
             };
-          };
-        }
-      ];
+          }
+        ];
+        profiles = [
+          {
+            name = "default";
+            devices = {
+              eth0 = {
+                name = "eth0";
+                network = "incusbr0";
+                type = "nic";
+              };
+              root = {
+                path = "/";
+                pool = "zfs-incus";
+                type = "disk";
+              };
+            };
+          }
+        ];
+      };
+    };
+
+    # Libvirtd support for virt-manager
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMF ];
+      };
     };
   };
 
@@ -279,6 +292,11 @@
       tree
       wget
       curl
+      # Virtualization packages
+      qemu_kvm         # qemu-kvm equivalent
+      virt-manager     # virt-manager (same name)
+      libvirt          # libvirt-clients equivalent
+      bridge-utils     # bridge-utils (same name)
     ];
   };
 
@@ -319,6 +337,7 @@
       "storage" # Access to storage devices
       "nas-users" # Access to NAS storage datasets
       "incus-admin" # Access to Incus management
+      "libvirtd" # Access to libvirt
     ];
 
     # SSH key authentication - configure with your public key
