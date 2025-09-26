@@ -214,6 +214,27 @@
     ACTION=="add|change", ENV{ID_SERIAL}=="HP_iLO_Internal_SD-CARD_000002660A01", ATTR{queue/scheduler}="mq-deadline"
   '';
 
+  # Configure Incus bridge static IP after Incus starts
+  systemd.services.incus-bridge-ip = {
+    description = "Configure Incus bridge static IP";
+    after = [ "incus.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      # Wait for bridge to exist
+      while ! ${pkgs.iproute2}/bin/ip link show hostbr0 >/dev/null 2>&1; do
+        sleep 1
+      done
+
+      # Set static IP
+      ${pkgs.iproute2}/bin/ip addr add 10.0.20.2/24 dev hostbr0 || true
+      ${pkgs.iproute2}/bin/ip route add default via 10.0.20.1 || true
+    '';
+  };
+
   # Set permissions on NAS storage datasets after mount
   systemd.services.nas-storage-permissions = {
     description = "Set permissions on NAS storage datasets";
@@ -268,8 +289,14 @@
     # Disable firewall for simplified setup (local network only)
     firewall.enable = false;
 
-    # Create bridge interface for Incus containers/VMs
-    bridges.br0.interfaces = [ ]; # Will be configured via NetworkManager
+    # Static IP configuration for Incus bridge (hostbr0)
+    # This ensures the bridge gets a persistent IP after Incus creates it
+    localCommands = ''
+      # Wait for Incus bridge to be created, then assign static IP
+      until ip link show hostbr0 >/dev/null 2>&1; do sleep 1; done
+      ${pkgs.iproute2}/bin/ip addr add 10.0.20.2/24 dev hostbr0 || true
+      ${pkgs.iproute2}/bin/ip route add default via 10.0.20.1 || true
+    '';
   };
 
   environment = {
