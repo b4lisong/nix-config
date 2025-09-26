@@ -214,48 +214,6 @@
     ACTION=="add|change", ENV{ID_SERIAL}=="HP_iLO_Internal_SD-CARD_000002660A01", ATTR{queue/scheduler}="mq-deadline"
   '';
 
-  # Configure Incus bridge static IP with better timing
-  systemd.services.incus-bridge-ip = {
-    description = "Configure Incus bridge static IP";
-    after = [ "incus.service" "incus-startup.service" ];
-    wants = [ "incus.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      Restart = "on-failure";
-      RestartSec = "5s";
-    };
-    script = ''
-      # Wait longer for bridge to exist and be ready
-      for i in {1..30}; do
-        if ${pkgs.iproute2}/bin/ip link show hostbr0 >/dev/null 2>&1; then
-          echo "Bridge hostbr0 found, configuring IP..."
-          break
-        fi
-        echo "Waiting for hostbr0 bridge... ($i/30)"
-        sleep 2
-      done
-
-      # Check if bridge actually exists
-      if ! ${pkgs.iproute2}/bin/ip link show hostbr0 >/dev/null 2>&1; then
-        echo "ERROR: hostbr0 bridge not found after 60 seconds"
-        exit 1
-      fi
-
-      # Remove any existing IP (in case of conflicts)
-      ${pkgs.iproute2}/bin/ip addr flush dev hostbr0 || true
-
-      # Set static IP
-      ${pkgs.iproute2}/bin/ip addr add 10.0.20.2/24 dev hostbr0
-
-      # Add default route (remove existing first)
-      ${pkgs.iproute2}/bin/ip route del default || true
-      ${pkgs.iproute2}/bin/ip route add default via 10.0.20.1
-
-      echo "Successfully configured hostbr0 with IP 10.0.20.2/24"
-    '';
-  };
 
   # Set permissions on NAS storage datasets after mount
   systemd.services.nas-storage-permissions = {
@@ -301,17 +259,26 @@
     '';
   };
 
-  # Network configuration
+  # Network configuration - Simple bridge setup
   networking = {
-    networkmanager.enable = true;
-    # Disable systemd-networkd to avoid conflict with NetworkManager
-    useNetworkd = lib.mkForce false;
+    # Disable NetworkManager in favor of simple bridge configuration
+    networkmanager.enable = false;
+    # Use systemd-networkd for bridge management
+    useNetworkd = true;
     # Required for Incus networking
     nftables.enable = true;
     # Disable firewall for simplified setup (local network only)
     firewall.enable = false;
 
-    # Note: Bridge IP configuration handled by systemd service after Incus starts
+    # Create bridge interface with NixOS
+    bridges.br0 = {
+      interfaces = [ "eno1" ];
+    };
+
+    # Configure bridge with DHCP
+    interfaces.br0 = {
+      useDHCP = true;
+    };
   };
 
   environment = {

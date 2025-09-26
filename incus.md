@@ -168,32 +168,27 @@ After the VM starts:
 1. **NAT Network (`incusbr0`)**: Default - containers get 10.0.100.x addresses with NAT
 2. **Bridged Network (`br0`)**: Containers get IP addresses directly from your router
 
-**Setting Up Bridged Network (Post-Deployment):**
+**Using Bridged Network for HomeAssistant VM:**
 
-After deploying the configuration, set up the bridge and connect it to Incus:
+The NixOS configuration automatically creates a `br0` bridge with your ethernet interface. After deployment:
 
 ```bash
 # SSH to linux-nas host
 ssh linux-nas
 
-# 1. Create NetworkManager bridge (replace eno1 with your ethernet interface)
-sudo nmcli connection add type bridge ifname br0 con-name bridge-br0
-sudo nmcli connection add type ethernet ifname eno1 master br0 con-name bridge-slave-eno1
-sudo nmcli connection up bridge-br0
-
-# 2. Add bridge to Incus
+# 1. Add the host bridge to Incus
 incus network create hostbr0 \
   --type=bridge \
   bridge.external_interfaces=br0 \
   ipv4.address=none \
   ipv6.address=none
 
-# 3. Create bridged profile
+# 2. Create bridged profile
 incus profile create bridged
 incus profile device add bridged eth0 nic network=hostbr0 name=eth0
 incus profile device add bridged root disk pool=zfs-incus path=/
 
-# 4. Create HomeAssistant VM with bridged network
+# 3. Create HomeAssistant VM with bridged network
 incus launch homeassistant-os homeassistant --vm \
   --config limits.cpu=2 \
   --config limits.memory=4GB \
@@ -201,7 +196,7 @@ incus launch homeassistant-os homeassistant --vm \
   --profile bridged
 ```
 
-This gives the VM direct access to your local network for optimal device discovery.
+**Note**: The `br0` bridge is automatically created and managed by NixOS, getting an IP via DHCP. This is much simpler than manual NetworkManager configuration.
 
 #### 4.2 Storage Integration
 Options for persistent data:
