@@ -155,15 +155,6 @@
               "ipv4.nat" = "true";
             };
           }
-          {
-            name = "br0";
-            type = "bridge";
-            config = {
-              "bridge.external_interfaces" = "br0";
-              "ipv4.address" = "none";
-              "ipv6.address" = "none";
-            };
-          }
         ];
         storage_pools = [
           {
@@ -181,21 +172,6 @@
               eth0 = {
                 name = "eth0";
                 network = "incusbr0";
-                type = "nic";
-              };
-              root = {
-                path = "/";
-                pool = "zfs-incus";
-                type = "disk";
-              };
-            };
-          }
-          {
-            name = "bridged";
-            devices = {
-              eth0 = {
-                name = "eth0";
-                network = "br0";
                 type = "nic";
               };
               root = {
