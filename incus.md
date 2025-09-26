@@ -162,9 +162,32 @@ After the VM starts:
 ### Phase 4: Network and Storage Integration
 
 #### 4.1 Network Configuration
-- **Host Network Access**: Use bridged networking for device discovery
-- **Port Forwarding**: Configure if using NAT instead of bridge
-- **mDNS/Avahi**: Enable for HomeKit and device discovery
+
+**Two Network Options Available:**
+
+1. **NAT Network (`incusbr0`)**: Default - containers get 10.0.100.x addresses with NAT
+2. **Bridged Network (`br0`)**: Containers get IP addresses directly from your router
+
+**Using Bridged Network for HomeAssistant VM:**
+```bash
+# Create VM with bridged profile for direct network access
+incus launch homeassistant-os homeassistant --vm \
+  --config limits.cpu=2 \
+  --config limits.memory=4GB \
+  --config limits.disk=32GB \
+  --profile bridged
+```
+
+**Post-Deployment Network Setup:**
+After deploying the configuration, you'll need to configure the bridge via NetworkManager:
+```bash
+# SSH to linux-nas and create bridge
+sudo nmcli connection add type bridge ifname br0 con-name bridge-br0
+sudo nmcli connection add type ethernet ifname eth0 master br0 con-name bridge-slave-eth0
+sudo nmcli connection up bridge-br0
+```
+
+This gives containers/VMs direct access to your local network for device discovery.
 
 #### 4.2 Storage Integration
 Options for persistent data:
