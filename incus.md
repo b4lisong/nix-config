@@ -176,19 +176,21 @@ The NixOS configuration automatically creates a `br0` bridge with your ethernet 
 # SSH to linux-nas host
 ssh linux-nas
 
-# 1. Add the host bridge to Incus
-incus network create hostbr0 \
-  --type=bridge \
-  bridge.external_interfaces=br0 \
-  ipv4.address=none \
-  ipv6.address=none
-
-# 2. Create bridged profile
+# 1. Create bridged profile that uses host br0 bridge directly
 incus profile create bridged
-incus profile device add bridged eth0 nic network=hostbr0 name=eth0
-incus profile device add bridged root disk pool=zfs-incus path=/
 
-# 3. Create HomeAssistant VM with bridged network
+# 2. Add network device connected directly to host bridge
+incus profile device add bridged eth0 nic \
+  nictype=bridged \
+  parent=br0 \
+  name=eth0
+
+# 3. Add root disk device
+incus profile device add bridged root disk \
+  pool=zfs-incus \
+  path=/
+
+# 4. Create HomeAssistant VM with bridged network
 incus launch homeassistant-os homeassistant --vm \
   --config limits.cpu=2 \
   --config limits.memory=4GB \
