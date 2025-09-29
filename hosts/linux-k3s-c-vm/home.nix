@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   # Include base profile for essential CLI tools and git configuration
@@ -8,6 +9,9 @@
     ../../home/profiles/base
     ../../home/profiles/tui
   ];
+
+  # Override home directory to avoid conflict with Incus VM module
+  home.homeDirectory = lib.mkForce "/home/balisong";
 
   # Enable base shell and essential tools
   # The base profile provides:
