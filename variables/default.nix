@@ -73,7 +73,13 @@
     nas = {
       hostname = "nas";
       system = "x86_64-linux";
-      description = "NAS Server (Proxmox VM)";
+      description = "NAS Server";
+    };
+
+    "k3s-c-vm" = {
+      hostname = "k3s-c-vm";
+      system = "x86_64-linux";
+      description = "k3s Server";
     };
   };
 
