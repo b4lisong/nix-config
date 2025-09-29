@@ -3,10 +3,12 @@
   lib,
   pkgs,
   myvars,
+  modulesPath,
   ...
 }: {
   imports = [
-    ./hardware-configuration.nix
+    # Include the default incus configuration
+    "${modulesPath}/virtualisation/incus-virtual-machine.nix"
   ];
 
   # Host identification
@@ -43,12 +45,26 @@
     };
   };
 
-  # Network configuration for VM
+  # Network configuration for Incus VM (from transferred configuration.nix)
   networking = {
-    networkmanager.enable = true;
-    useNetworkd = lib.mkForce false;
+    dhcpcd.enable = false;
+    useDHCP = false;
+    useHostResolvConf = false;
     # Disable firewall for VM environment
     firewall.enable = false;
+  };
+
+  # systemd-networkd configuration for Incus VM
+  systemd.network = {
+    enable = true;
+    networks."50-enp5s0" = {
+      matchConfig.Name = "enp5s0";
+      networkConfig = {
+        DHCP = "ipv4";
+        IPv6AcceptRA = true;
+      };
+      linkConfig.RequiredForOnline = "routable";
+    };
   };
 
   # Minimal environment packages for k3s TUI host
