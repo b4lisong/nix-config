@@ -20,7 +20,7 @@ from the original dotfiles configuration.
     settings = {
       # Scrollback and audio
       scrollback_lines = 99999;
-      enable_audio_bell = true;
+      enable_audio_bell = false; # Disabled for server environments
 
       # Window settings
       window_margin_width = 0;
