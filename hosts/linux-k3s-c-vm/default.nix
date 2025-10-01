@@ -47,7 +47,7 @@
       efi.canTouchEfiVariables = true;
     };
     # Support for CIFS/SMB network filesystems
-    supportedFilesystems = [ "cifs" ];
+    supportedFilesystems = ["cifs"];
   };
 
   # k3s configuration
@@ -55,7 +55,6 @@
     enable = true;
     role = "server";
     extraFlags = toString [
-      "--disable=servicelb" # add MetalLB later if needed
       "--write-kubeconfig-mode=644"
       "--node-ip=10.0.20.50" # explicit node IP to fix interface detection
       "--disable-network-policy" # disable network policy controller to bypass interface subnet issue
@@ -165,8 +164,8 @@
   # Set up NAS mount directory and credentials
   systemd.services.nas-mount-setup = {
     description = "Create NAS mount directory and check credentials";
-    before = [ "mnt-nas-app_config.mount" ];
-    wantedBy = [ "multi-user.target" ];
+    before = ["mnt-nas-app_config.mount"];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
