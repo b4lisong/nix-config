@@ -57,6 +57,9 @@
     extraFlags = toString [
       "--disable=servicelb" # add MetalLB later if needed
       "--write-kubeconfig-mode=644"
+      "--node-ip=10.0.20.50" # explicit node IP to fix interface detection
+      "--disable-network-policy" # disable network policy controller to bypass interface subnet issue
+      "--flannel-iface=enp5s0" # explicit interface binding for Flannel CNI
     ];
   };
 
