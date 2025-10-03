@@ -118,7 +118,7 @@
     systemPackages = with pkgs; [
       # Essential k3s tools
       kubectl
-      helm
+      kubernetes-helm
       k9s
       # Basic system tools
       curl
