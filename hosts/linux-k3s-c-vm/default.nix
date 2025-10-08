@@ -117,6 +117,7 @@
   environment = {
     systemPackages = with pkgs; [
       # Essential k3s tools
+      fluxcd
       kubectl
       kubernetes-helm
       k9s
