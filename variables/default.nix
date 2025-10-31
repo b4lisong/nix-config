@@ -81,6 +81,12 @@
       system = "x86_64-linux";
       description = "k3s Server";
     };
+
+    docker = {
+      hostname = "docker";
+      system = "x86_64-linux";
+      description = "Docker Host VM";
+    };
   };
 
   # Common directory paths
