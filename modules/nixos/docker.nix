@@ -40,12 +40,9 @@ support, with all settings using lib.mkDefault for easy customization.
     # Docker daemon configuration
     daemon.settings = {
       # Logging configuration
+      # journald handles log rotation via systemd configuration
       log-driver = lib.mkDefault "journald";
-      log-opts = lib.mkDefault {
-        max-size = "100m";
-        max-file = "3";
-      };
-      
+
       # Storage driver (let Docker auto-detect best option)
       # Common options: overlay2 (most systems), devicemapper (older systems)
       storage-driver = lib.mkDefault null; # Auto-detect
