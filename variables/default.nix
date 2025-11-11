@@ -58,6 +58,12 @@
       description = "Raspberry Pi 4B";
     };
 
+    rpiz2w = {
+      hostname = "rpiz2w";
+      system = "aarch64-linux";
+      description = "Raspberry Pi Zero 2 W";
+    };
+
     x1c4g = {
       hostname = "x1c4g";
       system = "x86_64-linux";
