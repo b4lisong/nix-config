@@ -14,12 +14,18 @@
   networking.hostName = myvars.hosts.nixvm.hostname;
 
   # Boot configuration
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 10;
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+      };
+      efi.canTouchEfiVariables = true;
     };
-    efi.canTouchEfiVariables = true;
+
+    # Load vhci-hcd kernel module on startup (for USB/IP)
+    # Using mkAfter to append to hardware-configuration.nix list
+    kernelModules = lib.mkAfter ["vhci-hcd"];
   };
 
   # NOTE: nixpkgs.hostPlatform and allowUnfree are set by the outputs system
@@ -146,6 +152,7 @@
   environment = {
     systemPackages = with pkgs; [
       #tailscale
+      linuxPackages.usbip # USB/IP userspace utility
     ];
   };
 
