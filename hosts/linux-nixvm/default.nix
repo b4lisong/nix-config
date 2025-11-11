@@ -46,7 +46,8 @@
     # X11 display server configuration for graphical desktop
     xserver = {
       enable = true;
-      xkb.options = "caps:swapescape"; # Swap Caps Lock and Escape keys for vim ergonomics
+      # Comment out below if already swapped on the host (e.g. macOS)
+      # xkb.options = "caps:swapescape"; # Swap Caps Lock and Escape keys for vim ergonomics
       dpi = 192; # Increase DPI for HiDPI display
       # Desktop manager configuration
       desktopManager = {
