@@ -93,6 +93,12 @@
       system = "x86_64-linux";
       description = "Docker Host VM";
     };
+
+    oci-nixos = {
+      hostname = "oci-nixos";
+      system = "aarch64-linux";
+      description = "Oracle Cloud Infrastructure ARM64 Instance";
+    };
   };
 
   # Common directory paths
