@@ -99,6 +99,12 @@
       system = "aarch64-linux";
       description = "Oracle Cloud Infrastructure ARM64 Instance";
     };
+
+    "game-server" = {
+      hostname = "game-server";
+      system = "x86_64-linux";
+      description = "Game Server VM (Hyper-V)";
+    };
   };
 
   # Common directory paths
