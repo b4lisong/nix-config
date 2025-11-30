@@ -111,11 +111,30 @@ in {
 
     git = {
       enable = true;
-      inherit (vars.git) userName;
-      inherit (vars.git) userEmail;
-      extraConfig = {
+      settings = {
+        user.name = vars.git.userName;
+        user.email = vars.git.userEmail;
         init.defaultBranch = vars.git.defaultBranch;
         pull.rebase = vars.git.pullRebase;
+        # Force SSH for GitHub URLs (avoid HTTPS authentication prompts)
+        url."git@github.com:".insteadOf = "https://github.com/";
+        # SSH commit signing
+        gpg.format = "ssh";
+        user.signingkey = "~/.ssh/id_ed25519.pub";
+      };
+    };
+
+    # SSH configuration for Git authentication
+    ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+      matchBlocks = {
+        "github.com" = {
+          hostname = "github.com";
+          user = "git";
+          identityFile = "~/.ssh/id_ed25519";
+          identitiesOnly = true;
+        };
       };
     };
 

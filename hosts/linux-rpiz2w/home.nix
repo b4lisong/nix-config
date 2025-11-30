@@ -24,12 +24,6 @@
     ];
   };
 
-  # Git configuration using centralized variables
-  programs.git = {
-    userName = myvars.git.userName;
-    userEmail = myvars.git.userEmail;
-  };
-
   # Pi-specific shell configuration
   programs.zsh = {
     # Raspberry Pi Zero 2 W specific aliases and functions

@@ -186,12 +186,11 @@
     };
 
     # Libvirtd support for virt-manager
+    # Note: OVMF images are now available by default in NixOS 25.11+
     libvirtd = {
       enable = true;
       qemu = {
         package = pkgs.qemu_kvm;
-        ovmf.enable = true;
-        ovmf.packages = [ pkgs.OVMF ];
       };
     };
   };

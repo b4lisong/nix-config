@@ -27,10 +27,10 @@ Linux and macOS, avoiding platform-specific implementations.
   ];
 
   # i3 window manager configuration for Linux desktop environments only
-  # Uses i3-gaps for enhanced visual features and window gaps
+  # i3 now includes gaps support by default (i3-gaps was merged into i3)
   xsession.windowManager.i3 = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
-    package = pkgs.i3-gaps; # Enhanced i3 variant with gaps between windows
+    package = pkgs.i3; # i3 now includes gaps support by default
     config = {
       terminal = "kitty";
       bars = []; # Disable i3bar completely

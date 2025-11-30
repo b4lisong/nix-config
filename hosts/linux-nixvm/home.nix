@@ -129,35 +129,9 @@
       Description = "Polybar status bar";
       After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
-      X-Restart-Triggers = [ "/nix/store/ac5xs1may8cya1z67x2lp6g8js7wf573-polybar.conf" ];
     };
     Install = lib.mkForce {
       WantedBy = [ "graphical-session.target" ];
-    };
-  };
-
-  # SSH configuration for Git authentication
-  programs.ssh = {
-    enable = true;
-    extraConfig = ''
-      Host github.com
-        HostName github.com
-        User git
-        IdentityFile ~/.ssh/id_ed25519
-        IdentitiesOnly yes
-    '';
-  };
-
-  # Git configuration using centralized variables
-  programs.git = {
-    userName = myvars.git.userName;
-    userEmail = myvars.git.userEmail;
-    extraConfig = {
-      # Force SSH for GitHub URLs
-      url."git@github.com:".insteadOf = "https://github.com/";
-      # SSH signing configuration (optional)
-      gpg.format = "ssh";
-      user.signingkey = "~/.ssh/id_ed25519.pub";
     };
   };
 

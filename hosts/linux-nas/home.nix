@@ -23,7 +23,7 @@
     # Host-specific packages for NAS functionality
     packages = with pkgs; [
       # File management and monitoring
-      du-dust # Better du alternative
+      dust # Better du alternative
       fd # Better find alternative
       ripgrep # Better grep alternative
 
@@ -40,31 +40,6 @@
 
   programs.gpg.enable = true;
   services.gpg-agent.enable = true;
-
-  # SSH configuration for Git authentication
-  programs.ssh = {
-    enable = true;
-    extraConfig = ''
-      Host github.com
-        HostName github.com
-        User git
-        IdentityFile ~/.ssh/id_ed25519
-        IdentitiesOnly yes
-    '';
-  };
-
-  # Git configuration using centralized variables
-  programs.git = {
-    userName = myvars.git.userName;
-    userEmail = myvars.git.userEmail;
-    extraConfig = {
-      # Force SSH for GitHub URLs
-      url."git@github.com:".insteadOf = "https://github.com/";
-      # SSH signing configuration (optional)
-      gpg.format = "ssh";
-      user.signingkey = "~/.ssh/id_ed25519.pub";
-    };
-  };
 
   # Host-specific shell configuration
   programs.zsh = {

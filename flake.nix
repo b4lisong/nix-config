@@ -68,11 +68,11 @@ This architecture provides:
 
   # Declare external dependencies needed by this flake
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin"; # stable pkgs
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin"; # stable pkgs
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # bleeding-edge pkgs
-    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs"; # nix-darwin nixpkgs version = nixpkgs version
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs"; # home-manager nixpkgs version = nixpkgs version
 
     # Haumea for automatic module discovery

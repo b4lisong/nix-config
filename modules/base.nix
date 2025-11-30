@@ -66,7 +66,7 @@ Defines the common system-level configuration shared by both NixOS and Darwin
     nerd-fonts.symbols-only # Icon font for terminal and UI
     font-awesome # Icon toolkit based on CSS and LESS
     material-design-icons # Material Design icon set
-    noto-fonts-emoji # Color emoji font with broad Unicode support
+    noto-fonts-color-emoji # Color emoji font with broad Unicode support
     dejavu_fonts # High-quality font family with wide Unicode coverage
   ];
 

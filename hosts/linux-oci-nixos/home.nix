@@ -29,12 +29,6 @@
     ];
   };
 
-  # Git configuration using centralized variables
-  programs.git = {
-    userName = myvars.git.userName;
-    userEmail = myvars.git.userEmail;
-  };
-
   # Cloud server specific shell configuration
   programs.zsh = {
     shellAliases = {

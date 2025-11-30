@@ -41,6 +41,21 @@ Break complex tasks into focused investigations. Use systematic workflows for co
 
 **CRITICAL**: Before testing any Nix flake configuration changes, ALL modified files must be added to Git. Nix flakes only see files that are tracked by Git. Use `git add .` to stage all changes before running `nix flake check`, `just check`, or any rebuild commands.
 
+### Nix Warnings Are BLOCKING
+
+**ALL warnings from `nix flake check` are treated as errors and MUST be fixed immediately.**
+
+- Deprecation warnings indicate APIs that will break in future releases
+- Evaluation warnings indicate configuration issues that need attention
+- **DO NOT** ignore warnings or defer them to "future cleanup"
+- **DO NOT** commit code that produces warnings
+- Fix ALL warnings before proceeding with any other work
+
+When you see warnings like:
+- `has been renamed to` - Update to the new option name immediately
+- `will be removed in the future` - Migrate to the new API immediately
+- `default values will be removed` - Explicitly configure the values you need
+
 ## UNIVERSAL FORBIDDEN PATTERNS
 
 **MANDATORY STATEMENT**: Before any commit/PR, say: "I have verified this follows all forbidden patterns in CLAUDE.md"
