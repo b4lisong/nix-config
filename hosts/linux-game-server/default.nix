@@ -62,9 +62,6 @@
     # Tailscale for NAT traversal
     tailscale = {
       enable = true;
-      useRoutingFeatures = "server";
-      # Advertise node as a potential Funnel host
-      advertiseTags = ["funnel"];
     };
   };
 
