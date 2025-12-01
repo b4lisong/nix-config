@@ -10,18 +10,18 @@
 # This configuration is for a game server running as a Hyper-V VM.
 # It includes steamcmd for installing and managing game servers.
 #
-# NOTE: After installing NixOS on the VM, run `nixos-generate-config` and
-# replace the placeholder fileSystems below with the actual configuration.
+# Disk layout is defined in disks.nix for use with disko during installation.
 {
-  # Placeholder filesystem configuration for flake evaluation
-  # Replace with actual values from `nixos-generate-config` after installation
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-  };
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";
-    fsType = "vfat";
+  # Filesystem configuration matching disko layout (see disks.nix)
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-label/nixos";
+      fsType = "ext4";
+    };
+    "/boot" = {
+      device = "/dev/disk/by-label/boot";
+      fsType = "vfat";
+    };
   };
 
   # Host identification
