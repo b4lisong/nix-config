@@ -15,6 +15,7 @@
               content = {
                 type = "filesystem";
                 format = "vfat";
+                extraArgs = ["-n" "boot"];
                 mountpoint = "/boot";
                 mountOptions = [
                   "defaults"
@@ -27,6 +28,7 @@
               content = {
                 type = "filesystem";
                 format = "ext4";
+                extraArgs = ["-L" "nixos"];
                 mountpoint = "/";
               };
             };
