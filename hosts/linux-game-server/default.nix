@@ -70,6 +70,7 @@
   # Game server packages
   environment.systemPackages = with pkgs; [
     steamcmd
+    steam-run
     # Basic system tools
     curl
     wget
