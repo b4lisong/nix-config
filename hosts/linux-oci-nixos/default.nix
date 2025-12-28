@@ -5,6 +5,10 @@
   myvars,
   ...
 }: {
+  imports = [
+    ./hardware-configuration.nix
+  ];
+
   # Host identification
   networking.hostName = myvars.hosts.oci-nixos.hostname;
 
@@ -15,23 +19,26 @@
         enable = true;
         configurationLimit = 5;
       };
-      efi.canTouchEfiVariables = true;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
+      };
     };
+    initrd.systemd.enable = true;
   };
 
-  # Filesystem configuration matching disko layout
+  # Enable multi-user target for proper boot
+  systemd.targets.multi-user.enable = true;
+
+  # Filesystem configuration matching actual disk layout
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-label/nixos";
+      device = "/dev/sda2";
       fsType = "ext4";
     };
     "/boot" = {
-      device = "/dev/disk/by-label/boot";
+      device = "/dev/sda1";
       fsType = "vfat";
-    };
-    "/srv" = {
-      device = "/dev/disk/by-label/srv";
-      fsType = "ext4";
     };
   };
 
@@ -80,7 +87,6 @@
     description = myvars.user.fullName;
     extraGroups = [
       "wheel" # sudo access
-      "networkmanager"
     ];
 
     # SSH key authentication
