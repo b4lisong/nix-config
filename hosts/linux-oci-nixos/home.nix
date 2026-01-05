@@ -13,6 +13,9 @@
 
     # TUI profile for headless cloud server
     ../../home/profiles/tui
+
+    # Docker role for container management
+    ../../home/roles/docker
   ];
 
   # Home Manager configuration

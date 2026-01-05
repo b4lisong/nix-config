@@ -7,6 +7,8 @@
 }: {
   imports = [
     ./hardware-configuration.nix
+    # Enable Docker support
+    ../../modules/nixos/docker.nix
   ];
 
   # Host identification
@@ -51,6 +53,15 @@
     "d /srv 0777 root root -"
   ];
 
+  # Docker configuration
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
+
   # Host-specific service configuration
   services = {
     # SSH configuration for remote management
@@ -80,6 +91,8 @@
     wget
     htop
     git
+    # Docker tools
+    docker-compose
   ];
 
   programs = {
@@ -96,6 +109,7 @@
     description = myvars.user.fullName;
     extraGroups = [
       "wheel" # sudo access
+      "docker" # Docker access
     ];
 
     # SSH key authentication
