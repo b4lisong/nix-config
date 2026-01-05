@@ -40,7 +40,16 @@
       device = "/dev/sda1";
       fsType = "vfat";
     };
+    "/srv" = {
+      device = "/dev/sdb1";
+      fsType = "ext4";
+    };
   };
+
+  # Set global read/write permissions on /srv
+  systemd.tmpfiles.rules = [
+    "d /srv 0777 root root -"
+  ];
 
   # Host-specific service configuration
   services = {
