@@ -72,6 +72,12 @@
         PasswordAuthentication = false;
       };
     };
+
+    # Tailscale VPN configuration
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "server"; # enables IP forwarding
+    };
   };
 
   # Network configuration
@@ -93,6 +99,8 @@
     git
     # Docker tools
     docker-compose
+    # Tailscale CLI
+    tailscale
   ];
 
   programs = {
