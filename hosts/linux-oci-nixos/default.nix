@@ -86,13 +86,8 @@
 
   # Network configuration
   networking = {
-    # Firewall configuration (managed at cloud level)
-    # Uncomment and configure if host-level firewall is needed:
-    # firewall = {
-    #   enable = true;
-    #   allowedTCPPorts = [ 22 80 443 ];
-    #   allowedUDPPorts = [ ];
-    # };
+    # Firewall disabled - managed at OCI security list level
+    firewall.enable = false;
   };
 
   # Essential packages for cloud server
