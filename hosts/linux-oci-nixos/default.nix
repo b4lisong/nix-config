@@ -27,6 +27,10 @@
       };
     };
     initrd.systemd.enable = true;
+    # Allow rootless Docker to bind to privileged ports (80, 443, etc.)
+    kernel.sysctl = {
+      "net.ipv4.ip_unprivileged_port_start" = 80;
+    };
   };
 
   # Enable multi-user target for proper boot
