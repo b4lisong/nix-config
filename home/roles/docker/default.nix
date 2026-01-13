@@ -64,12 +64,4 @@ Examples of what this role might include when implemented:
     #   regctl # Container registry client
   ];
 
-  # Rootless Docker daemon configuration
-  # System Docker uses /etc/docker/daemon.json, but rootless Docker
-  # uses ~/.config/docker/daemon.json
-  home.file.".config/docker/daemon.json".text = builtins.toJSON {
-    # Use real DNS servers instead of systemd-resolved stub (127.0.0.53)
-    # which is unreachable from inside containers
-    dns = ["1.1.1.1" "8.8.8.8"];
-  };
 }
