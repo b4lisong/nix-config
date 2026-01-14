@@ -53,7 +53,7 @@ Override Examples:
   home.packages = [
     # Override dev role's stable nodejs with bleeding-edge version
     # Personal machine can handle potential instability for latest features
-    pkgs-unstable.nodePackages_latest.nodejs
+    #pkgs-unstable.nodePackages_latest.nodejs
   ];
 
   # Display and interface customizations for this specific machine

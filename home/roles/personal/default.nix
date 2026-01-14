@@ -30,9 +30,6 @@ Architecture:
     signal-desktop-bin # Secure messaging application
     zoom-us # Video conferencing for personal use
 
-    # Creative and Productivity
-    gimp-with-plugins # Image editing and manipulation
-
     # Web browsing (development edition for personal projects)
     firefox-devedition # Firefox with developer tools and features
 

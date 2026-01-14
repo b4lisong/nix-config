@@ -56,12 +56,12 @@ Configuration Areas:
     # Inherit defaults from modules/darwin and extend with host-specific packages
     casks = [
       # Development and productivity tools
-      "vscode" # VS Code IDE
+      "visual-studio-code" # VS Code IDE
       "claude" # Claude Desktop MCP
 
       # Remote access and virtualization
       "parsec" # Low-latency remote desktop for gaming/work
-      "vmware-fusion" # Virtualization for testing different OS environments
+      #"vmware-fusion" # Virtualization for testing different OS environments
       "orbstack" # Docker replacement and CLI VMs
 
       # Compatibility and gaming
