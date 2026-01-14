@@ -72,6 +72,9 @@ Configuration Areas:
 
       # Messaging & communications
       "discord" # Voice and text chat
+
+      # Password management
+      "1password"
     ];
 
     # Command-line tools via Homebrew
