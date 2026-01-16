@@ -75,6 +75,9 @@ Configuration Areas:
 
       # Password management
       "1password"
+
+      # Networking
+      "tailscale-app"
     ];
 
     # Command-line tools via Homebrew
