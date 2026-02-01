@@ -104,6 +104,16 @@
           "max connections" = "10";
         };
         # NAS storage dataset shares
+        "downloads" = {
+          "path" = "/home/balisong/downloads";
+          "browseable" = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "create mask" = "0664";
+          "directory mask" = "0775";
+          "valid users" = "@nas-users";
+          "force group" = "nas-users";
+        };
         "media" = {
           "path" = "/mnt/media";
           "browseable" = "yes";
