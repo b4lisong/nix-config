@@ -105,7 +105,7 @@
         };
         # NAS storage dataset shares
         "downloads" = {
-          "path" = "/home/balisong/downloads";
+          "path" = "/mnt/downloads";
           "browseable" = "yes";
           "read only" = "no";
           "guest ok" = "no";
