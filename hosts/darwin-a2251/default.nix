@@ -68,7 +68,6 @@ Configuration Areas:
       "wine@staging" # Windows application compatibility layer
 
       # Browsers
-      "google-chrome" # Chrome browser (not available in nixpkgs)
 
       # Messaging & communications
       "discord" # Voice and text chat
