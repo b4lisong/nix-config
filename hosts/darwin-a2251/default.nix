@@ -58,6 +58,7 @@ Configuration Areas:
       # Development and productivity tools
       "visual-studio-code" # VS Code IDE
       "claude" # Claude Desktop MCP
+      "claude-code"
 
       # Remote access and virtualization
       "parsec" # Low-latency remote desktop for gaming/work
