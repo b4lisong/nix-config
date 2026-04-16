@@ -17,10 +17,7 @@ in
       nixos-modules
       ++ [
         (_: {
-          nixpkgs.pkgs = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
+          nixpkgs.config.allowUnfree = true;
         })
       ]
       # Check if we have any home modules;
