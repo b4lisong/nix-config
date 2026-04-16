@@ -108,7 +108,7 @@
     # Tailscale CLI
     tailscale
     # Claude Code CLI
-    claude-code
+    pkgs.claude-code
   ];
 
   programs = {
