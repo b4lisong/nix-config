@@ -3,6 +3,7 @@
   lib,
   pkgs,
   myvars,
+  claude-code,
   ...
 }: {
   imports = [
@@ -10,6 +11,9 @@
     # Enable Docker support
     ../../modules/nixos/docker.nix
   ];
+
+  # Claude Code overlay
+  nixpkgs.overlays = [claude-code.overlays.default];
 
   # Host identification
   networking.hostName = myvars.hosts.oci-nixos.hostname;
@@ -103,6 +107,8 @@
     docker-compose
     # Tailscale CLI
     tailscale
+    # Claude Code CLI
+    claude-code
   ];
 
   programs = {

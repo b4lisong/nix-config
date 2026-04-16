@@ -78,6 +78,10 @@ This architecture provides:
     # Haumea for automatic module discovery
     haumea.url = "github:nix-community/haumea/v0.2.2";
     haumea.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Claude Code CLI
+    claude-code.url = "github:sadjow/claude-code-nix";
+    claude-code.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
   # Main function that generates what this flake provides
