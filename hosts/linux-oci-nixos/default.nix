@@ -89,6 +89,15 @@
       enable = true;
       useRoutingFeatures = "server"; # enables IP forwarding
     };
+
+    # VS Code in the browser (behind auth proxy)
+    code-server = {
+      enable = true;
+      host = "0.0.0.0";
+      port = 4444;
+      auth = "none";
+      user = "balisong";
+    };
   };
 
   # Network configuration
