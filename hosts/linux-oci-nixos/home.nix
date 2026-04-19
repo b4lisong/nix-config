@@ -30,6 +30,10 @@
 
       # Additional cloud server utilities
     ];
+
+    sessionVariables = {
+      DOCKER_HOST = "unix:///run/user/1000/docker.sock";
+    };
   };
 
   # Cloud server specific shell configuration
