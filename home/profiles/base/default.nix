@@ -16,6 +16,10 @@ in {
     stateVersion = "25.05";
     inherit (vars.user) username;
     homeDirectory = "/Users/${vars.user.username}";
+    sessionVariables = {
+      EDITOR = vars.preferences.editor;
+      VISUAL = vars.preferences.editor;
+    };
     packages = with pkgs; [
       # Version Control
       git # Distributed version control system
