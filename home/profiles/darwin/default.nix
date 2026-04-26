@@ -64,8 +64,10 @@ Extension Points:
   home = {
     # Darwin-specific environment variables
     sessionVariables = {
-      # Ensure proper macOS integration
-      # These are set automatically by the system, but can be overridden if needed
+      # Route $BROWSER through `open` so terminal apps that honor the convention
+      # hand URLs to the macOS default browser handler (set Safari as default in
+      # System Settings → Desktop & Dock → Default web browser).
+      BROWSER = "open";
     };
   };
 }
