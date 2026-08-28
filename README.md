@@ -157,3 +157,7 @@ nix flake update     # Update all inputs
 
 More manual setup notes live in `notes.md`.
 
+Nixpkgs 26.05 is the last release supporting `x86_64-darwin`, which
+`darwin-a2251` runs. See [x86_64-darwin-eol.md](x86_64-darwin-eol.md) for the
+deadline and the input split required before the other hosts can move to 26.11.
+
