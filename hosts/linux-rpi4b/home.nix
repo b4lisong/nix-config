@@ -68,7 +68,7 @@
   # Neovim configuration optimized for this Pi's performance
   programs.neovim = {
     # Pi-specific performance optimizations
-    extraLuaConfig = ''
+    initLua = ''
       -- Pi 4B specific optimizations
       vim.opt.updatetime = 1000  -- Slower update for better performance on Pi
       vim.opt.timeoutlen = 500   -- Faster key timeout

@@ -89,9 +89,11 @@ It focuses on essential NixOS system services, security, and optimization.
     # DNS resolution
     resolved = {
       enable = true;
-      dnssec = "true";
-      domains = ["~."];
-      fallbackDns = ["1.1.1.1" "8.8.8.8"];
+      settings.Resolve = {
+        DNSSEC = "true";
+        Domains = ["~."];
+        FallbackDNS = ["1.1.1.1" "8.8.8.8"];
+      };
     };
     
     # Note: Automatic system updates not available in NixOS 25.05
@@ -179,6 +181,12 @@ It focuses on essential NixOS system services, security, and optimization.
 
   # Kernel configuration
   boot = {
+    # Match the default that Nixpkgs 26.11 adopts. Forcing a root pool import
+    # can mount a pool another system still has active, so upstream recommends
+    # false. Hosts that genuinely need a forced import override this; the only
+    # ZFS host here (linux-nas) already sets it explicitly.
+    zfs.forceImportRoot = lib.mkDefault false;
+
     # Enable sysrq key for emergency situations
     kernel.sysctl = {
       "kernel.sysrq" = 1;

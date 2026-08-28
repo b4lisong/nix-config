@@ -47,7 +47,7 @@
   # Neovim configuration optimized for Pi Zero 2 W performance
   programs.neovim = {
     # Pi Zero 2 W specific performance optimizations
-    extraLuaConfig = ''
+    initLua = ''
       -- Pi Zero 2 W specific optimizations (less powerful than Pi 4B)
       vim.opt.updatetime = 2000  -- Slower update for better performance on Pi Zero
       vim.opt.timeoutlen = 500   -- Faster key timeout

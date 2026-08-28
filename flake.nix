@@ -68,11 +68,17 @@ This architecture provides:
 
   # Declare external dependencies needed by this flake
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin"; # stable pkgs
+    # 26.05 is the final Nixpkgs release supporting x86_64-darwin (darwin-a2251).
+    # Binaries are built until 26.05 goes out of support at the end of 2026; 26.11
+    # drops the platform entirely, including source builds. Moving past 26.05 will
+    # require a separate pinned nixpkgs for the Intel host or retiring it.
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin"; # stable pkgs
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # bleeding-edge pkgs
-    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    # Track the matching release branch, not master: nix-darwin asserts that its
+    # release equals the Nixpkgs release, and master follows nixpkgs-unstable.
+    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs"; # nix-darwin nixpkgs version = nixpkgs version
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs"; # home-manager nixpkgs version = nixpkgs version
 
     # Haumea for automatic module discovery

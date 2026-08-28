@@ -27,7 +27,10 @@ Architecture:
     spotify # Music streaming service
 
     # Communication
-    signal-desktop-bin # Secure messaging application
+    # Signal is installed as a Homebrew cask in modules/darwin/homebrew.nix:
+    # nixpkgs replaced the signal-desktop-bin binary package with a
+    # build-from-source signal-desktop, whose signal-webrtc dependency does not
+    # compile on Darwin (third_party/nasm includes the glibc-only <endian.h>).
     zoom-us # Video conferencing for personal use
 
     # Web browsing (development edition for personal projects)

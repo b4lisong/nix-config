@@ -12,10 +12,21 @@ let
   mylib = import ../lib { inherit lib; };
   myvars = import ../variables;  # OUR variables, not ../vars
 
+  # Nixpkgs 26.11 dropped x86_64-darwin, and the removal is a hard throw at
+  # import time rather than a per-package failure -- importing nixpkgs-unstable
+  # with system = "x86_64-darwin" aborts evaluation outright. The Intel host
+  # (darwin-a2251, the only x86_64-darwin host) therefore sources its
+  # "unstable" set from stable 26.05, which carries newer Go than the last
+  # pre-drop unstable (1.26.6 vs 1.26.3) and keeps receiving security fixes
+  # until 26.05 goes out of support at the end of 2026. Every other host keeps
+  # tracking nixpkgs-unstable normally.
+  unstableFor =
+    system: if system == "x86_64-darwin" then inputs.nixpkgs else inputs.nixpkgs-unstable;
+
   # Generate specialArgs for each system
   genSpecialArgs = system: inputs // {
     inherit mylib myvars;
-    pkgs-unstable = import inputs.nixpkgs-unstable {
+    pkgs-unstable = import (unstableFor system) {
       inherit system;
       config.allowUnfree = true;
     };
@@ -73,10 +84,6 @@ in
   devShells = forAllSystems (system:
     let
       pkgs = nixpkgs.legacyPackages.${system};
-      pkgs-unstable = import nixpkgs-unstable {
-        inherit system;
-        config.allowUnfree = true;
-      };
     in {
       default = pkgs.mkShell {
         buildInputs = with pkgs; [

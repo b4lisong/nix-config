@@ -32,7 +32,7 @@
         _1password-gui
         chromium
         firefox-devedition
-        protonvpn-gui
+        proton-vpn
         nicotine-plus
       ]
       ++ [

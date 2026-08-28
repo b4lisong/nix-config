@@ -19,6 +19,9 @@ This module provides sensible defaults while allowing hosts to override and exte
       "scroll-reverser" # Fix mouse scroll direction
       "little-snitch" # Network monitoring and security
 
+      # Communication
+      "signal" # Secure messaging; no working nixpkgs build on Darwin
+
       # Could add more universally useful defaults:
       "raycast" # Spotlight replacement
       # "1password"      # Password manager
@@ -43,7 +46,6 @@ This module provides sensible defaults while allowing hosts to override and exte
     # Global Homebrew configuration
     global = {
       brewfile = lib.mkDefault true; # Use nix-darwin generated Brewfile
-      lockfiles = lib.mkDefault false; # Don't create lockfiles (read-only store)
       autoUpdate = lib.mkDefault true; # Allow manual brew commands to auto-update
     };
 

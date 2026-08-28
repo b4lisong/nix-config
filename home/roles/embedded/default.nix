@@ -127,26 +127,26 @@ Key focus areas:
   # SSH configuration optimized for embedded device management
   programs.ssh = {
     # Host configurations for common embedded device patterns
-    matchBlocks = {
+    settings = {
       # Common embedded device hostnames
       "*.local" = {
-        user = "pi";  # Common default for Pi devices
-        forwardAgent = false;
-        compression = true;
+        User = "pi";  # Common default for Pi devices
+        ForwardAgent = false;
+        Compression = true;
       };
-      
+
       # IoT devices often use these IP ranges
       "192.168.*" = {
-        forwardAgent = false;
-        compression = true;
-        serverAliveInterval = 30;  # Keep connections alive through NAT
-        serverAliveCountMax = 3;
+        ForwardAgent = false;
+        Compression = true;
+        ServerAliveInterval = 30;  # Keep connections alive through NAT
+        ServerAliveCountMax = 3;
       };
-      
+
       "10.*" = {
-        forwardAgent = false;
-        compression = true;
-        serverAliveInterval = 30;
+        ForwardAgent = false;
+        Compression = true;
+        ServerAliveInterval = 30;
       };
     };
   };
