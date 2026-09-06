@@ -23,7 +23,10 @@
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 5;
+        # Daily unattended upgrades consume a boot entry per changed
+        # generation, so keep more than the fleet default of 5 to preserve a
+        # usable window for manual rollback.
+        configurationLimit = 20;
       };
       efi = {
         canTouchEfiVariables = true;
@@ -151,6 +154,34 @@
   # Host-specific localization
   time.timeZone = lib.mkForce "America/Los_Angeles";
   i18n.defaultLocale = lib.mkForce "en_US.UTF-8";
+
+  # Unattended upgrades from the CI-validated deployment branch.
+  #
+  # The deployment branch only advances after GitHub Actions has run
+  # `nix flake check` and built this host's toplevel, so the server never
+  # picks a revision that has not been validated. It consumes the committed
+  # flake.lock as-is: `upgrade = false` drops the `--upgrade` flag that would
+  # otherwise let nixos-rebuild choose its own upstream revision.
+  #
+  # `allowReboot = false` means a kernel update activates userspace but leaves
+  # the old kernel running until an operator reboots. Deliberate: this host
+  # should never restart unattended.
+  #
+  # The module supplies `--refresh --flake <uri>` itself and only adds
+  # `--no-build-output` on the channel code path, so build logs are already
+  # captured in the journal without extra flags. Garbage collection is left to
+  # the weekly `nix.gc` timer in modules/nixos/default.nix rather than
+  # `runGarbageCollection`, to avoid a collection run after every upgrade.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:b4lisong/nix-config/deploy#oci-nixos";
+    operation = "switch";
+    upgrade = false;
+    allowReboot = false;
+    dates = "daily";
+    randomizedDelaySec = "45min";
+    fixedRandomDelay = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

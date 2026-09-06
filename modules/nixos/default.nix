@@ -96,9 +96,6 @@ It focuses on essential NixOS system services, security, and optimization.
       };
     };
     
-    # Note: Automatic system updates not available in NixOS 25.05
-    # Manual updates recommended: nixos-rebuild switch --upgrade
-    
     # Firmware updates for supported hardware
     fwupd.enable = true;
     

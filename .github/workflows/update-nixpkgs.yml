@@ -1,0 +1,166 @@
+# Weekly nixpkgs lockfile update.
+#
+# This workflow updates only the `nixpkgs` input in flake.lock, validates the
+# result, and opens a pull request. It never touches the server: deployment is
+# the job of promote-deploy.yml plus the host's own system.autoUpgrade timer.
+#
+# Validation runs here, before the pull request is opened, rather than as a
+# required check on the pull request itself. Pull requests created with the
+# default GITHUB_TOKEN do not trigger `pull_request` workflows, so a required
+# check on the bot's own pull request would stay pending forever and auto-merge
+# would never fire.
+name: Update nixpkgs
+
+on:
+  schedule:
+    # Mondays, 07:00 UTC.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-nixpkgs
+  cancel-in-progress: false
+
+jobs:
+  update:
+    # oci-nixos is aarch64-linux, so its toplevel cannot be built on an x86_64
+    # runner. ARM runners are available at no cost for public repositories.
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
+        with:
+          determinate: false
+          extra-conf: |
+            extra-substituters = https://nix-community.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimXuKWsyFQjy8Z8QK7k+j9YQjKtXHOM=
+
+      - name: Update the nixpkgs input
+        run: nix flake update nixpkgs
+
+      - name: Check whether the lockfile changed
+        id: changed
+        run: |
+          if git diff --quiet -- flake.lock; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The pull request created below is merged without human review, so the
+      # change it carries must be provably narrow. Reject anything that is not
+      # exactly one moved nixpkgs pin.
+      - name: Verify the change is a nixpkgs-only lockfile update
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          touched="$(git diff --name-only)"
+          if [ "$touched" != "flake.lock" ]; then
+            echo "Expected only flake.lock to change, got:" >&2
+            echo "$touched" >&2
+            exit 1
+          fi
+
+          git show HEAD:flake.lock > /tmp/flake.lock.before
+          python3 - <<'PY'
+          import json
+          import sys
+
+          with open("/tmp/flake.lock.before") as fh:
+              before = json.load(fh)
+          with open("flake.lock") as fh:
+              after = json.load(fh)
+
+          errors = []
+
+          if before.get("root") != after.get("root"):
+              errors.append("the lockfile root entry changed")
+          if before.get("version") != after.get("version"):
+              errors.append("the lockfile version changed")
+
+          before_nodes = before["nodes"]
+          after_nodes = after["nodes"]
+
+          if set(before_nodes) != set(after_nodes):
+              added = sorted(set(after_nodes) - set(before_nodes))
+              removed = sorted(set(before_nodes) - set(after_nodes))
+              errors.append(f"node set changed (added={added}, removed={removed})")
+
+          for name in sorted(set(before_nodes) & set(after_nodes)):
+              if name == "nixpkgs":
+                  continue
+              if before_nodes[name] != after_nodes[name]:
+                  errors.append(f"input {name!r} changed but only nixpkgs may move")
+
+          nixpkgs_before = before_nodes["nixpkgs"]
+          nixpkgs_after = after_nodes["nixpkgs"]
+          if nixpkgs_before.get("original") != nixpkgs_after.get("original"):
+              errors.append("the nixpkgs input URI changed, not just its revision")
+          if nixpkgs_before == nixpkgs_after:
+              errors.append("nixpkgs did not actually move")
+
+          if errors:
+              for error in errors:
+                  print(f"error: {error}", file=sys.stderr)
+              sys.exit(1)
+
+          print(
+              "nixpkgs {} -> {}".format(
+                  nixpkgs_before["locked"]["rev"], nixpkgs_after["locked"]["rev"]
+              )
+          )
+          PY
+
+      - name: Check the flake
+        if: steps.changed.outputs.changed == 'true'
+        run: nix flake check --print-build-logs
+
+      - name: Build the oci-nixos system closure
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          nix build --print-build-logs --no-link \
+            '.#nixosConfigurations.oci-nixos.config.system.build.toplevel'
+
+      - name: Open or update the pull request
+        id: pr
+        if: steps.changed.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          branch: automated/update-nixpkgs
+          base: main
+          title: "chore: update nixpkgs flake input"
+          commit-message: |
+            chore: update nixpkgs flake input
+
+            Weekly automated lockfile update. Only the nixpkgs input moved.
+            Validated in CI with nix flake check and a build of
+            nixosConfigurations.oci-nixos.config.system.build.toplevel.
+          body: |
+            Weekly automated update of the `nixpkgs` input in `flake.lock`.
+
+            No other flake input was changed, and no file other than
+            `flake.lock` was touched. CI verified both constraints before
+            opening this pull request, then ran `nix flake check` and built
+            `nixosConfigurations.oci-nixos.config.system.build.toplevel`.
+
+            Merging this advances `main`. The `deploy` branch, which
+            `oci-nixos` tracks via `system.autoUpgrade`, only follows once
+            promote-deploy.yml has revalidated the merge commit.
+          delete-branch: true
+          add-paths: |
+            flake.lock
+
+      - name: Enable auto-merge
+        if: steps.changed.outputs.changed == 'true' && steps.pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.pr.outputs.pull-request-number }}
+        run: gh pr merge --auto --squash "$PR"

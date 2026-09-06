@@ -1,0 +1,55 @@
+# Promotion gate for the deployment branch.
+#
+# oci-nixos runs `nixos-rebuild switch --flake github:b4lisong/nix-config/deploy`
+# on a daily timer, so whatever sits at the tip of `deploy` is what the server
+# activates. This workflow is the only thing that writes to that branch: it
+# revalidates every commit that reaches `main` and fast-forwards `deploy` only
+# if the host's closure still evaluates and builds.
+#
+# The push below is a plain fast-forward, never a force push, so `deploy` can
+# only ever advance along `main`.
+name: Promote to deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: promote-deploy
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # deploy is pushed from this checkout, so its history must be present.
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
+        with:
+          determinate: false
+          extra-conf: |
+            extra-substituters = https://nix-community.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimXuKWsyFQjy8Z8QK7k+j9YQjKtXHOM=
+
+      - name: Check the flake
+        run: nix flake check --print-build-logs
+
+      - name: Build the oci-nixos system closure
+        run: |
+          nix build --print-build-logs --no-link \
+            '.#nixosConfigurations.oci-nixos.config.system.build.toplevel'
+
+      - name: Fast-forward deploy
+        run: git push origin "${GITHUB_SHA}:refs/heads/deploy"

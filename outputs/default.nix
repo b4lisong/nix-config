@@ -51,22 +51,11 @@ let
   allSystemNames = builtins.attrNames allSystems;
   nixosSystemValues = builtins.attrValues nixosSystems;
   darwinSystemValues = builtins.attrValues darwinSystems;
-  allSystemValues = nixosSystemValues ++ darwinSystemValues;
 
   # Helper for generating attributes across all systems
   forAllSystems = func: (nixpkgs.lib.genAttrs allSystemNames func);
 in
 {
-  # Add attribute sets into outputs, for debugging
-  debugAttrs = {
-    inherit
-      nixosSystems
-      darwinSystems
-      allSystems
-      allSystemNames
-      ;
-  };
-
   # NixOS Configurations
   nixosConfigurations = lib.attrsets.mergeAttrsList (
     map (it: it.nixosConfigurations or { }) nixosSystemValues
