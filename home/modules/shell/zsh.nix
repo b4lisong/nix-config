@@ -30,6 +30,16 @@ in {
       # just alias
       j = "just";
     };
+    # Per-machine settings that are deliberately not tracked in this repo.
+    # Sourced from .zshenv rather than .zshrc so that exports also reach
+    # non-interactive shells (ssh commands, scripts, systemd user units),
+    # which never read .zshrc.
+    envExtra = ''
+      if [[ -f "$HOME/.zshenv.local" ]]; then
+        source "$HOME/.zshenv.local"
+      fi
+    '';
+
     # initContent gives us fine-grained control over
     #   extra settings and their relative ordering.
     # We can also apply conditional statements in these blocks
