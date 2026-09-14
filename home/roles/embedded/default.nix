@@ -190,7 +190,7 @@ Key focus areas:
       bind-key N new-window -n "network" "watch -n 2 'ss -tuln'"
       
       # Status bar with system info relevant to embedded systems
-      set -g status-right "#[fg=green]#(uptime | cut -d',' -f3-) #[fg=yellow]#{?window_zoomed_flag, 🔍 ,}#[fg=blue]%Y-%m-%d %H:%M"
+      set -g status-right "#[fg=green]#(uptime | cut -d',' -f3-) #[fg=yellow]#{?window_zoomed_flag, Z ,}#[fg=blue]%Y-%m-%d %H:%M"
       
       # Automatic session restoration (useful for long-running embedded development)
       set -g @resurrect-save-bash-history 'on'

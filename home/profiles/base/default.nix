@@ -10,6 +10,7 @@ in {
     ../../modules/editors/vim.nix # Traditional vim with shared configuration
     ../../modules/shell/zsh.nix
     ../../modules/shell/starship.nix
+    ../../modules/terminal/tmux.nix # Terminal multiplexer, agent-friendly defaults
   ];
 
   home = {
@@ -40,7 +41,6 @@ in {
       delta # Syntax-highlighting pager for git,diff
 
       # Terminal Enhancement
-      tmux # Terminal multiplexer
       starship # Customizable command prompt
 
       # Development Tools
