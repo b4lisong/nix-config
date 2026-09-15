@@ -29,6 +29,7 @@
       smartmontools
 
       # Additional cloud server utilities
+      gh # GitHub CLI, used to manage Actions workflows and pull requests
     ];
 
     sessionVariables = {
