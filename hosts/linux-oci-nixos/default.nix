@@ -129,6 +129,54 @@
       enable = true;
       enableSSHSupport = true;
     };
+
+    # Run dynamically linked binaries that were not built by Nix.
+    #
+    # Project flakes and direnv do not need this; their dependencies come from
+    # nixpkgs already linked against store paths. It is needed for prebuilt
+    # executables that npm installs into node_modules and looks for a
+    # /lib64/ld-linux interpreter that does not exist on NixOS:
+    #
+    #   - workerd, spawned by `wrangler dev`. Absent from nixpkgs 26.05, so
+    #     there is no packaged substitute; patching the binary in place would
+    #     be undone by every pnpm install.
+    #   - The Chromium that Playwright downloads for end-to-end runs.
+    #
+    # Playwright can instead use pkgs.playwright-driver.browsers via
+    # PLAYWRIGHT_BROWSERS_PATH, which avoids the Chromium libraries below but
+    # ties the project to the driver version in nixpkgs. workerd needs nix-ld
+    # either way, so both go through it here.
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+        # workerd
+        stdenv.cc.cc.lib
+
+        # Playwright's Chromium
+        alsa-lib
+        at-spi2-atk
+        at-spi2-core
+        atk
+        cairo
+        cups
+        dbus
+        expat
+        glib
+        nspr
+        nss
+        pango
+        libdrm
+        libgbm
+        libxkbcommon
+        xorg.libX11
+        xorg.libXcomposite
+        xorg.libXdamage
+        xorg.libXext
+        xorg.libXfixes
+        xorg.libXrandr
+        xorg.libxcb
+      ];
+    };
   };
 
   # User configuration specific to this host
