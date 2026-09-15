@@ -7,8 +7,12 @@
 # Validation runs here, before the pull request is opened, rather than as a
 # required check on the pull request itself. Pull requests created with the
 # default GITHUB_TOKEN do not trigger `pull_request` workflows, so a required
-# check on the bot's own pull request would stay pending forever and auto-merge
+# check on the bot's own pull request would stay pending forever and the merge
 # would never fire.
+#
+# Because of that the pull request carries no required checks and is mergeable
+# the moment it is opened. It is therefore merged outright below; GitHub
+# rejects auto-merge on a pull request that has nothing left to wait for.
 name: Update nixpkgs
 
 on:
@@ -158,9 +162,9 @@ jobs:
           add-paths: |
             flake.lock
 
-      - name: Enable auto-merge
+      - name: Merge the pull request
         if: steps.changed.outputs.changed == 'true' && steps.pr.outputs.pull-request-number != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.pr.outputs.pull-request-number }}
-        run: gh pr merge --auto --squash "$PR"
+        run: gh pr merge --squash "$PR"
