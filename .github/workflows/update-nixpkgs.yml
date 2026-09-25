@@ -13,6 +13,11 @@
 # Because of that the pull request carries no required checks and is mergeable
 # the moment it is opened. It is therefore merged outright below; GitHub
 # rejects auto-merge on a pull request that has nothing left to wait for.
+#
+# The merge is pushed with GITHUB_TOKEN, and GitHub does not start `push`
+# workflows for GITHUB_TOKEN pushes, so promote-deploy.yml would never see the
+# new commit on its own. The final step dispatches it explicitly instead;
+# `workflow_dispatch` is one of the events GITHUB_TOKEN is allowed to trigger.
 name: Update nixpkgs
 
 on:
@@ -36,6 +41,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -168,3 +174,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.pr.outputs.pull-request-number }}
         run: gh pr merge --squash "$PR"
+
+      - name: Trigger promotion to deploy
+        if: steps.changed.outputs.changed == 'true' && steps.pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run promote-deploy.yml --ref main
