@@ -10,6 +10,8 @@
     ./hardware-configuration.nix
     # Enable Docker support
     ../../modules/nixos/docker.nix
+    # Daily backup of /home and /srv to the NAS
+    ./nas-backup.nix
   ];
 
   # Claude Code overlay

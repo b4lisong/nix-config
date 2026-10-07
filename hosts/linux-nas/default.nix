@@ -83,6 +83,26 @@
       };
     };
 
+    # Tailscale VPN; oci-nixos reaches this host by its MagicDNS name to push
+    # backups. The firewall is disabled, so no interface rules are needed.
+    tailscale.enable = true;
+
+    # Snapshot the backup dataset so the rsync mirrors pushed into it keep a
+    # history: a file deleted or corrupted at the source survives in older
+    # snapshots. Sanoid takes the daily snapshot at 23:59, after the
+    # oci-nixos push (03:00-03:30).
+    sanoid = {
+      enable = true;
+      datasets."storage/backup" = {
+        autosnap = true;
+        autoprune = true;
+        hourly = 0;
+        daily = 14;
+        monthly = 6;
+        yearly = 0;
+      };
+    };
+
     # Samba file sharing service
     samba = {
       enable = true;
@@ -237,6 +257,26 @@
       # Set ownership and permissions for storage datasets
       ${pkgs.coreutils}/bin/chown root:nas-users /mnt/app_config /mnt/media /mnt/backup
       ${pkgs.coreutils}/bin/chmod 2775 /mnt/app_config /mnt/media /mnt/backup
+    '';
+  };
+
+  # Target directory for the oci-nixos backup push. Created by a unit that
+  # requires the mount rather than by tmpfiles: /mnt/backup is mounted with
+  # nofail, and a directory created on the root filesystem would silently
+  # receive backups. Mode 0700 because /mnt/backup is shared over Samba to
+  # nas-users and the backup contains secrets.
+  systemd.services.oci-nixos-backup-dir = {
+    description = "Create the oci-nixos backup directory";
+    after = [ "zfs-mount.service" "nas-storage-permissions.service" ];
+    wantedBy = [ "multi-user.target" ];
+    unitConfig.RequiresMountsFor = "/mnt/backup";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      ${pkgs.coreutils}/bin/mkdir -p /mnt/backup/systems/server
+      ${pkgs.coreutils}/bin/install -d -m 0700 -o ${myvars.user.username} -g users /mnt/backup/systems/server/oci-nixos
     '';
   };
 
