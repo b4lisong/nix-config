@@ -20,6 +20,12 @@ in {
     sessionVariables = {
       EDITOR = vars.preferences.editor;
       VISUAL = vars.preferences.editor;
+      # zoxide's doctor warns whenever `z` runs without __zoxide_hook in
+      # chpwd_functions. Shells that replay a snapshot of aliases and
+      # functions (such as Claude Code's Bash tool) carry the `cd = "z"`
+      # alias but not that array, so every `cd` printed a spurious warning.
+      # The hook is registered correctly in real interactive shells.
+      _ZO_DOCTOR = "0";
     };
     packages = with pkgs; [
       # Version Control
