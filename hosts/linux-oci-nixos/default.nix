@@ -105,6 +105,9 @@
       port = 4444;
       auth = "none";
       user = "balisong";
+      # Without this the module creates and runs under a dedicated
+      # code-server group, which nothing else uses.
+      group = "users";
     };
   };
 
