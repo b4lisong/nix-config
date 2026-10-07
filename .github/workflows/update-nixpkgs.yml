@@ -1,8 +1,8 @@
 # Weekly nixpkgs lockfile update.
 #
 # This workflow updates only the `nixpkgs` input in flake.lock, validates the
-# result, and opens a pull request. It never touches the server: deployment is
-# the job of promote-deploy.yml plus the host's own system.autoUpgrade timer.
+# result, and opens a pull request. It never touches the servers: deployment is
+# the job of promote-deploy.yml plus each host's own system.autoUpgrade timer.
 #
 # Validation runs here, before the pull request is opened, rather than as a
 # required check on the pull request itself. Pull requests created with the
@@ -13,6 +13,12 @@
 # Because of that the pull request carries no required checks and is mergeable
 # the moment it is opened. It is therefore merged outright below; GitHub
 # rejects auto-merge on a pull request that has nothing left to wait for.
+#
+# Both deployed hosts are built before the merge. oci-nixos is aarch64-linux
+# and nas is x86_64-linux, so each builds on a runner of its own architecture.
+# The updated flake.lock is produced once and handed to the build and pull
+# request jobs as an artifact, so every job validates and ships the exact same
+# lockfile.
 #
 # The merge is pushed with GITHUB_TOKEN, and GitHub does not start `push`
 # workflows for GITHUB_TOKEN pushes, so promote-deploy.yml would never see the
@@ -35,13 +41,9 @@ concurrency:
 
 jobs:
   update:
-    # oci-nixos is aarch64-linux, so its toplevel cannot be built on an x86_64
-    # runner. ARM runners are available at no cost for public repositories.
     runs-on: ubuntu-24.04-arm
-    permissions:
-      contents: write
-      pull-requests: write
-      actions: write
+    outputs:
+      changed: ${{ steps.changed.outputs.changed }}
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -133,15 +135,68 @@ jobs:
         if: steps.changed.outputs.changed == 'true'
         run: nix flake check --print-build-logs
 
-      - name: Build the oci-nixos system closure
+      - name: Hand the updated lockfile to the later jobs
         if: steps.changed.outputs.changed == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: flake-lock
+          path: flake.lock
+          retention-days: 1
+
+  build:
+    needs: update
+    if: needs.update.outputs.changed == 'true'
+    strategy:
+      matrix:
+        include:
+          - host: oci-nixos
+            runner: ubuntu-24.04-arm
+          - host: nas
+            runner: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch the updated lockfile
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: flake-lock
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
+        with:
+          determinate: false
+          extra-conf: |
+            extra-substituters = https://nix-community.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimXuKWsyFQjy8Z8QK7k+j9YQjKtXHOM=
+
+      - name: Build the ${{ matrix.host }} system closure
+        env:
+          HOST: ${{ matrix.host }}
         run: |
           nix build --print-build-logs --no-link \
-            '.#nixosConfigurations.oci-nixos.config.system.build.toplevel'
+            ".#nixosConfigurations.${HOST}.config.system.build.toplevel"
+
+  pull-request:
+    needs: [update, build]
+    if: needs.update.outputs.changed == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch the updated lockfile
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: flake-lock
 
       - name: Open or update the pull request
         id: pr
-        if: steps.changed.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           branch: automated/update-nixpkgs
@@ -151,32 +206,33 @@ jobs:
             chore: update nixpkgs flake input
 
             Weekly automated lockfile update. Only the nixpkgs input moved.
-            Validated in CI with nix flake check and a build of
-            nixosConfigurations.oci-nixos.config.system.build.toplevel.
+            Validated in CI with nix flake check and builds of the oci-nixos
+            and nas system toplevels.
           body: |
             Weekly automated update of the `nixpkgs` input in `flake.lock`.
 
             No other flake input was changed, and no file other than
             `flake.lock` was touched. CI verified both constraints before
             opening this pull request, then ran `nix flake check` and built
-            `nixosConfigurations.oci-nixos.config.system.build.toplevel`.
+            `config.system.build.toplevel` for `nixosConfigurations.oci-nixos`
+            and `nixosConfigurations.nas`.
 
             Merging this advances `main`. The `deploy` branch, which
-            `oci-nixos` tracks via `system.autoUpgrade`, only follows once
-            promote-deploy.yml has revalidated the merge commit.
+            `oci-nixos` and `nas` track via `system.autoUpgrade`, only follows
+            once promote-deploy.yml has revalidated the merge commit.
           delete-branch: true
           add-paths: |
             flake.lock
 
       - name: Merge the pull request
-        if: steps.changed.outputs.changed == 'true' && steps.pr.outputs.pull-request-number != ''
+        if: steps.pr.outputs.pull-request-number != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.pr.outputs.pull-request-number }}
         run: gh pr merge --squash "$PR"
 
       - name: Trigger promotion to deploy
-        if: steps.changed.outputs.changed == 'true' && steps.pr.outputs.pull-request-number != ''
+        if: steps.pr.outputs.pull-request-number != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run promote-deploy.yml --ref main

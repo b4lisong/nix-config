@@ -1,10 +1,18 @@
 # Promotion gate for the deployment branch.
 #
-# oci-nixos runs `nixos-rebuild switch --flake github:b4lisong/nix-config/deploy`
-# on a daily timer, so whatever sits at the tip of `deploy` is what the server
-# activates. This workflow is the only thing that writes to that branch: it
-# revalidates every commit that reaches `main` and fast-forwards `deploy` only
-# if the host's closure still evaluates and builds.
+# oci-nixos and nas both run `nixos-rebuild switch --flake
+# github:b4lisong/nix-config/deploy#<host>` on a daily timer, so whatever sits
+# at the tip of `deploy` is what both servers activate. This workflow is the
+# only thing that writes to that branch: it revalidates every commit that
+# reaches `main` and fast-forwards `deploy` only if every deployed host's
+# closure still evaluates and builds.
+#
+# The hosts share one branch so they always run the same revision. The cost is
+# that a commit breaking either host holds back both until it is fixed.
+#
+# Each host is built on a runner of its own architecture: oci-nixos is
+# aarch64-linux and nas is x86_64-linux, and neither runner can build the
+# other's toplevel.
 #
 # The push below is a plain fast-forward, never a force push, so `deploy` can
 # only ever advance along `main`.
@@ -24,16 +32,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  promote:
+  check:
     runs-on: ubuntu-24.04-arm
-    permissions:
-      contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # deploy is pushed from this checkout, so its history must be present.
-          fetch-depth: 0
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
@@ -46,10 +49,45 @@ jobs:
       - name: Check the flake
         run: nix flake check --print-build-logs
 
-      - name: Build the oci-nixos system closure
+  build:
+    strategy:
+      matrix:
+        include:
+          - host: oci-nixos
+            runner: ubuntu-24.04-arm
+          - host: nas
+            runner: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
+        with:
+          determinate: false
+          extra-conf: |
+            extra-substituters = https://nix-community.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimXuKWsyFQjy8Z8QK7k+j9YQjKtXHOM=
+
+      - name: Build the ${{ matrix.host }} system closure
+        env:
+          HOST: ${{ matrix.host }}
         run: |
           nix build --print-build-logs --no-link \
-            '.#nixosConfigurations.oci-nixos.config.system.build.toplevel'
+            ".#nixosConfigurations.${HOST}.config.system.build.toplevel"
+
+  promote:
+    needs: [check, build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # deploy is pushed from this checkout, so its history must be present.
+          fetch-depth: 0
 
       - name: Fast-forward deploy
         run: git push origin "${GITHUB_SHA}:refs/heads/deploy"

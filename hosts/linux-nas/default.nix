@@ -420,6 +420,31 @@
   time.timeZone = lib.mkForce "America/Los_Angeles";
   i18n.defaultLocale = lib.mkForce "en_US.UTF-8";
 
+  # Unattended upgrades from the CI-validated deployment branch.
+  #
+  # Same mechanism as oci-nixos: `deploy` only advances after GitHub Actions
+  # has run `nix flake check` and built both hosts' toplevels, and the
+  # committed flake.lock is consumed as-is (`upgrade = false`).
+  #
+  # `allowReboot = false` matters more here than on oci-nixos: root is on ZFS
+  # and GRUB lives on the internal SD card, so a boot that fails unattended
+  # needs physical access to recover. A kernel or ZFS update therefore leaves
+  # the old kernel and zfs module loaded until an operator reboots.
+  #
+  # The upgrade window (00:00-00:45 local) stays clear of the oci-nixos backup
+  # that writes to this host at 03:00. Garbage collection is left to the weekly
+  # `nix.gc` timer in modules/nixos/default.nix.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:b4lisong/nix-config/deploy#nas";
+    operation = "switch";
+    upgrade = false;
+    allowReboot = false;
+    dates = "daily";
+    randomizedDelaySec = "45min";
+    fixedRandomDelay = true;
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. Don't change this after initial installation.
