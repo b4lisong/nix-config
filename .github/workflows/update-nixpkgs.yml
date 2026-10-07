@@ -171,6 +171,16 @@ jobs:
             extra-substituters = https://nix-community.cachix.org
             extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimXuKWsyFQjy8Z8QK7k+j9YQjKtXHOM=
 
+      # Pulls from and pushes to the repo's own cache. Daemon mode (the
+      # default) pushes only paths built in this job, never ones substituted
+      # from the public caches, so in practice it uploads Hermes Agent and
+      # little else, and each Hermes revision is built once.
+      - name: Use the b4lisong binary cache
+        uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # v17
+        with:
+          name: b4lisong
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
       - name: Build the ${{ matrix.host }} system closure
         env:
           HOST: ${{ matrix.host }}

@@ -202,6 +202,10 @@
     ];
 
     hashedPassword = null;
+
+    # Keep the user systemd manager running without a login session, so the
+    # Hermes gateway (a user service, see hermes.nix) survives logout.
+    linger = true;
   };
 
   # Security configuration
@@ -210,6 +214,14 @@
   # Host-specific localization
   time.timeZone = lib.mkForce "America/Los_Angeles";
   i18n.defaultLocale = lib.mkForce "en_US.UTF-8";
+
+  # The repo's own Cachix cache. CI pushes what it builds that the public caches
+  # lack, chiefly Hermes Agent (about 25 minutes from source on this host's 4
+  # cores), so upgrades substitute it instead of rebuilding locally.
+  nix.settings = {
+    substituters = lib.mkAfter ["https://b4lisong.cachix.org"];
+    trusted-public-keys = lib.mkAfter ["b4lisong.cachix.org-1:9BLGLTTbM01jwHrBQ8PPtH1FJyltZpqWiN+kzVkrPMY="];
+  };
 
   # Unattended upgrades from the CI-validated deployment branch.
   #

@@ -412,8 +412,8 @@
 
   # Security configuration
   security = {
-    # Require sudo password for security
-    sudo.wheelNeedsPassword = lib.mkForce true;
+    # Passwordless, matching oci-nixos
+    sudo.wheelNeedsPassword = lib.mkForce false;
   };
 
   # Host-specific localization

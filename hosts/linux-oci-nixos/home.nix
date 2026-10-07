@@ -16,6 +16,9 @@
 
     # Docker role for container management
     ../../home/roles/docker
+
+    # Hermes Agent gateway, administering this host and the NAS
+    ./hermes.nix
   ];
 
   # Home Manager configuration
@@ -31,6 +34,11 @@
       # Additional cloud server utilities
       gh # GitHub CLI, used to manage Actions workflows and pull requests
       python3
+
+      # Codex CLI, a coding agent Hermes hands work to alongside Claude Code.
+      # From unstable because, like Claude Code, it moves faster than the
+      # stable release cycle.
+      pkgs-unstable.codex
     ];
 
     sessionVariables = {

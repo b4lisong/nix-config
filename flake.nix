@@ -88,6 +88,13 @@ This architecture provides:
     # Claude Code CLI
     claude-code.url = "github:sadjow/claude-code-nix";
     claude-code.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+    # Hermes Agent (oci-nixos Home Manager module). No `follows`: it builds
+    # against its own pinned nixos-unstable, which is what upstream tests, and
+    # keeping it separate means the weekly nixpkgs bump never changes the
+    # Hermes derivation. Hermes itself only moves on a manual
+    # `nix flake update hermes-agent`.
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   # Main function that generates what this flake provides
