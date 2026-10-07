@@ -23,10 +23,13 @@
     loader = {
       systemd-boot = {
         enable = true;
-        # Daily unattended upgrades consume a boot entry per changed
-        # generation, so keep more than the fleet default of 5 to preserve a
-        # usable window for manual rollback.
-        configurationLimit = 20;
+        # Bounded by the 511 MB ESP, not by the rollback window. Each distinct
+        # aarch64 kernel copied to /boot is about 64 MB plus a 26 MB initrd,
+        # and the installer copies new files before pruning old ones. A limit
+        # of 20 filled /boot after six kernel updates and broke every switch,
+        # including unattended upgrades. Generations past the limit lose only
+        # their boot entry; they stay in the system profile until collected.
+        configurationLimit = 5;
       };
       efi = {
         canTouchEfiVariables = true;
