@@ -102,6 +102,13 @@ in {
       (mkOrder 1500 ''
         # Final setup, external tool integration
         # echo "Welcome to zsh!"
+
+        # Agent shells (Claude Code sets CLAUDECODE and AI_AGENT) get the
+        # builtin cd: zoxide's cd may jump to a different directory that
+        # matches the name when the given path does not exist.
+        if [[ -n $CLAUDECODE || -n $AI_AGENT ]]; then
+          unalias cd 2>/dev/null
+        fi
       '')
     ];
 
