@@ -29,9 +29,20 @@ in {
     enable = true;
     gateway.enable = true;
 
+    backend = {
+      mode = "dashboard";
+      host = "0.0.0.0";
+      port = 9119;
+    };
+
     environmentFiles = ["${config.home.homeDirectory}/.config/hermes/secrets.env"];
 
     settings = {
+      dashboard = {
+        # Trust only NPM's verified source address for forwarded headers.
+        trusted_proxies = ["10.0.0.163"];
+      };
+
       # ChatGPT subscription through the Codex OAuth client.
       model = {
         provider = "openai-codex";
