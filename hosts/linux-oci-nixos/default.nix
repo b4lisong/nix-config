@@ -81,6 +81,12 @@
     };
   };
 
+  # Rootless Docker's default "builtin" port driver rewrites every published
+  # port's source address to the network gateway (until RootlessKit v3), so
+  # Caddy can't tell Cloudflare's IPs apart and Authelia sees one client.
+  # The slirp4netns port driver keeps the real source IP at lower throughput.
+  systemd.user.services.docker.environment.DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER = "slirp4netns";
+
   # Host-specific service configuration
   services = {
     # SSH configuration for remote management
