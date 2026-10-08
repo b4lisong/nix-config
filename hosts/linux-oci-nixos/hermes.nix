@@ -39,7 +39,8 @@ in {
 
     settings = {
       dashboard = {
-        # Trust only NPM's verified source address for forwarded headers.
+        # Trust only the reverse proxy (Caddy) for forwarded headers. Rootless
+        # Docker containers reach the host from 10.0.0.163, not a bridge IP.
         trusted_proxies = ["10.0.0.163"];
       };
 
