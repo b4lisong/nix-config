@@ -19,6 +19,25 @@
   ...
 }: let
   username = myvars.user.username;
+
+  # The module hardens its units for an agent that should not escalate. This
+  # one is meant to administer the host, so three settings are relaxed on both
+  # units that run agents: the gateway (Telegram chats) and the backend, which
+  # spawns the agent workers for dashboard chats.
+  #   NoNewPrivileges  would make setuid sudo refuse to run.
+  #   PrivateTmp       would hide tmux sockets in /tmp/tmux-<uid>, so the user
+  #                    could not attach to sessions Hermes starts.
+  #   PATH             the module limits it to hermes, bash, coreutils, and git;
+  #                    this gives Hermes the same tools as a login shell,
+  #                    including setuid sudo from /run/wrappers. A later
+  #                    PATH= assignment overrides the module's in systemd.
+  adminAgentService = {
+    NoNewPrivileges = lib.mkForce false;
+    PrivateTmp = lib.mkForce false;
+    Environment = lib.mkAfter [
+      "PATH=/run/wrappers/bin:/etc/profiles/per-user/${username}/bin:/run/current-system/sw/bin"
+    ];
+  };
 in {
   imports = [hermes-agent.homeManagerModules.default];
 
@@ -73,20 +92,6 @@ in {
     };
   };
 
-  # The module hardens the gateway unit for an agent that should not escalate.
-  # This one is meant to administer the host, so three settings are relaxed:
-  #   NoNewPrivileges  would make setuid sudo refuse to run.
-  #   PrivateTmp       would hide tmux sockets in /tmp/tmux-<uid>, so the user
-  #                    could not attach to sessions Hermes starts.
-  #   PATH             the module limits it to hermes, bash, coreutils, and git;
-  #                    this gives Hermes the same tools as a login shell,
-  #                    including setuid sudo from /run/wrappers. A later
-  #                    PATH= assignment overrides the module's in systemd.
-  systemd.user.services.hermes-agent.Service = {
-    NoNewPrivileges = lib.mkForce false;
-    PrivateTmp = lib.mkForce false;
-    Environment = lib.mkAfter [
-      "PATH=/run/wrappers/bin:/etc/profiles/per-user/${username}/bin:/run/current-system/sw/bin"
-    ];
-  };
+  systemd.user.services.hermes-agent.Service = adminAgentService;
+  systemd.user.services.hermes-backend.Service = adminAgentService;
 }
