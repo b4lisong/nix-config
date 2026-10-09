@@ -63,6 +63,10 @@ in {
         trusted_proxies = ["10.0.0.163"];
       };
 
+      # The admin ID stays in the untracked environment file; Nix emits the
+      # literal placeholder for Hermes to resolve from the service environment.
+      gateway.platforms.telegram.extra.allow_admin_from = ["\${HERMES_TELEGRAM_ADMIN_ID}"];
+
       # ChatGPT subscription through the Codex OAuth client.
       model = {
         provider = "openai-codex";
