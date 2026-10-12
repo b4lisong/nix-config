@@ -101,19 +101,28 @@ jobs:
           before_nodes = before["nodes"]
           after_nodes = after["nodes"]
 
+          # Lock node names are not input names: when another input brings its
+          # own unfollowed nixpkgs (hermes-agent does), Nix may give that node
+          # the bare "nixpkgs" name and suffix ours. Resolve our input's node
+          # through the root's input map instead of assuming its name.
+          root_name = after["root"]
+          nixpkgs_node = after_nodes[root_name]["inputs"]["nixpkgs"]
+          if before_nodes[before["root"]]["inputs"]["nixpkgs"] != nixpkgs_node:
+              errors.append("the root nixpkgs input points at a different lock node")
+
           if set(before_nodes) != set(after_nodes):
               added = sorted(set(after_nodes) - set(before_nodes))
               removed = sorted(set(before_nodes) - set(after_nodes))
               errors.append(f"node set changed (added={added}, removed={removed})")
 
           for name in sorted(set(before_nodes) & set(after_nodes)):
-              if name == "nixpkgs":
+              if name == nixpkgs_node:
                   continue
               if before_nodes[name] != after_nodes[name]:
-                  errors.append(f"input {name!r} changed but only nixpkgs may move")
+                  errors.append(f"lock node {name!r} changed but only {nixpkgs_node!r} (the root nixpkgs input) may move")
 
-          nixpkgs_before = before_nodes["nixpkgs"]
-          nixpkgs_after = after_nodes["nixpkgs"]
+          nixpkgs_before = before_nodes[nixpkgs_node]
+          nixpkgs_after = after_nodes[nixpkgs_node]
           if nixpkgs_before.get("original") != nixpkgs_after.get("original"):
               errors.append("the nixpkgs input URI changed, not just its revision")
           if nixpkgs_before == nixpkgs_after:
