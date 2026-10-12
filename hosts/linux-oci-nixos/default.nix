@@ -29,8 +29,9 @@
         # aarch64 kernel copied to /boot is about 64 MB plus a 26 MB initrd,
         # and the installer copies new files before pruning old ones. A limit
         # of 20 filled /boot after six kernel updates and broke every switch,
-        # including unattended upgrades. Generations past the limit lose only
-        # their boot entry; they stay in the system profile until collected.
+        # including unattended upgrades. The limit only prunes boot entries;
+        # the system profile is trimmed to the same count by the nix-gc
+        # preStart below.
         configurationLimit = 5;
       };
       efi = {
@@ -256,6 +257,15 @@
     randomizedDelaySec = "45min";
     fixedRandomDelay = true;
   };
+
+  # Keep the rollback window to the last 5 system generations. Daily upgrades
+  # arrive in bursts, so the shared `--delete-older-than 30d` rule can retain
+  # a dozen or more closures; nix-collect-garbage can only prune by age, so
+  # trim the system profile by count just before the weekly collection, which
+  # then frees the dropped closures. Other profiles keep the 30-day rule.
+  systemd.services.nix-gc.preStart = ''
+    ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --delete-generations +5
+  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
