@@ -99,7 +99,7 @@ home.packages = lib.mkForce [pkgs.nodejs pkgs.gh];
 
 **Flakes only see files tracked by Git.** Run `git add` on new files before any `nix` or rebuild command, or they will be invisible to evaluation. Staging is enough; a commit is not required.
 
-**Warnings are blocking.** Treat every warning from `nix flake check` as an error and fix it before committing: renamed options, deprecated APIs, and defaults slated for removal should be migrated immediately. The one standing exception is the `x86_64-darwin` end-of-life warning documented in [docs/x86_64-darwin-eol.md](docs/x86_64-darwin-eol.md).
+**`nix flake check` must pass before every commit that touches `.nix` files or `flake.lock`, and warnings are blocking.** Commits that change only docs or other non-Nix files do not need it. Treat every warning as an error and fix it before committing: renamed options, deprecated APIs, and defaults slated for removal should be migrated immediately. The one standing exception is the `x86_64-darwin` end-of-life warning documented in [docs/x86_64-darwin-eol.md](docs/x86_64-darwin-eol.md).
 
 Validate `.nix` changes against the actual system configuration, not just the flake:
 
@@ -112,6 +112,10 @@ Validate `.nix` changes against the actual system configuration, not just the fl
 `nixos-rebuild` has no `check` action; `dry-build` is the closest equivalent. `nix flake check` only evaluates the current platform unless `--all-systems` is passed.
 
 Formatting and linting (`alejandra`, `statix`, `deadnix`) run as pre-commit hooks on `.nix` files and are available in `nix develop`. Do not run them on non-Nix files.
+
+## Committing
+
+Commit and push directly to `main` unless asked to use a branch. No CI runs on pull requests; `promote-deploy.yml` validates each push to `main` before advancing the `deploy` branch that `oci-nixos` and `nas` pull, so a broken push blocks deployment to both hosts until fixed.
 
 ## Rebuilding
 
