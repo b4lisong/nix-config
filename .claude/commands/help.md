@@ -55,10 +55,6 @@ Comprehensive help and guidance for the Claude Code Template command system and 
 - **Purpose**: Generate comprehensive handoff prompts for fresh sessions
 - **Usage**: `/prompt`, `/prompt debugging`, `/prompt architecture`
 
-**`/claude-md [action]`** - Instruction file maintenance
-- **Purpose**: Update and maintain AGENTS.md instruction file
-- **Usage**: `/claude-md refresh`, `/claude-md add pattern`, `/claude-md update`
-
 ## Workflow Guidance
 
 ### **Complete Development Process**
