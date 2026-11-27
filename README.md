@@ -145,7 +145,7 @@ Format, lint, and check code:
 ```bash
 alejandra .          # Format Nix code
 statix check .       # Lint Nix code
-deadnix .            # Find unused code
+deadnix -L .         # Find unused code (-L: allow unused argument-pattern names)
 nix flake check      # Validate flake
 ```
 

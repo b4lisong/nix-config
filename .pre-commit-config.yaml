@@ -23,7 +23,7 @@ repos:
       - id: deadnix
         name: deadnix
         description: "Find unused Nix code"
-        entry: deadnix --fail
+        entry: deadnix --fail --no-lambda-pattern-names
         language: system
         files: '\.nix$'
         pass_filenames: true

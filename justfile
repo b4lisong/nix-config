@@ -86,7 +86,7 @@ fmt:
 # Check nix files for issues
 lint:
     statix check .
-    deadnix .
+    deadnix --no-lambda-pattern-names .
 
 # Format disks with disko
 format DISKS_FILE:
