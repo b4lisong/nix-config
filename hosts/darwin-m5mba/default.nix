@@ -30,6 +30,7 @@ which also sets nixpkgs.hostPlatform. Settings here extend those modules.
       "claude" # Claude Desktop
       "claude-code"
       "codex" # OpenAI Codex CLI
+      "codex-app" # OpenAI Codex desktop app
 
       # Remote access and virtualization
       "parsec" # Low-latency remote desktop
@@ -62,6 +63,7 @@ which also sets nixpkgs.hostPlatform. Settings here extend those modules.
 
     brews = [
       "winetricks" # Helper for wine@staging
+      "herdr" # Terminal multiplexer for coding agents
     ];
 
     # Requires signing into the App Store before the first activation.
