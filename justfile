@@ -45,7 +45,7 @@ check:
 rollback:
     #!/usr/bin/env bash
     if [ "{{os_type}}" = "Darwin" ]; then
-        sudo darwin-rebuild rollback
+        sudo darwin-rebuild --rollback
     else
         sudo nixos-rebuild switch --rollback
     fi

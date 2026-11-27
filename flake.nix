@@ -2,7 +2,7 @@
 FLAKE.NIX - Main Configuration Entry Point
 
 This flake provides a modular, cross-platform Nix configuration supporting
-both macOS (via nix-darwin) and future NixOS systems. It implements a
+both macOS (via nix-darwin) and NixOS systems. It implements a
 layered architecture with clear separation of concerns.
 
 ARCHITECTURE OVERVIEW:
@@ -18,7 +18,7 @@ System Configuration Layers (applied bottom-to-top):
    - Darwin: macOS defaults, Touch ID, Homebrew integration
    - NixOS: Hardware, systemd services, desktop environments
 
-3. Host Layer (hosts/<hostname>/system.nix):
+3. Host Layer (hosts/<platform>-<name>/default.nix):
    - Machine-specific system configuration
    - Host-specific Homebrew packages
    - Hardware-specific settings and overrides
@@ -36,8 +36,9 @@ User Configuration Layers (Home Manager):
    - work: Work-specific tools and compliance
    - security: Security and penetration testing tools
    - docker: Container and orchestration tools
+   - embedded: Embedded development tools
 
-6. Host Layer (hosts/<hostname>/home.nix):
+6. Host Layer (hosts/<platform>-<name>/home.nix):
    - Host-specific user configuration
    - Combines profiles and roles for complete environment
    - Machine-specific overrides and customizations
@@ -48,7 +49,13 @@ DUAL PACKAGE SYSTEM:
 - Both available to all modules via specialArgs
 
 CONFIGURATION FLOW:
-flake.nix → mkDarwinHost() → system modules → Home Manager → user profiles/roles
+flake.nix
+  -> outputs/default.nix                   (specialArgs, merges all architectures)
+  -> outputs/<arch>/default.nix            (haumea auto-discovers src/*.nix)
+  -> outputs/<arch>/src/<name>.nix         (one file per host)
+  -> mylib.macosSystem / mylib.nixosSystem (lib/)
+  -> system modules + Home Manager module
+  -> hosts/<platform>-<name>/home.nix -> home/profiles + home/roles
 
 VARIABLES SYSTEM:
 - Centralized in variables/default.nix

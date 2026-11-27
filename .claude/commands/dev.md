@@ -265,7 +265,6 @@ AI: "All payment tests are green - perfect for refactoring!
 - **`/dev` → `/refactor`**: When code works but needs improvement (with test safety)
 
 ### **TDD Learning Integration:**
-- **`/dev` → `/claude-md add pattern`**: Codify successful TDD patterns you discover
 - **After each `/dev` session**: Document what the tests taught you about the problem domain
 
 ## TDD Best Practices Enforced

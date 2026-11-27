@@ -29,8 +29,6 @@
   - Interactive command discovery and workflow guidance
 - **`/prompt [focus]`** - Context handoff for LLM transitions
   - Generate comprehensive handoff for continuation sessions
-- **`/claude-md <action>`** - Essential instruction file maintenance
-  - Backup, update mastery tracking, and manage CLAUDE.md
 
 ## Command Philosophy
 
@@ -80,12 +78,6 @@ These commands embody our development philosophy:
 /prompt                               # Comprehensive LLM handoff
 /prompt debugging                     # Debugging-focused handoff
 /help dev                            # Get TDD workflow guidance
-```
-
-**Maintenance:**
-```bash
-/claude-md backup                     # Before major changes
-/claude-md update-mastery             # Weekly skill tracking
 ```
 
 ## Command Design Principles

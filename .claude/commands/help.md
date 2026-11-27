@@ -55,10 +55,6 @@ Comprehensive help and guidance for the Claude Code Template command system and 
 - **Purpose**: Generate comprehensive handoff prompts for fresh sessions
 - **Usage**: `/prompt`, `/prompt debugging`, `/prompt architecture`
 
-**`/claude-md [action]`** - Instruction file maintenance
-- **Purpose**: Update and maintain CLAUDE.md instruction file
-- **Usage**: `/claude-md refresh`, `/claude-md add pattern`, `/claude-md update`
-
 ## Workflow Guidance
 
 ### **Complete Development Process**
@@ -134,7 +130,7 @@ Comprehensive help and guidance for the Claude Code Template command system and 
 1. Start with `/help workflow` to understand the complete process
 2. Try `/dev "simple calculator"` for your first TDD experience
 3. Use `/check` frequently to learn quality standards
-4. Read through CLAUDE.md for complete philosophy and guidelines
+4. Read through AGENTS.md for complete philosophy and guidelines
 
 **Experienced developer?**
 - `/dev` is your primary command for all feature development

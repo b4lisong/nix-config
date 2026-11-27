@@ -25,7 +25,7 @@ Generate comprehensive handoff prompts for seamless LLM transitions and continui
 - Current project structure and key files
 - Active todos and project state
 - Recent development progress and next logical steps
-- Key constraints and patterns from CLAUDE.md
+- Key constraints and patterns from AGENTS.md
 - Available commands and workflow guidance
 
 **Focused handoff (`/prompt [focus_area]`) includes:**
