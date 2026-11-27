@@ -65,10 +65,11 @@ Hosts are automatically discovered from `outputs/{architecture}/src/*.nix` files
 * `home.nix` – Home Manager entry point that imports one of the profiles
 * Additional files as needed (`hardware-configuration.nix`, `disks.nix`, etc.)
 
-Currently five hosts are defined:
+Hosts include:
 
 **macOS (Darwin):**
 * `darwin-a2251` (x86_64-darwin) – Personal MacBook Pro (Intel) - actively used
+* `darwin-m5mba` (aarch64-darwin) – Personal MacBook Air 15" (M5), replacing a2251
 * `darwin-sksm3` (aarch64-darwin) – Work MacBook (Apple Silicon) - actively used
 
 **Linux (NixOS):**

@@ -62,8 +62,9 @@ Usage: $(basename "$0") [options] <host>
 
 Bootstrap this machine as <host> from the nix-config flake.
 
-  nix-darwin  Installs Nix and Homebrew if missing, sets the hostname, moves
-              aside /etc shell files, and runs the first darwin-rebuild switch.
+  nix-darwin  Installs Nix, Homebrew and (on Apple Silicon) Rosetta 2 if
+              missing, sets the hostname, moves aside /etc shell files, and
+              runs the first darwin-rebuild switch.
   NixOS       Offers to refresh hardware-configuration.nix, then runs
               nixos-rebuild switch.
 
@@ -401,8 +402,35 @@ darwin_switch() {
   fi
 }
 
+# Wine and other x86_64-only casks need Rosetta 2 on Apple Silicon, and
+# nix-darwin has no option to install it.
+darwin_rosetta() {
+  [ "$SYSTEM" = aarch64-darwin ] || return 0
+  step "Rosetta 2"
+  if [ -f /Library/Apple/usr/libexec/oah/libRosettaRuntime ]; then
+    info "already installed"
+    return
+  fi
+  run sudo softwareupdate --install-rosetta --agree-to-license
+}
+
+# Homebrew installs masApps through `mas`, which fails unless the App Store
+# is signed in. `mas account` no longer works on current macOS, so ask.
+darwin_app_store() {
+  local count
+  count=$(nix eval --raw "$REPO#darwinConfigurations.$HOST.config.homebrew.masApps" \
+    --apply 'a: toString (builtins.length (builtins.attrNames a))')
+  [ "$count" != 0 ] || return 0
+  step "Mac App Store"
+  info "$HOST installs $count App Store app(s), which needs an App Store sign-in."
+  confirm "Are you signed into the App Store?" y ||
+    die "open the App Store, sign in, then re-run"
+}
+
 bootstrap_darwin() {
   darwin_homebrew
+  darwin_rosetta
+  darwin_app_store
   darwin_hostname
   darwin_switch
 }

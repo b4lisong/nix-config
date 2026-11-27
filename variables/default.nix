@@ -46,6 +46,12 @@
       description = "Personal MacBook Pro (Intel)";
     };
 
+    m5mba = {
+      hostname = "m5mba";
+      system = "aarch64-darwin";
+      description = "Personal MacBook Air 15\" (M5)";
+    };
+
     sksm3 = {
       hostname = "sksm3";
       system = "aarch64-darwin";
