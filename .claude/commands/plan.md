@@ -156,7 +156,7 @@ The systematic planning process analyzes requirements, identifies dependencies, 
 - **`/plan` → `/ship`**: Create final commit with proper documentation
 
 **Quality Requirements**:
-- Follow all forbidden patterns from CLAUDE.md
+- Follow all forbidden patterns from AGENTS.md
 - Use proper error handling for your language (Result types, exceptions)
 - No unwrap(), expect(), panic!() in production code
 - Delete old code when replacing functionality

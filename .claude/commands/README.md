@@ -30,7 +30,7 @@
 - **`/prompt [focus]`** - Context handoff for LLM transitions
   - Generate comprehensive handoff for continuation sessions
 - **`/claude-md <action>`** - Essential instruction file maintenance
-  - Backup, update mastery tracking, and manage CLAUDE.md
+  - Backup, update mastery tracking, and manage AGENTS.md
 
 ## Command Philosophy
 

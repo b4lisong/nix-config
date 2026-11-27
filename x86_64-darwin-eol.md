@@ -123,4 +123,4 @@ evaluation warning: Nixpkgs 26.05 will be the last release to support x86_64-dar
 ```
 
 This cannot be fixed while the host exists. It is a standing exception to the
-rule in `CLAUDE.md` that warnings are treated as blocking.
+rule in `AGENTS.md` that warnings are treated as blocking.

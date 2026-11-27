@@ -1,8 +1,8 @@
 ---
 allowed-tools: all
-description: Essential CLAUDE.md maintenance
+description: Essential AGENTS.md maintenance
 ---
-# CLAUDE.md Maintenance
+# AGENTS.md Maintenance
 
 **Usage:**
 - `/claude-md backup` - Create timestamped backup before changes

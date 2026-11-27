@@ -168,7 +168,7 @@ The `/debug` command transforms reactive firefighting into systematic engineerin
 - **`/debug` → `/debug`**: When tests fail unexpectedly, switch to systematic debugging  
 - **`/debug` → `/ship`**: Create final commit with proper documentation
 **Quality Requirements**:
-- Follow all forbidden patterns from CLAUDE.md
+- Follow all forbidden patterns from AGENTS.md
 - Use proper error handling for your language (Result types, exceptions)
 - No unwrap(), expect(), panic!() in production code
 - Delete old code when replacing functionality
