@@ -1,110 +1,85 @@
 # Machine Setup Instructions
 
-## For New Machines Using Existing Configuration
+## Setting Up a Machine That Already Has a Host Configuration
 
-1. **Install Nix**
-   ```bash
-   curl -fsSL https://install.determinate.systems/nix | sh -s -- install
-   ```
-   - Choose 'no' when prompted to install the Determinate distribution to install the recommended vanilla upstream Nix.
+Use `scripts/bootstrap.sh <host>`. It detects whether the machine is macOS
+or NixOS and its architecture, refuses to continue if `<host>` is defined
+for a different architecture in `outputs/<arch>/src/`, and runs the first
+activation. Each step is skipped if already done, so re-run it after fixing
+a failure.
 
-2. **Clone Configuration Repository**
-   ```bash
-   git clone https://github.com/b4lisong/nix-config.git
-   cd nix-config
-   ```
+On a fresh machine with no checkout, pipe it from GitHub. It clones the repo
+to `~/dev/nix-config` over HTTPS and continues from there:
 
-3. **Check Available Machine Configurations**
-   ```bash
-   # View defined machines in variables/default.nix
-   grep -A 5 "hosts = {" variables/default.nix
-   ```
+```bash
+curl -fsSL https://raw.githubusercontent.com/b4lisong/nix-config/main/scripts/bootstrap.sh | bash -s -- <host>
+```
 
-4. **Use Existing Machine Configuration**
-   ```bash
-   # For Darwin machines (a2251, sksm3):
-   sudo nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake .#<hostname>
-   sudo darwin-rebuild switch --flake .#<hostname>
-   
-   # For NixOS machines (rpi4b):
-   sudo nixos-rebuild switch --flake .#<hostname>
-   
-   # Or use Just commands (auto-detects platform):
-   just rebuild
-   just check
-   
-   # Examples:
-   # sudo nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake .#a2251
-   # sudo darwin-rebuild switch --flake .#sksm3
-   # sudo nixos-rebuild switch --flake .#rpi4b
-   ```
+From an existing checkout:
 
-## For Adding New Machines to Configuration
+```bash
+scripts/bootstrap.sh <host>            # run it
+scripts/bootstrap.sh --dry-run <host>  # print what would change
+scripts/bootstrap.sh --help            # options and the list of hosts
+```
 
-1. **Follow steps 1-2 above to install Nix and clone repository**
+### What it does
 
-2. **Create new branch for machine setup**
-   ```bash
-   git checkout -b <new-hostname>
-   git push -u origin <new-hostname>
-   ```
+**macOS (nix-darwin)**
 
-3. **Add machine definition to variables/default.nix**
-   ```nix
-   <hostname> = {
-     hostname = "<hostname>";
-     system = "<architecture>"; # "aarch64-darwin" for Apple Silicon, "x86_64-darwin" for Intel
-     description = "<description>";
-   };
-   ```
+1. Installs upstream Nix with the Determinate Systems installer
+   (`--prefer-upstream-nix`) if `nix` is missing.
+2. Installs Homebrew if the host enables `homebrew` (nix-darwin manages
+   Homebrew packages but does not install Homebrew).
+3. Sets `HostName` and `LocalHostName` to `<host>`, since `just` targets
+   `.#$(hostname -s)`.
+4. Moves `/etc/bashrc`, `/etc/zshrc` and `/etc/zshenv` to
+   `*.before-nix-darwin` (restored if activation fails), then runs
+   `darwin-rebuild switch` using the nix-darwin version pinned in
+   `flake.lock`.
 
-4. **Create host configuration files**
-   ```bash
-   mkdir hosts/<hostname>
-   # Create hosts/<hostname>/system.nix (based on existing examples)
-   # Create hosts/<hostname>/home.nix (based on existing examples)
-   ```
+**NixOS, already installed**
 
-5. **Add to flake.nix configurations**
-   ```nix
-   # For Darwin systems:
-   darwinConfigurations.${vars.hosts.<hostname>.hostname} =
-     nix-darwin.lib.darwinSystem (mkDarwinHost vars.hosts.<hostname>.hostname);
-   
-   # For NixOS systems:
-   nixosConfigurations.${vars.hosts.<hostname>.hostname} =
-     nixpkgs.lib.nixosSystem (mkNixOSHost vars.hosts.<hostname>.hostname);
-   ```
+1. If the host has a `hardware-configuration.nix`, compares it with
+   `nixos-generate-config --show-hardware-config` and offers to replace it
+   (default: keep).
+2. Runs `nixos-rebuild switch --flake .#<host>`.
 
-6. **Test and apply configuration**
-   ```bash
-   git add .
-   git commit -m "feat: add <hostname> machine configuration"
-   nix flake check  # Verify configuration syntax
-   
-   # For Darwin systems:
-   sudo nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake .#<hostname>
-   sudo darwin-rebuild switch --flake .#<hostname>
-   
-   # For NixOS systems:
-   sudo nixos-rebuild switch --flake .#<hostname>
-   
-   # Or use Just commands:
-   just check
-   just rebuild
-   ```
+**NixOS, fresh install from the installer ISO (`--install`)**
 
-## Architecture Notes
+Requires `hosts/linux-<host>/disks.nix`. Boot the NixOS ISO, then:
 
-- **Apple Silicon Macs**: Use `"aarch64-darwin"`
-- **Intel Macs**: Use `"x86_64-darwin"`
-- **Linux ARM**: Use `"aarch64-linux"` (fully supported)
+```bash
+curl -fsSL https://raw.githubusercontent.com/b4lisong/nix-config/main/scripts/bootstrap.sh | bash -s -- --install <host>
+```
 
-## Current Defined Machines
+1. Lists the disks named in `disks.nix` and asks you to type the host name
+   to confirm. **Everything on those disks is erased.** `--yes` does not skip
+   this.
+2. Partitions, formats and mounts them with disko.
+3. Regenerates `hardware-configuration.nix` from `/mnt` and offers to replace
+   it (default: replace). Filesystems are mounted by UUID, and formatting
+   creates new UUIDs, so keeping the old file produces a system that does
+   not boot.
+4. Runs `nixos-install --flake .#<host>`, which asks for a root password.
+5. Copies the repo to `~/dev/nix-config` in the new system.
 
-- **a2251**: Personal MacBook Pro (Intel) - `x86_64-darwin` - Darwin configuration
-- **sksm3**: Work MacBook (Apple Silicon) - `aarch64-darwin` - Darwin configuration
-- **rpi4b**: Raspberry Pi 4B (ARM Linux) - `aarch64-linux` - NixOS configuration with embedded development environment
+Remove the installer media and reboot.
+
+### Afterwards
+
+- If `hardware-configuration.nix` changed, review and commit it.
+- The clone uses HTTPS. To push, switch to SSH:
+  `git remote set-url origin git@github.com:b4lisong/nix-config.git`
+- Day-to-day rebuilds: `just check`, `just rebuild`.
+
+## Adding a New Host to the Configuration
+
+Follow [hosts/README.md](../hosts/README.md) to create
+`hosts/<platform>-<name>/`, `outputs/<arch>/src/<name>.nix`, and an entry in
+`variables/default.nix`. Hosts are discovered automatically, so `flake.nix`
+does not change. `git add` the new files, run `nix flake check`, then
+bootstrap the machine as above.
 
 ## Raspberry Pi 4B Setup Guide
 

@@ -101,15 +101,15 @@ just show-platform    # Show detected platform and hostname
 
 **macOS (Darwin):**
 ```bash
-sudo darwin-rebuild switch --flake .#darwin-a2251
-sudo darwin-rebuild switch --flake .#darwin-sksm3
+sudo darwin-rebuild switch --flake .#a2251
+sudo darwin-rebuild switch --flake .#sksm3
 ```
 
 **NixOS (Linux):**
 ```bash
-sudo nixos-rebuild switch --flake .#linux-rpi4b
-sudo nixos-rebuild switch --flake .#linux-x1c4g
-sudo nixos-rebuild switch --flake .#linux-nixvm
+sudo nixos-rebuild switch --flake .#rpi4b
+sudo nixos-rebuild switch --flake .#x1c4g
+sudo nixos-rebuild switch --flake .#nixvm
 ```
 
 **List Available Hosts:**
@@ -123,7 +123,7 @@ For initial deployment to a Raspberry Pi 4B:
 
 ```bash
 # Build SD card image (cross-compile from macOS)
-nix build .#nixosConfigurations.linux-rpi4b.config.system.build.sdImage
+nix build .#nixosConfigurations.rpi4b.config.system.build.sdImage
 
 # Flash image to SD card and boot Pi
 # SSH to Pi (ensure SSH key is configured in hosts/linux-rpi4b/default.nix)
@@ -155,7 +155,8 @@ Update dependencies:
 nix flake update     # Update all inputs
 ```
 
-More manual setup notes live in `docs/notes.md`.
+To set up a new machine, run `scripts/bootstrap.sh <host>`; see
+[docs/notes.md](docs/notes.md) for details.
 
 Nixpkgs 26.05 is the last release supporting `x86_64-darwin`, which
 `darwin-a2251` runs. See [docs/x86_64-darwin-eol.md](docs/x86_64-darwin-eol.md) for the
