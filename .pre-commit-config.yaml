@@ -14,10 +14,13 @@ repos:
       - id: statix-check
         name: statix check
         description: "Lint Nix files with statix"
-        entry: statix check
+        # Lint only the staged files. `statix check` takes a single target, so
+        # loop over them; linting the whole tree fails on warnings in files the
+        # commit does not touch.
+        entry: sh -c 'rc=0; for f in "$@"; do statix check "$f" || rc=1; done; exit $rc' --
         language: system
         files: '\.nix$'
-        pass_filenames: false
+        pass_filenames: true
 
       # Optional: Find dead Nix code
       - id: deadnix
