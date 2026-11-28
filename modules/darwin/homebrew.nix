@@ -42,8 +42,15 @@ in {
       "scroll-reverser" # Fix mouse scroll direction
       "little-snitch" # Network monitoring and security
 
+      # Terminal; configured by programs.kitty in home/modules/terminal
+      "kitty"
+
       # Communication
-      "signal" # Secure messaging; no working nixpkgs build on Darwin
+      # Secure messaging. nixpkgs replaced the signal-desktop-bin binary package
+      # with a build-from-source signal-desktop, whose signal-webrtc dependency
+      # does not compile on Darwin (third_party/nasm includes the glibc-only
+      # <endian.h>).
+      "signal"
 
       # Could add more universally useful defaults:
       "raycast" # Spotlight replacement

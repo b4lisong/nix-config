@@ -52,8 +52,6 @@ Examples of what this role might include when implemented:
     #
     #   # Compliance and security
     #   # Company-specific security agents
-    # Browsers
-    firefox-devedition
   ];
 
   # programs = {

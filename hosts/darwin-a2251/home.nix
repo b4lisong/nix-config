@@ -16,7 +16,7 @@ Configuration Strategy:
    - Includes: base → tui → gui → darwin profiles
    - Provides: CLI tools, TUI apps, GUI apps, macOS optimizations
 2. Import personal role (entertainment and personal productivity)
-   - Provides: Spotify, Signal, GIMP, Firefox Developer Edition
+   - Provides: personal tools (GUI apps such as Spotify and Zoom are Homebrew casks)
 3. Import dev role (development tools and environments)
    - Provides: Neovim, Node.js, Claude Code
 
@@ -31,7 +31,12 @@ Override Examples:
 - Terminal padding can be customized for personal preference
 - Application-specific settings can be fine-tuned per host
 */
-{lib, pkgs, pkgs-unstable, ...}: {
+{
+  lib,
+  pkgs,
+  pkgs-unstable,
+  ...
+}: {
   imports = [
     # Complete macOS desktop profile (includes base, tui, gui profiles)
     ../../home/profiles/darwin

@@ -22,20 +22,10 @@ Architecture:
 - Can be imported alongside profiles for complete user environments
 */
 {pkgs, ...}: {
+  # macOS GUI apps (Spotify, Zoom, Signal) are Homebrew casks in the host and
+  # modules/darwin/homebrew.nix: casks land in /Applications where Spotlight and
+  # Raycast index them, and self-updating apps can update themselves.
   home.packages = with pkgs; [
-    # Entertainment and Media
-    spotify # Music streaming service
-
-    # Communication
-    # Signal is installed as a Homebrew cask in modules/darwin/homebrew.nix:
-    # nixpkgs replaced the signal-desktop-bin binary package with a
-    # build-from-source signal-desktop, whose signal-webrtc dependency does not
-    # compile on Darwin (third_party/nasm includes the glibc-only <endian.h>).
-    zoom-us # Video conferencing for personal use
-
-    # Web browsing (development edition for personal projects)
-    firefox-devedition # Firefox with developer tools and features
-
     # Additional personal applications can be added here:
     # discord # Gaming and community communication
     # vlc # Media player for various formats

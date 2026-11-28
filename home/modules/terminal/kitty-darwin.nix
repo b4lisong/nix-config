@@ -13,6 +13,10 @@ settings and keybindings on top of the cross-platform baseline.
 }: {
   config = lib.mkIf (pkgs.stdenv.isDarwin && config.programs.kitty.enable) {
     programs.kitty = {
+      # The app comes from the kitty Homebrew cask (modules/darwin/homebrew.nix),
+      # which Spotlight and Raycast can index; Home Manager only writes the config.
+      package = lib.mkDefault null;
+
       # Darwin-specific font size (larger for high-DPI displays)
       font.size = lib.mkForce 14;
 

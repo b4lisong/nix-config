@@ -25,7 +25,11 @@ Configuration Areas:
 - Environment variables for terminal integration
 - Host-specific system behavior customizations
 */
-{myvars, pkgs, ...}: {
+{
+  myvars,
+  pkgs,
+  ...
+}: {
   # NOTE: imports are now handled by the outputs system
   # base.nix and modules/darwin are imported automatically
   # Variables are passed as myvars parameter
@@ -65,9 +69,9 @@ Configuration Areas:
       #"vmware-fusion" # Virtualization for testing different OS environments
       "orbstack" # Docker replacement and CLI VMs
 
-      # Browsers
-
-      # Messaging & communications
+      # Media and communication
+      "spotify"
+      "zoom"
       "discord" # Voice and text chat
 
       # Password management

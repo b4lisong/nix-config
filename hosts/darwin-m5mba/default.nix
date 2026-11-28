@@ -36,6 +36,10 @@ which also sets nixpkgs.hostPlatform. Settings here extend those modules.
       "parsec" # Low-latency remote desktop
       "orbstack" # Docker and Linux VMs
 
+      # Media and communication
+      "spotify"
+      "zoom"
+
       # Browsers
       "google-chrome"
 
