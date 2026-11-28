@@ -28,174 +28,178 @@ Key focus areas:
   ...
 }: {
   # Embedded systems and hardware development packages
-  home.packages = with pkgs; [
-    # Hardware communication and interfacing
-    minicom          # Serial terminal emulator
-    picocom          # Minimal serial communication program
-    i2c-tools        # I2C utilities for sensor interfacing
-    # Note: SPI tools typically come with kernel driver access via /dev/spi*
-    
-    # System monitoring optimized for embedded systems
-    iotop            # I/O monitoring (important for SD cards)
-    bandwhich        # Network utilization monitoring per process
-    procs            # Modern ps replacement with better embedded system info
-    dust             # Disk usage analyzer (du replacement)
-    
-    # Network debugging and analysis
-    nmap             # Network discovery and security auditing
-    netcat-gnu       # Network debugging and data transfer
-    tcpdump          # Network packet analyzer
-    ethtool          # Ethernet interface configuration
-    
-    # Hardware analysis and debugging
-    lshw             # Hardware information
-    dmidecode        # DMI/SMBIOS table decoder
-    lsof             # List open files (useful for hardware debugging)
-    strace           # System call tracer
-    
-    # Development tools for embedded projects
-    gcc              # C compiler for hardware projects
-    gdb              # GNU debugger
-    binutils         # Binary utilities (objdump, readelf, etc.)
-    
-    # File synchronization and remote access
-    rsync            # Efficient file transfer and synchronization
-    
-    # Archive and compression tools
-    p7zip            # 7-zip support
-    unrar            # RAR extraction
-    
-    # Text processing for config files and logs
-    jq               # JSON processor
-    yq               # YAML processor
-    
-    # System utilities
-    pciutils         # lspci for hardware enumeration
-    usbutils         # lsusb for USB device info
-    file             # File type detection
-    which            # Command location utility
-    tree             # Directory tree visualization
-    
-    # Git extensions for embedded development
-    git-lfs          # Large file support for binary assets
-  ] ++ [
-    # Latest development tools for modern embedded projects
-    pkgs-unstable.python3  # Latest Python for hardware scripting
-  ];
+  home.packages = with pkgs;
+    [
+      # Hardware communication and interfacing
+      minicom # Serial terminal emulator
+      picocom # Minimal serial communication program
+      i2c-tools # I2C utilities for sensor interfacing
+      # Note: SPI tools typically come with kernel driver access via /dev/spi*
 
-  # Shell configuration for embedded development
-  programs.zsh = {
-    # Embedded systems specific aliases and functions
-    shellAliases = {
-      # Hardware monitoring shortcuts (works on any Linux system with /sys)
-      "hw-temp" = "find /sys -name 'temp*_input' 2>/dev/null | head -5 | xargs -I {} sh -c 'echo -n \"{}: \"; cat {} 2>/dev/null | awk \"{print \\$1/1000 \\\"°C\\\"}'\" 2>/dev/null || echo 'Temperature sensors not available'";
-      "hw-freq" = "cat /proc/cpuinfo | grep 'cpu MHz' || echo 'CPU frequency info not available'";
-      
-      # GPIO shortcuts (will work on Pi when available)
-      "gpio-read" = "command -v gpio >/dev/null && gpio readall || echo 'GPIO tools not available'";
-      
-      # I2C detection
-      "i2c-scan" = "command -v i2cdetect >/dev/null && i2cdetect -y 1 || echo 'I2C tools not available'";
-      
-      # Network diagnostics
-      "net-scan" = "ip route | head -1 | awk '{print $3}' | xargs nmap -sn";
-      "ports" = "ss -tuln";
-      
-      # System resource monitoring
-      "mem-usage" = "free -h";
-      "disk-usage" = "df -h | grep -E '^/dev/'";
-      "top-processes" = "ps aux --sort=-%cpu | head";
-      
-      # Log analysis shortcuts
-      "logs-errors" = "journalctl -p err -b";
-      "logs-kernel" = "dmesg | tail -20";
-      
-      # Hardware information
-      "hw-info" = "echo '=== CPU Info ==='; lscpu | head -10; echo; echo '=== Memory Info ==='; free -h; echo; echo '=== Storage Info ==='; lsblk";
-      "usb-tree" = "lsusb -t";
-    };
-    
-    # Environment variables for embedded development
-    sessionVariables = {
-      # Common embedded development paths
-      EMBEDDED_TOOLS_PATH = "$HOME/.local/bin";
-      # Python path for hardware libraries (Pi-specific but harmless elsewhere)
-      PYTHONPATH = "$PYTHONPATH:/opt/vc/lib/python3.x/site-packages";
-    };
-  };
+      # System monitoring optimized for embedded systems
+      iotop # I/O monitoring (important for SD cards)
+      bandwhich # Network utilization monitoring per process
+      procs # Modern ps replacement with better embedded system info
+      dust # Disk usage analyzer (du replacement)
 
-  # SSH configuration optimized for embedded device management
-  programs.ssh = {
-    # Host configurations for common embedded device patterns
-    settings = {
-      # Common embedded device hostnames
-      "*.local" = {
-        User = "pi";  # Common default for Pi devices
-        ForwardAgent = false;
-        Compression = true;
-      };
+      # Network debugging and analysis
+      nmap # Network discovery and security auditing
+      netcat-gnu # Network debugging and data transfer
+      tcpdump # Network packet analyzer
+      ethtool # Ethernet interface configuration
 
-      # IoT devices often use these IP ranges
-      "192.168.*" = {
-        ForwardAgent = false;
-        Compression = true;
-        ServerAliveInterval = 30;  # Keep connections alive through NAT
-        ServerAliveCountMax = 3;
-      };
+      # Hardware analysis and debugging
+      lshw # Hardware information
+      dmidecode # DMI/SMBIOS table decoder
+      lsof # List open files (useful for hardware debugging)
+      strace # System call tracer
 
-      "10.*" = {
-        ForwardAgent = false;
-        Compression = true;
-        ServerAliveInterval = 30;
-      };
-    };
-  };
+      # Development tools for embedded projects
+      gcc # C compiler for hardware projects
+      gdb # GNU debugger
+      binutils # Binary utilities (objdump, readelf, etc.)
 
-  # Git configuration for embedded projects
-  programs.git = {
-    # Embedded development often involves binary files
-    lfs.enable = true;
-    
-    # Common patterns for embedded development
-    ignores = [
-      # Build artifacts
-      "*.o"
-      "*.elf"
-      "*.bin"
-      "*.hex"
-      
-      # Embedded IDE files
-      ".vscode/"
-      "*.code-workspace"
-      
-      # Hardware-specific
-      "*.pcb-bak"
-      "*.sch-bak"
-      
-      # Logs and temporary files
-      "*.log"
-      "core.*"
+      # File synchronization and remote access
+      rsync # Efficient file transfer and synchronization
+
+      # Archive and compression tools
+      p7zip # 7-zip support
+      unrar # RAR extraction
+
+      # Text processing for config files and logs
+      jq # JSON processor
+      yq # YAML processor
+
+      # System utilities
+      pciutils # lspci for hardware enumeration
+      usbutils # lsusb for USB device info
+      file # File type detection
+      which # Command location utility
+      tree # Directory tree visualization
+
+      # Git extensions for embedded development
+      git-lfs # Large file support for binary assets
+    ]
+    ++ [
+      # Latest development tools for modern embedded projects
+      pkgs-unstable.python3 # Latest Python for hardware scripting
     ];
-  };
 
-  # Tmux configuration optimized for embedded development
-  programs.tmux = {
-    extraConfig = ''
-      # Embedded development often requires multiple serial connections
-      bind-key S new-window -n "serial" "minicom"
-      bind-key I new-window -n "i2c" "watch -n 2 i2cdetect -y 1"
-      
-      # Quick hardware monitoring windows
-      bind-key H new-window -n "hardware" "htop"
-      bind-key N new-window -n "network" "watch -n 2 'ss -tuln'"
-      
-      # Status bar with system info relevant to embedded systems
-      set -g status-right "#[fg=green]#(uptime | cut -d',' -f3-) #[fg=yellow]#{?window_zoomed_flag, Z ,}#[fg=blue]%Y-%m-%d %H:%M"
-      
-      # Automatic session restoration (useful for long-running embedded development)
-      set -g @resurrect-save-bash-history 'on'
-      set -g @resurrect-capture-pane-contents 'on'
-    '';
+  programs = {
+    # Shell configuration for embedded development
+    zsh = {
+      # Embedded systems specific aliases and functions
+      shellAliases = {
+        # Hardware monitoring shortcuts (works on any Linux system with /sys)
+        "hw-temp" = "find /sys -name 'temp*_input' 2>/dev/null | head -5 | xargs -I {} sh -c 'echo -n \"{}: \"; cat {} 2>/dev/null | awk \"{print \\$1/1000 \\\"°C\\\"}'\" 2>/dev/null || echo 'Temperature sensors not available'";
+        "hw-freq" = "cat /proc/cpuinfo | grep 'cpu MHz' || echo 'CPU frequency info not available'";
+
+        # GPIO shortcuts (will work on Pi when available)
+        "gpio-read" = "command -v gpio >/dev/null && gpio readall || echo 'GPIO tools not available'";
+
+        # I2C detection
+        "i2c-scan" = "command -v i2cdetect >/dev/null && i2cdetect -y 1 || echo 'I2C tools not available'";
+
+        # Network diagnostics
+        "net-scan" = "ip route | head -1 | awk '{print $3}' | xargs nmap -sn";
+        "ports" = "ss -tuln";
+
+        # System resource monitoring
+        "mem-usage" = "free -h";
+        "disk-usage" = "df -h | grep -E '^/dev/'";
+        "top-processes" = "ps aux --sort=-%cpu | head";
+
+        # Log analysis shortcuts
+        "logs-errors" = "journalctl -p err -b";
+        "logs-kernel" = "dmesg | tail -20";
+
+        # Hardware information
+        "hw-info" = "echo '=== CPU Info ==='; lscpu | head -10; echo; echo '=== Memory Info ==='; free -h; echo; echo '=== Storage Info ==='; lsblk";
+        "usb-tree" = "lsusb -t";
+      };
+
+      # Environment variables for embedded development
+      sessionVariables = {
+        # Common embedded development paths
+        EMBEDDED_TOOLS_PATH = "$HOME/.local/bin";
+        # Python path for hardware libraries (Pi-specific but harmless elsewhere)
+        PYTHONPATH = "$PYTHONPATH:/opt/vc/lib/python3.x/site-packages";
+      };
+    };
+
+    # SSH configuration optimized for embedded device management
+    ssh = {
+      # Host configurations for common embedded device patterns
+      settings = {
+        # Common embedded device hostnames
+        "*.local" = {
+          User = "pi"; # Common default for Pi devices
+          ForwardAgent = false;
+          Compression = true;
+        };
+
+        # IoT devices often use these IP ranges
+        "192.168.*" = {
+          ForwardAgent = false;
+          Compression = true;
+          ServerAliveInterval = 30; # Keep connections alive through NAT
+          ServerAliveCountMax = 3;
+        };
+
+        "10.*" = {
+          ForwardAgent = false;
+          Compression = true;
+          ServerAliveInterval = 30;
+        };
+      };
+    };
+
+    # Git configuration for embedded projects
+    git = {
+      # Embedded development often involves binary files
+      lfs.enable = true;
+
+      # Common patterns for embedded development
+      ignores = [
+        # Build artifacts
+        "*.o"
+        "*.elf"
+        "*.bin"
+        "*.hex"
+
+        # Embedded IDE files
+        ".vscode/"
+        "*.code-workspace"
+
+        # Hardware-specific
+        "*.pcb-bak"
+        "*.sch-bak"
+
+        # Logs and temporary files
+        "*.log"
+        "core.*"
+      ];
+    };
+
+    # Tmux configuration optimized for embedded development
+    tmux = {
+      extraConfig = ''
+        # Embedded development often requires multiple serial connections
+        bind-key S new-window -n "serial" "minicom"
+        bind-key I new-window -n "i2c" "watch -n 2 i2cdetect -y 1"
+
+        # Quick hardware monitoring windows
+        bind-key H new-window -n "hardware" "htop"
+        bind-key N new-window -n "network" "watch -n 2 'ss -tuln'"
+
+        # Status bar with system info relevant to embedded systems
+        set -g status-right "#[fg=green]#(uptime | cut -d',' -f3-) #[fg=yellow]#{?window_zoomed_flag, Z ,}#[fg=blue]%Y-%m-%d %H:%M"
+
+        # Automatic session restoration (useful for long-running embedded development)
+        set -g @resurrect-save-bash-history 'on'
+        set -g @resurrect-capture-pane-contents 'on'
+      '';
+    };
   };
 
   # Development environment helpers

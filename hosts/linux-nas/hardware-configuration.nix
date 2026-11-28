@@ -9,57 +9,53 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = ["ehci_pci" "ahci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod"];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
-
-  fileSystems."/" = {
-    device = "rpool/root";
-    fsType = "zfs";
+  boot = {
+    initrd.availableKernelModules = ["ehci_pci" "ahci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod"];
+    initrd.kernelModules = [];
+    kernelModules = ["kvm-intel"];
+    extraModulePackages = [];
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-id/usb-HP_iLO_Internal_SD-CARD_000002660A01-0:0-part1";
-    fsType = "ext4";
-  };
-
-  fileSystems."/home" = {
-    device = "rpool/home";
-    fsType = "zfs";
-  };
-
-  fileSystems."/incus" = {
-    device = "rpool/incus";
-    fsType = "zfs";
-  };
-
-  fileSystems."/mnt/app_config" = {
-    device = "storage/app_config";
-    fsType = "zfs";
-    options = [ "defaults" "nofail" ];
-  };
-
-  fileSystems."/mnt/backup" = {
-    device = "storage/backup";
-    fsType = "zfs";
-    options = [ "defaults" "nofail" ];
-  };
-
-  fileSystems."/mnt/media" = {
-    device = "storage/media";
-    fsType = "zfs";
-    options = [ "defaults" "nofail" ];
-  };
-
-  fileSystems."/nix" = {
-    device = "rpool/nix";
-    fsType = "zfs";
-  };
-
-  fileSystems."/var" = {
-    device = "rpool/var";
-    fsType = "zfs";
+  fileSystems = {
+    "/" = {
+      device = "rpool/root";
+      fsType = "zfs";
+    };
+    "/boot" = {
+      device = "/dev/disk/by-id/usb-HP_iLO_Internal_SD-CARD_000002660A01-0:0-part1";
+      fsType = "ext4";
+    };
+    "/home" = {
+      device = "rpool/home";
+      fsType = "zfs";
+    };
+    "/incus" = {
+      device = "rpool/incus";
+      fsType = "zfs";
+    };
+    "/mnt/app_config" = {
+      device = "storage/app_config";
+      fsType = "zfs";
+      options = ["defaults" "nofail"];
+    };
+    "/mnt/backup" = {
+      device = "storage/backup";
+      fsType = "zfs";
+      options = ["defaults" "nofail"];
+    };
+    "/mnt/media" = {
+      device = "storage/media";
+      fsType = "zfs";
+      options = ["defaults" "nofail"];
+    };
+    "/nix" = {
+      device = "rpool/nix";
+      fsType = "zfs";
+    };
+    "/var" = {
+      device = "rpool/var";
+      fsType = "zfs";
+    };
   };
 
   swapDevices = [];

@@ -27,11 +27,11 @@ It focuses on essential NixOS system services, security, and optimization.
       trusted-public-keys = lib.mkAfter [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimXuKWsyFQjy8Z8QK7k+j9YQjKtXHOM="
       ];
-      
+
       # Optimize store and enable auto-optimise
       auto-optimise-store = true;
     };
-    
+
     # Automatic garbage collection
     gc = {
       automatic = true;
@@ -47,10 +47,10 @@ It focuses on essential NixOS system services, security, and optimization.
       enable = true;
       killUnconfinedConfinables = true;
     };
-    
+
     # Configure polkit for privilege escalation
     polkit.enable = true;
-    
+
     # Harden the system
     protectKernelImage = true;
 
@@ -85,7 +85,7 @@ It focuses on essential NixOS system services, security, and optimization.
         RuntimeMaxUse=100M
       '';
     };
-    
+
     # DNS resolution
     resolved = {
       enable = true;
@@ -95,10 +95,10 @@ It focuses on essential NixOS system services, security, and optimization.
         FallbackDNS = ["1.1.1.1" "8.8.8.8"];
       };
     };
-    
+
     # Firmware updates for supported hardware
     fwupd.enable = true;
-    
+
     # Disk optimization
     fstrim.enable = true;
   };
@@ -111,7 +111,7 @@ It focuses on essential NixOS system services, security, and optimization.
       allowPing = true;
       logReversePathDrops = true;
     };
-    
+
     # Modern network stack
     useNetworkd = lib.mkDefault true;
   };
@@ -153,23 +153,23 @@ It focuses on essential NixOS system services, security, and optimization.
     iotop
     lsof
     psmisc
-    
+
     # Network debugging
     tcpdump
     ethtool
-    
+
     # File system tools
     dosfstools
     ntfs3g
-    
+
     # Archive tools
     unzip
     zip
-    
+
     # Text processing
     less
     more
-    
+
     # System information
     inxi
     usbutils
@@ -192,23 +192,22 @@ It focuses on essential NixOS system services, security, and optimization.
       "net.ipv4.conf.all.rp_filter" = 1;
       "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
       "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+      # BBR congestion control (needs the tcp_bbr module below)
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
     };
-    
+
     # Kernel modules for common hardware
     kernelModules = [
       "tcp_bbr" # Better congestion control
     ];
-    
-    # Enable BBR congestion control
-    kernel.sysctl."net.core.default_qdisc" = "fq";
-    kernel.sysctl."net.ipv4.tcp_congestion_control" = "bbr";
   };
 
   # User configuration defaults
   users = {
     # Enable mutable users for easier initial setup and password management
     mutableUsers = lib.mkDefault true;
-    
+
     # Default shell
     defaultUserShell = pkgs.zsh;
   };

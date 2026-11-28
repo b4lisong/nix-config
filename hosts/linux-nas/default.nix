@@ -10,12 +10,9 @@
   ];
   # NOTE: other imports are now handled by the outputs system
 
-  # Host identification
-  networking.hostName = myvars.hosts.nas.hostname;
-
   # Boot configuration for ZFS root with legacy GRUB
   boot = {
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = ["zfs"];
     zfs.forceImportRoot = false;
     loader.grub = {
       enable = true;
@@ -24,8 +21,8 @@
       device = "/dev/disk/by-id/usb-HP_iLO_Internal_SD-CARD_000002660A01-0:0"; # Internal SD card for bootloader (HP MicroServer Gen8 workaround)
     };
     # Bare-metal hardware configuration
-    initrd.availableKernelModules = [ "ehci_pci" "ahci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod" ];
-    kernelModules = [ "kvm-intel" ]; # Change to "kvm-amd" if using AMD host
+    initrd.availableKernelModules = ["ehci_pci" "ahci" "ata_piix" "uhci_hcd" "xhci_pci_renesas" "usbhid" "usb_storage" "sd_mod"];
+    kernelModules = ["kvm-intel"]; # Change to "kvm-amd" if using AMD host
 
     # ZFS ARC memory limits and performance tuning for KVM hypervisor with 16GB RAM
     extraModprobeConfig = ''
@@ -41,9 +38,6 @@
       options zfs zfs_dirty_data_max_percent=25
     '';
   };
-
-  # ZFS-specific configuration
-  networking.hostId = "8425e349"; # Required for ZFS - matches system hostId
 
   # Memory management for KVM hypervisor with limited RAM
   zramSwap = {
@@ -166,7 +160,6 @@
         };
       };
     };
-
   };
 
   # Virtualization configuration
@@ -174,7 +167,7 @@
     # Incus virtualization
     incus = {
       enable = true;
-      ui.enable = true;  # Enable Incus web UI
+      ui.enable = true; # Enable Incus web UI
       preseed = {
         networks = [
           {
@@ -243,73 +236,81 @@
     ACTION=="add|change", ENV{ID_SERIAL}=="HP_iLO_Internal_SD-CARD_000002660A01", ATTR{queue/scheduler}="mq-deadline"
   '';
 
+  systemd = {
+    services = {
+      # Set permissions on NAS storage datasets after mount
+      nas-storage-permissions = {
+        description = "Set permissions on NAS storage datasets";
+        after = ["zfs-mount.service"];
+        wantedBy = ["multi-user.target"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          # Set ownership and permissions for storage datasets
+          ${pkgs.coreutils}/bin/chown root:nas-users /mnt/app_config /mnt/media /mnt/backup
+          ${pkgs.coreutils}/bin/chmod 2775 /mnt/app_config /mnt/media /mnt/backup
+        '';
+      };
 
-  # Set permissions on NAS storage datasets after mount
-  systemd.services.nas-storage-permissions = {
-    description = "Set permissions on NAS storage datasets";
-    after = [ "zfs-mount.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
+      # Target directory for the oci-nixos backup push. Created by a unit that
+      # requires the mount rather than by tmpfiles: /mnt/backup is mounted with
+      # nofail, and a directory created on the root filesystem would silently
+      # receive backups. Mode 0700 because /mnt/backup is shared over Samba to
+      # nas-users and the backup contains secrets.
+      oci-nixos-backup-dir = {
+        description = "Create the oci-nixos backup directory";
+        after = ["zfs-mount.service" "nas-storage-permissions.service"];
+        wantedBy = ["multi-user.target"];
+        unitConfig.RequiresMountsFor = "/mnt/backup";
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          ${pkgs.coreutils}/bin/mkdir -p /mnt/backup/systems/server
+          ${pkgs.coreutils}/bin/install -d -m 0700 -o ${myvars.user.username} -g users /mnt/backup/systems/server/oci-nixos
+        '';
+      };
+
+      # Set up Samba users after samba service starts
+      samba-user-setup = {
+        description = "Set up Samba users";
+        after = ["samba-smbd.service"];
+        wantedBy = ["multi-user.target"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          # Add service user to Samba user database if not already present
+          if ! ${pkgs.samba}/bin/pdbedit -L | ${pkgs.gnugrep}/bin/grep -q "^nas-user:"; then
+            echo "Setting up Samba service user: nas-user"
+            # Note: This creates the user but requires manual password setup
+            # Run: sudo smbpasswd -a nas-user
+            ${pkgs.samba}/bin/pdbedit -a -u nas-user -t || true
+          fi
+
+          # Also add main user to Samba user database if not already present
+          if ! ${pkgs.samba}/bin/pdbedit -L | ${pkgs.gnugrep}/bin/grep -q "^${myvars.user.username}:"; then
+            echo "Setting up Samba user: ${myvars.user.username}"
+            # Note: This creates the user but requires manual password setup
+            # Run: sudo smbpasswd -a ${myvars.user.username}
+            ${pkgs.samba}/bin/pdbedit -a -u ${myvars.user.username} -t || true
+          fi
+        '';
+      };
     };
-    script = ''
-      # Set ownership and permissions for storage datasets
-      ${pkgs.coreutils}/bin/chown root:nas-users /mnt/app_config /mnt/media /mnt/backup
-      ${pkgs.coreutils}/bin/chmod 2775 /mnt/app_config /mnt/media /mnt/backup
-    '';
-  };
-
-  # Target directory for the oci-nixos backup push. Created by a unit that
-  # requires the mount rather than by tmpfiles: /mnt/backup is mounted with
-  # nofail, and a directory created on the root filesystem would silently
-  # receive backups. Mode 0700 because /mnt/backup is shared over Samba to
-  # nas-users and the backup contains secrets.
-  systemd.services.oci-nixos-backup-dir = {
-    description = "Create the oci-nixos backup directory";
-    after = [ "zfs-mount.service" "nas-storage-permissions.service" ];
-    wantedBy = [ "multi-user.target" ];
-    unitConfig.RequiresMountsFor = "/mnt/backup";
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      ${pkgs.coreutils}/bin/mkdir -p /mnt/backup/systems/server
-      ${pkgs.coreutils}/bin/install -d -m 0700 -o ${myvars.user.username} -g users /mnt/backup/systems/server/oci-nixos
-    '';
-  };
-
-  # Set up Samba users after samba service starts
-  systemd.services.samba-user-setup = {
-    description = "Set up Samba users";
-    after = [ "samba-smbd.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      # Add service user to Samba user database if not already present
-      if ! ${pkgs.samba}/bin/pdbedit -L | ${pkgs.gnugrep}/bin/grep -q "^nas-user:"; then
-        echo "Setting up Samba service user: nas-user"
-        # Note: This creates the user but requires manual password setup
-        # Run: sudo smbpasswd -a nas-user
-        ${pkgs.samba}/bin/pdbedit -a -u nas-user -t || true
-      fi
-
-      # Also add main user to Samba user database if not already present
-      if ! ${pkgs.samba}/bin/pdbedit -L | ${pkgs.gnugrep}/bin/grep -q "^${myvars.user.username}:"; then
-        echo "Setting up Samba user: ${myvars.user.username}"
-        # Note: This creates the user but requires manual password setup
-        # Run: sudo smbpasswd -a ${myvars.user.username}
-        ${pkgs.samba}/bin/pdbedit -a -u ${myvars.user.username} -t || true
-      fi
-    '';
   };
 
   # Network configuration - Simple bridge setup
   networking = {
+    # Host identification
+    hostName = myvars.hosts.nas.hostname;
+    # Required for ZFS - matches system hostId
+    hostId = "8425e349";
+
     # Disable NetworkManager in favor of simple bridge configuration
     networkmanager.enable = false;
     # Use systemd-networkd for bridge management
@@ -321,7 +322,7 @@
 
     # Create bridge interface with NixOS
     bridges.br0 = {
-      interfaces = [ "eno1" ];
+      interfaces = ["eno1"];
     };
 
     # Configure bridge with DHCP
@@ -354,10 +355,10 @@
       wget
       curl
       # Virtualization packages
-      qemu_kvm         # qemu-kvm equivalent
-      virt-manager     # virt-manager (same name)
-      libvirt          # libvirt-clients equivalent
-      bridge-utils     # bridge-utils (same name)
+      qemu_kvm # qemu-kvm equivalent
+      virt-manager # virt-manager (same name)
+      libvirt # libvirt-clients equivalent
+      bridge-utils # bridge-utils (same name)
     ];
   };
 
@@ -370,44 +371,46 @@
     };
   };
 
-  # Group configuration for NAS storage access
-  users.groups.nas-users = {
-    gid = 1000; # Fixed GID for consistent SMB/NFS sharing
-  };
+  users = {
+    # Group configuration for NAS storage access
+    groups.nas-users = {
+      gid = 1000; # Fixed GID for consistent SMB/NFS sharing
+    };
 
-  # Service user for Samba access
-  users.users.nas-user = {
-    isSystemUser = true;
-    description = "NAS Samba service user";
-    group = "nas-users";
-    extraGroups = [
-      "storage" # Access to storage devices
-    ];
-    createHome = false;
-  };
+    # Service user for Samba access
+    users.nas-user = {
+      isSystemUser = true;
+      description = "NAS Samba service user";
+      group = "nas-users";
+      extraGroups = [
+        "storage" # Access to storage devices
+      ];
+      createHome = false;
+    };
 
-  # User configuration specific to this host
-  users.users.${myvars.user.username} = {
-    isNormalUser = true;
-    description = myvars.user.fullName;
-    extraGroups = [
-      "wheel" # sudo access
-      "networkmanager"
-      "audio"
-      "video"
-      "storage" # Access to storage devices
-      "nas-users" # Access to NAS storage datasets
-      "incus-admin" # Access to Incus management
-      "libvirtd" # Access to libvirt
-    ];
+    # User configuration specific to this host
+    users.${myvars.user.username} = {
+      isNormalUser = true;
+      description = myvars.user.fullName;
+      extraGroups = [
+        "wheel" # sudo access
+        "networkmanager"
+        "audio"
+        "video"
+        "storage" # Access to storage devices
+        "nas-users" # Access to NAS storage datasets
+        "incus-admin" # Access to Incus management
+        "libvirtd" # Access to libvirt
+      ];
 
-    # SSH key authentication - configure with your public key
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICNBEKkYPumCLWgGGgvJ6Gr9FPtF8i1U5TBB2IrJnFV9"
-    ];
+      # SSH key authentication - configure with your public key
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICNBEKkYPumCLWgGGgvJ6Gr9FPtF8i1U5TBB2IrJnFV9"
+      ];
 
-    # Allow setting passwords manually after first boot
-    hashedPassword = null;
+      # Allow setting passwords manually after first boot
+      hashedPassword = null;
+    };
   };
 
   # Security configuration

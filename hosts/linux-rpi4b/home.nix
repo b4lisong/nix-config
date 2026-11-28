@@ -43,55 +43,57 @@
       ];
   };
 
-  # Pi-specific shell configuration
-  programs.zsh = {
-    # Raspberry Pi specific aliases and functions
-    shellAliases = {
-      # Pi-specific system monitoring shortcuts
-      temp = "vcgencmd measure_temp 2>/dev/null || echo 'vcgencmd not available'";
-      gpu-temp = "vcgencmd measure_temp 2>/dev/null || echo 'vcgencmd not available'";
-      cpu-freq = "vcgencmd measure_clock arm 2>/dev/null || echo 'vcgencmd not available'";
-      gpu-freq = "vcgencmd measure_clock core 2>/dev/null || echo 'vcgencmd not available'";
+  programs = {
+    # Pi-specific shell configuration
+    zsh = {
+      # Raspberry Pi specific aliases and functions
+      shellAliases = {
+        # Pi-specific system monitoring shortcuts
+        temp = "vcgencmd measure_temp 2>/dev/null || echo 'vcgencmd not available'";
+        gpu-temp = "vcgencmd measure_temp 2>/dev/null || echo 'vcgencmd not available'";
+        cpu-freq = "vcgencmd measure_clock arm 2>/dev/null || echo 'vcgencmd not available'";
+        gpu-freq = "vcgencmd measure_clock core 2>/dev/null || echo 'vcgencmd not available'";
 
-      # Pi system information
-      pi-info = "vcgencmd version 2>/dev/null && vcgencmd get_mem arm 2>/dev/null && vcgencmd get_mem gpu 2>/dev/null || echo 'Pi-specific commands not available'";
+        # Pi system information
+        pi-info = "vcgencmd version 2>/dev/null && vcgencmd get_mem arm 2>/dev/null && vcgencmd get_mem gpu 2>/dev/null || echo 'Pi-specific commands not available'";
 
-      # Network shortcuts optimized for this Pi's typical usage
-      myip = "curl -s ifconfig.me";
-      localip = "ip route get 1 | head -1 | cut -d' ' -f7";
+        # Network shortcuts optimized for this Pi's typical usage
+        myip = "curl -s ifconfig.me";
+        localip = "ip route get 1 | head -1 | cut -d' ' -f7";
 
-      # SD card health monitoring specific to Pi
-      sd-health = "sudo smartctl -a /dev/mmcblk0 2>/dev/null || echo 'SD card monitoring not available'";
-    };
-  };
-
-  # Neovim configuration optimized for this Pi's performance
-  programs.neovim = {
-    # Pi-specific performance optimizations
-    initLua = ''
-      -- Pi 4B specific optimizations
-      vim.opt.updatetime = 1000  -- Slower update for better performance on Pi
-      vim.opt.timeoutlen = 500   -- Faster key timeout
-
-      -- Disable heavy features for better Pi performance
-      vim.g.loaded_perl_provider = 0
-      vim.g.loaded_ruby_provider = 0
-    '';
-  };
-
-  # Starship prompt customization for this Pi
-  programs.starship = {
-    settings = {
-      # Show memory usage (critical for Pi monitoring)
-      memory_usage = {
-        disabled = false;
-        threshold = 70; # Pi 4B has limited RAM
-        format = "[$symbol$ram]($style) ";
-        symbol = "🐏 ";
+        # SD card health monitoring specific to Pi
+        sd-health = "sudo smartctl -a /dev/mmcblk0 2>/dev/null || echo 'SD card monitoring not available'";
       };
+    };
 
-      # Always show hostname for this headless Pi
-      hostname.disabled = false;
+    # Neovim configuration optimized for this Pi's performance
+    neovim = {
+      # Pi-specific performance optimizations
+      initLua = ''
+        -- Pi 4B specific optimizations
+        vim.opt.updatetime = 1000  -- Slower update for better performance on Pi
+        vim.opt.timeoutlen = 500   -- Faster key timeout
+
+        -- Disable heavy features for better Pi performance
+        vim.g.loaded_perl_provider = 0
+        vim.g.loaded_ruby_provider = 0
+      '';
+    };
+
+    # Starship prompt customization for this Pi
+    starship = {
+      settings = {
+        # Show memory usage (critical for Pi monitoring)
+        memory_usage = {
+          disabled = false;
+          threshold = 70; # Pi 4B has limited RAM
+          format = "[$symbol$ram]($style) ";
+          symbol = "🐏 ";
+        };
+
+        # Always show hostname for this headless Pi
+        hostname.disabled = false;
+      };
     };
   };
 
@@ -100,4 +102,3 @@
   # the initial installation.
   home.stateVersion = "25.05";
 }
-

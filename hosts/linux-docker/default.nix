@@ -96,51 +96,53 @@
     };
   };
 
-  # NAS share mounting configuration for Docker volumes
-  fileSystems."/mnt/nas/app_config" = {
-    device = "//nas/app_config";
-    fsType = "cifs";
-    options = [
-      "credentials=/etc/cifs-credentials"
-      "uid=1000"
-      "gid=1000"
-      "file_mode=0664"
-      "dir_mode=0775"
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.device-timeout=10"
-      "x-systemd.mount-timeout=10"
-    ];
-  };
-  fileSystems."/mnt/nas/media" = {
-    device = "//nas/media";
-    fsType = "cifs";
-    options = [
-      "credentials=/etc/cifs-credentials"
-      "uid=1000"
-      "gid=1000"
-      "file_mode=0664"
-      "dir_mode=0775"
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.device-timeout=10"
-      "x-systemd.mount-timeout=10"
-    ];
-  };
-  fileSystems."/mnt/nas/downloads" = {
-    device = "//nas/downloads";
-    fsType = "cifs";
-    options = [
-      "credentials=/etc/cifs-credentials"
-      "uid=1000"
-      "gid=1000"
-      "file_mode=0664"
-      "dir_mode=0775"
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.device-timeout=10"
-      "x-systemd.mount-timeout=10"
-    ];
+  fileSystems = {
+    # NAS share mounting configuration for Docker volumes
+    "/mnt/nas/app_config" = {
+      device = "//nas/app_config";
+      fsType = "cifs";
+      options = [
+        "credentials=/etc/cifs-credentials"
+        "uid=1000"
+        "gid=1000"
+        "file_mode=0664"
+        "dir_mode=0775"
+        "nofail"
+        "x-systemd.automount"
+        "x-systemd.device-timeout=10"
+        "x-systemd.mount-timeout=10"
+      ];
+    };
+    "/mnt/nas/media" = {
+      device = "//nas/media";
+      fsType = "cifs";
+      options = [
+        "credentials=/etc/cifs-credentials"
+        "uid=1000"
+        "gid=1000"
+        "file_mode=0664"
+        "dir_mode=0775"
+        "nofail"
+        "x-systemd.automount"
+        "x-systemd.device-timeout=10"
+        "x-systemd.mount-timeout=10"
+      ];
+    };
+    "/mnt/nas/downloads" = {
+      device = "//nas/downloads";
+      fsType = "cifs";
+      options = [
+        "credentials=/etc/cifs-credentials"
+        "uid=1000"
+        "gid=1000"
+        "file_mode=0664"
+        "dir_mode=0775"
+        "nofail"
+        "x-systemd.automount"
+        "x-systemd.device-timeout=10"
+        "x-systemd.mount-timeout=10"
+      ];
+    };
   };
 
   # Essential packages for Docker host

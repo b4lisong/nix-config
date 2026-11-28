@@ -122,15 +122,18 @@ in {
     git = {
       enable = true;
       settings = {
-        user.name = vars.git.userName;
-        user.email = vars.git.userEmail;
+        user = {
+          name = vars.git.userName;
+          email = vars.git.userEmail;
+          # SSH commit signing (see gpg.format below)
+          signingkey = "~/.ssh/id_ed25519.pub";
+        };
         init.defaultBranch = vars.git.defaultBranch;
         pull.rebase = vars.git.pullRebase;
         # Force SSH for GitHub URLs (avoid HTTPS authentication prompts)
         url."git@github.com:".insteadOf = "https://github.com/";
         # SSH commit signing
         gpg.format = "ssh";
-        user.signingkey = "~/.ssh/id_ed25519.pub";
       };
     };
 

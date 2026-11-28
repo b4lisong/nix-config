@@ -46,8 +46,30 @@
     };
   };
 
-  # Enable multi-user target for proper boot
-  systemd.targets.multi-user.enable = true;
+  systemd = {
+    # Enable multi-user target for proper boot
+    targets.multi-user.enable = true;
+
+    # Set global read/write permissions on /srv
+    tmpfiles.rules = [
+      "d /srv 0777 root root -"
+    ];
+
+    # Rootless Docker's default "builtin" port driver rewrites every published
+    # port's source address to the network gateway (until RootlessKit v3), so
+    # Caddy can't tell Cloudflare's IPs apart and Authelia sees one client.
+    # The slirp4netns port driver keeps the real source IP at lower throughput.
+    user.services.docker.environment.DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER = "slirp4netns";
+
+    # Keep the rollback window to the last 5 system generations. Daily upgrades
+    # arrive in bursts, so the shared `--delete-older-than 30d` rule can retain
+    # a dozen or more closures; nix-collect-garbage can only prune by age, so
+    # trim the system profile by count just before the weekly collection, which
+    # then frees the dropped closures. Other profiles keep the 30-day rule.
+    services.nix-gc.preStart = ''
+      ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --delete-generations +5
+    '';
+  };
 
   # Filesystem configuration matching actual disk layout
   fileSystems = {
@@ -65,11 +87,6 @@
     };
   };
 
-  # Set global read/write permissions on /srv
-  systemd.tmpfiles.rules = [
-    "d /srv 0777 root root -"
-  ];
-
   # Docker configuration
   virtualisation.docker = {
     enable = true;
@@ -81,12 +98,6 @@
       };
     };
   };
-
-  # Rootless Docker's default "builtin" port driver rewrites every published
-  # port's source address to the network gateway (until RootlessKit v3), so
-  # Caddy can't tell Cloudflare's IPs apart and Authelia sees one client.
-  # The slirp4netns port driver keeps the real source IP at lower throughput.
-  systemd.user.services.docker.environment.DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER = "slirp4netns";
 
   # Host-specific service configuration
   services = {
@@ -257,15 +268,6 @@
     randomizedDelaySec = "45min";
     fixedRandomDelay = true;
   };
-
-  # Keep the rollback window to the last 5 system generations. Daily upgrades
-  # arrive in bursts, so the shared `--delete-older-than 30d` rule can retain
-  # a dozen or more closures; nix-collect-garbage can only prune by age, so
-  # trim the system profile by count just before the weekly collection, which
-  # then frees the dropped closures. Other profiles keep the 30-day rule.
-  systemd.services.nix-gc.preStart = ''
-    ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --delete-generations +5
-  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

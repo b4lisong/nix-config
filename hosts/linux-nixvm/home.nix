@@ -27,31 +27,27 @@
     homeDirectory = lib.mkForce "/home/${myvars.user.username}";
 
     # Host-specific packages
-    packages = with pkgs;
-      [
-        _1password-gui
-        chromium
-        firefox-devedition
-        proton-vpn
-        nicotine-plus
-      ]
-      ++ [
-        # Latest (unstable) packages
-        # pkgs-unstable.nodejs_latest # Latest Node.js for modern JS projects
-      ];
-      
+    packages = with pkgs; [
+      _1password-gui
+      chromium
+      firefox-devedition
+      proton-vpn
+      nicotine-plus
+      # Latest (unstable) packages
+      # pkgs-unstable.nodejs_latest # Latest Node.js for modern JS projects
+    ];
+
     # Configure npm to use custom global directory
     file.".npmrc".text = ''
       prefix=${config.home.homeDirectory}/.npm-global
     '';
-    
+
     # Add npm global bin to PATH
     sessionPath = [
       "${config.home.homeDirectory}/.npm-global/bin"
     ];
   };
 
-  programs.gpg.enable = true;
   services.gpg-agent.enable = true;
 
   # Polybar configuration with proper i3 dependency
@@ -67,10 +63,10 @@
         echo "Waiting for i3 to start..."
         ${pkgs.coreutils}/bin/sleep 0.5
       done
-      
+
       # Give i3 a moment to fully initialize
       ${pkgs.coreutils}/bin/sleep 1
-      
+
       # Launch polybar
       polybar main &
     '';
@@ -86,21 +82,21 @@
         background = "#1e1e2e";
         foreground = "#cdd6f4";
       };
-      
+
       "module/i3" = {
         type = "internal/i3";
         format = "<label-state> <label-mode>";
         index-sort = true;
         wrapping-scroll = false;
       };
-      
+
       "module/date" = {
         type = "internal/date";
         date = "%Y-%m-%d%";
         time = "%H:%M";
         label = "%date% %time%";
       };
-      
+
       "module/battery" = {
         type = "internal/battery";
         battery = "BAT0";
@@ -108,13 +104,13 @@
         format-charging = "<label-charging>";
         format-discharging = "<label-discharging>";
       };
-      
+
       "module/memory" = {
         type = "internal/memory";
         format = "RAM <label>";
         label = "%percentage_used%%";
       };
-      
+
       "module/cpu" = {
         type = "internal/cpu";
         format = "CPU <label>";
@@ -127,55 +123,60 @@
   systemd.user.services.polybar = {
     Unit = lib.mkForce {
       Description = "Polybar status bar";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
+      After = ["graphical-session.target"];
+      PartOf = ["graphical-session.target"];
     };
     Install = lib.mkForce {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = ["graphical-session.target"];
     };
   };
 
-  # Host-specific kitty configuration
-  programs.kitty.font.size = lib.mkForce 14;
+  programs = {
+    # GPG; the agent is configured under services.gpg-agent
+    gpg.enable = true;
 
-  # Host-specific shell configuration
-  programs.zsh = {
-    # Host-specific aliases and functions
-    shellAliases = {
-    };
-    
-    # TERM configuration for proper terminal handling
-    initContent = ''
-      case "$TERM" in
-          xterm*)
-              if [ -e "${pkgs.ncurses}/share/terminfo/x/xterm-256color" ]; then
-                  export TERM=xterm-256color
-              elif [ -e "${pkgs.ncurses}/share/terminfo/x/xterm-color" ]; then
-                  export TERM=xterm-color;
-              else
-                  export TERM=xterm
-              fi
-              ;;
-          linux)
-              export TERM=linux
-              ;;
-      esac
-      
-      # Auto-start tmux only for SSH connections or Linux console (not graphical terminals)
-      if command -v tmux &> /dev/null && [ -n "$PS1" ] && \
-         [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && \
-         ([ -n "$SSH_CONNECTION" ] || [ -n "$SSH_TTY" ] || [ "$TERM" = "linux" ]) && \
-         [ -z "$KITTY_WINDOW_ID" ]; then
-        # Check if any tmux sessions exist
-        if tmux list-sessions &>/dev/null; then
-          # Attach to the first available session
-          exec tmux attach-session
-        else
-          # Create a new session
-          exec tmux new-session
+    # Host-specific kitty configuration
+    kitty.font.size = lib.mkForce 14;
+
+    # Host-specific shell configuration
+    zsh = {
+      # Host-specific aliases and functions
+      shellAliases = {
+      };
+
+      # TERM configuration for proper terminal handling
+      initContent = ''
+        case "$TERM" in
+            xterm*)
+                if [ -e "${pkgs.ncurses}/share/terminfo/x/xterm-256color" ]; then
+                    export TERM=xterm-256color
+                elif [ -e "${pkgs.ncurses}/share/terminfo/x/xterm-color" ]; then
+                    export TERM=xterm-color;
+                else
+                    export TERM=xterm
+                fi
+                ;;
+            linux)
+                export TERM=linux
+                ;;
+        esac
+
+        # Auto-start tmux only for SSH connections or Linux console (not graphical terminals)
+        if command -v tmux &> /dev/null && [ -n "$PS1" ] && \
+           [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && \
+           ([ -n "$SSH_CONNECTION" ] || [ -n "$SSH_TTY" ] || [ "$TERM" = "linux" ]) && \
+           [ -z "$KITTY_WINDOW_ID" ]; then
+          # Check if any tmux sessions exist
+          if tmux list-sessions &>/dev/null; then
+            # Attach to the first available session
+            exec tmux attach-session
+          else
+            # Create a new session
+            exec tmux new-session
+          fi
         fi
-      fi
-    '';
+      '';
+    };
   };
 
   # This value determines the Home Manager release that your
@@ -183,4 +184,3 @@
   # the initial installation.
   home.stateVersion = "25.05";
 }
-

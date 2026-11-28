@@ -5,7 +5,7 @@ This module provides the baseline kitty configuration using Home Manager's
 built-in programs.kitty module. It contains all cross-platform settings
 from the original dotfiles configuration.
 */
-{...}: {
+_: {
   # Kitty terminal configuration using Home Manager's built-in module
   programs.kitty = {
     enable = true;

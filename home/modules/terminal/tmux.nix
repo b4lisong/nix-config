@@ -7,7 +7,7 @@ tmux, both locally and over SSH. The agent TUI is an alternate-screen
 application that relies on extended key encoding, OSC passthrough and a
 truecolor-capable TERM, none of which tmux forwards under its defaults.
 */
-{...}: {
+_: {
   programs.tmux = {
     enable = true;
 

@@ -27,13 +27,10 @@
     homeDirectory = lib.mkForce "/home/${myvars.user.username}";
 
     # Host-specific packages
-    packages = with pkgs;
-      [
-      ]
-      ++ [
-        # Latest (unstable) packages
-        # pkgs-unstable.nodejs_latest # Latest Node.js for modern JS projects
-      ];
+    packages = with pkgs; [
+      # Latest (unstable) packages
+      # pkgs-unstable.nodejs_latest # Latest Node.js for modern JS projects
+    ];
 
     # Configure npm to use custom global directory
     file.".npmrc".text = ''
