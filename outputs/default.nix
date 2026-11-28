@@ -75,10 +75,14 @@ in {
   devShells = forAllSystems (system: let
     pkgs = nixpkgs.legacyPackages.${system};
   in {
-    default = pkgs.mkShell {
-      buildInputs = with pkgs; [
+    # mkShellNoCC: nothing here compiles, so skip the C toolchain stdenv adds.
+    default = pkgs.mkShellNoCC {
+      packages = with pkgs; [
         alejandra
-        pre-commit
+        # prek runs .pre-commit-config.yaml. nixpkgs' pre-commit is not cached
+        # on aarch64-darwin, and building it runs tests that need dotnet-sdk
+        # bootstrapped from source.
+        prek
         statix
         deadnix
         nix-tree
@@ -86,9 +90,6 @@ in {
         nil
         jq
         git
-        lua-language-server
-        stylua
-        selene
       ];
     };
   });

@@ -16,7 +16,7 @@ This repository is under constant development!
 
 * **Darwin configurations** – automatically discovered from `outputs/{arch}/src/*.nix` and assembled from a layered set of modules for macOS systems.
 * **NixOS configurations** – automatically discovered from `outputs/{arch}/src/*.nix` and assembled from a layered set of modules for Linux systems.
-* **Development shells** – a set of per-architecture `mkShell` environments containing tools such as `alejandra`, `pre-commit`, `statix`, and `deadnix`.
+* **Development shells** – a set of per-architecture `mkShellNoCC` environments containing tools such as `alejandra`, `prek` (runs the pre-commit hooks; install them with `prek install`), `statix`, and `deadnix`.
 
 The configuration supports both stable and bleeding-edge packages through dual nixpkgs inputs, with Home Manager integrated as a system module (Darwin or NixOS) rather than standalone. Hosts are organized by architecture and discovered automatically - no manual flake.nix editing required when adding new machines.
 
@@ -92,7 +92,7 @@ This configuration includes Just commands that automatically detect your platfor
 
 ```bash
 just rebuild          # Auto-detects platform (darwin-rebuild or nixos-rebuild)
-just build            # Build without switching  
+just build            # Build without switching
 just check            # Validate configuration
 just rollback         # Revert to previous generation
 just show-platform    # Show detected platform and hostname
@@ -162,4 +162,3 @@ To set up a new machine, run `scripts/bootstrap.sh <host>`; see
 Nixpkgs 26.05 is the last release supporting `x86_64-darwin`, which
 `darwin-a2251` runs. See [docs/x86_64-darwin-eol.md](docs/x86_64-darwin-eol.md) for the
 deadline and the input split required before the other hosts can move to 26.11.
-
