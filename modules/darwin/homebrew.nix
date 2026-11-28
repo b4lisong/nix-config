@@ -2,7 +2,25 @@
 Default Homebrew configuration for all Darwin systems
 This module provides sensible defaults while allowing hosts to override and extend
 */
-{lib, ...}: {
+{
+  config,
+  lib,
+  ...
+}: let
+  inherit (config.homebrew) prefix;
+in {
+  # nix-darwin builds PATH itself, so the /etc/paths.d/homebrew entry written
+  # by the Homebrew installer is never read. Add the prefix (derived from the
+  # platform: /opt/homebrew on Apple Silicon, /usr/local on Intel) after the
+  # Nix profiles so Nix packages take precedence over Homebrew formulae, but
+  # before the macOS system directories (nix-darwin adds those at order 1200)
+  # so formulae still win over Apple's bundled tools. That matches where
+  # /usr/local/bin, already on the default PATH, puts Intel Homebrew.
+  environment.systemPath = lib.mkIf (config.homebrew.enable && prefix != "/usr/local") (lib.mkOrder 1100 [
+    "${prefix}/bin"
+    "${prefix}/sbin"
+  ]);
+
   homebrew = {
     enable = lib.mkDefault true;
 
