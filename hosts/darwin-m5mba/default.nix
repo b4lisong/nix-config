@@ -36,10 +36,6 @@ which also sets nixpkgs.hostPlatform. Settings here extend those modules.
       "parsec" # Low-latency remote desktop
       "orbstack" # Docker and Linux VMs
 
-      # Compatibility and gaming. Wine runs x86_64 code under Rosetta 2,
-      # which scripts/bootstrap.sh installs.
-      "wine@staging"
-
       # Browsers
       "google-chrome"
 
@@ -62,13 +58,11 @@ which also sets nixpkgs.hostPlatform. Settings here extend those modules.
     ];
 
     brews = [
-      "winetricks" # Helper for wine@staging
       "herdr" # Terminal multiplexer for coding agents
     ];
 
     # Requires signing into the App Store before the first activation.
     masApps = {
-      "NextDNS" = 1464122853;
       "1Password for Safari" = 1569813296;
     };
   };

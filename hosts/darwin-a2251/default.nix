@@ -65,9 +65,6 @@ Configuration Areas:
       #"vmware-fusion" # Virtualization for testing different OS environments
       "orbstack" # Docker replacement and CLI VMs
 
-      # Compatibility and gaming
-      "wine@staging" # Windows application compatibility layer
-
       # Browsers
 
       # Messaging & communications
@@ -80,14 +77,8 @@ Configuration Areas:
       "tailscale-app"
     ];
 
-    # Command-line tools via Homebrew
-    brews = [
-      "winetricks" # Helper tool for Wine Windows compatibility
-    ];
-
     # Mac App Store applications
     masApps = {
-      "NextDNS" = 1464122853; # DNS service
       "1Password for Safari" = 1569813296; # Password management
     };
   };

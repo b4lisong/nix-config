@@ -11,7 +11,7 @@ This module provides sensible defaults while allowing hosts to override and exte
       # Leave Homebrew packages that are not in the generated Brewfile alone.
       # "zap" removed 13 undeclared formulae on activation and kept failing on
       # casks it could not remove (gstreamer-runtime is a dependency of the
-      # declared wine@staging), so packages installed by hand outside this
+      # then-declared wine@staging), so packages installed by hand outside this
       # config were being deleted. Use "check" to preview removals instead.
       cleanup = lib.mkDefault "none";
       autoUpdate = lib.mkDefault false; # Don't auto-update during rebuild
